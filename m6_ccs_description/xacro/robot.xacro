@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<robot name="DobotCR5" xmlns:xacro="http://www.ros.org/wiki/xacro">
+	<xacro:arg name="collider" default="convex"/>
+	<xacro:arg name="type" default="left"/>
+
+	<xacro:include filename="$(find m6_ccs_description)/xacro/arm.xacro"/>
+
+	<xacro:if value="${'$(arg type)' == 'left'}">
+		<xacro:M6_CCS/>
+	</xacro:if>
+	<xacro:if value="${'$(arg type)' == 'right'}">
+		<xacro:M6_CCS direction="-1"/>
+	</xacro:if>
+</robot>

@@ -1,0 +1,273 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+	<xacro:property name="PI" value="3.1415926535897931"/>
+	<xacro:macro name="M6_SRS" params="name:='' direction:=1 collider:=convex">
+		<xacro:property name="prefix" value="${name + '_' if name else ''}"/>
+
+		<!-- Base Link -->
+		<link name="${prefix}base_link">
+			<inertial>
+				<origin xyz="0.0001427 1.626E-05 0.039067" />
+				<mass value="1.2946"/>
+				<inertia
+						ixx="0.00116453" ixy="1.06E-06" ixz="-8.13E-06"
+						iyy="0.00114921" iyz="3.08E-06" izz="0.00141686"/>
+			</inertial>
+			<visual>
+				<geometry>
+					<mesh filename="package://m6_srs_description/meshes/Base.STL"/>
+				</geometry>
+				<material name="">
+					<color rgba="1 0 0 1"/>
+				</material>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://m6_srs_description/meshes/Base.STL"/>
+				</geometry>
+			</collision>
+		</link>
+
+		<!-- Link 1 -->
+		<link name="${prefix}link1">
+			<inertial>
+				<origin xyz="1.875E-05 0.006003 0.1438" />
+				<mass value="2.0926"/>
+				<inertia
+						ixx="0.00515643" ixy="2.62E-06" ixz="3.78E-06"
+						iyy="0.0055553" iyz="0.00038404" izz="0.00198037"/>
+			</inertial>
+			<visual>
+
+				<geometry>
+					<mesh filename="package://m6_srs_description/meshes/Link1.STL"/>
+				</geometry>
+				<material name="">
+					<color rgba="0 1 0 1"/>
+				</material>
+			</visual>
+			<collision>
+
+				<geometry>
+					<mesh filename="package://m6_srs_description/meshes/Link1.STL"/>
+				</geometry>
+			</collision>
+		</link>
+
+		<!-- Joint 1 -->
+		<joint name="${prefix}joint1" type="revolute">
+
+			<parent link="${prefix}base_link"/>
+			<child link="${prefix}link1"/>
+			<axis xyz="0 0 1"/>
+			<limit lower="-3.1067" upper="3.1067" effort="108" velocity="3.1416"/>
+		</joint>
+
+		<!-- Link 2 -->
+		<link name="${prefix}link2">
+			<inertial>
+				<origin xyz="-7.03E-06 0.05542 0.010995" />
+				<mass value="1.9432"/>
+				<inertia
+						ixx="0.01035460" ixy="-5.59E-06" ixz="2.06E-06"
+						iyy="0.00316139" iyz="-0.00119042" izz="0.00953530"/>
+			</inertial>
+			<visual>
+				<geometry>
+					<mesh filename="package://m6_srs_description/meshes/Link2.STL"/>
+				</geometry>
+				<material name="">
+					<color rgba="0 0 1 1"/>
+				</material>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://m6_srs_description/meshes/Link2.STL"/>
+				</geometry>
+			</collision>
+		</link>
+
+		<!-- Joint 2 -->
+		<joint name="${prefix}joint2" type="revolute">
+			<origin xyz="0 0 0.1745" rpy="1.5708 0 0"/>
+			<parent link="${prefix}link1"/>
+			<child link="${prefix}link2"/>
+			<axis xyz="0 0 1"/>
+			<limit lower="-2.0944" upper="2.0944" effort="108" velocity="3.1416"/>
+		</joint>
+
+		<!-- Link 3 -->
+		<link name="${prefix}link3">
+			<inertial>
+				<origin xyz="0.0087411 0.0019043 0.23487" />
+				<mass value="1.6913"/>
+				<inertia
+						ixx="0.00650115" ixy="3.338E-05" ixz="0.00079318"
+						iyy="0.00689453" iyz="0.00017675" izz="0.00164437"/>
+			</inertial>
+			<visual>
+
+				<geometry>
+					<mesh filename="package://m6_srs_description/meshes/Link3.STL"/>
+				</geometry>
+				<material name="">
+					<color rgba="1 0 0 1"/>
+				</material>
+			</visual>
+			<collision>
+
+				<geometry>
+					<mesh filename="package://m6_srs_description/meshes/Link3.STL"/>
+				</geometry>
+			</collision>
+		</link>
+
+		<!-- Joint 3 -->
+		<joint name="${prefix}joint3" type="revolute">
+			<origin xyz="0 0 0" rpy="-1.5708 0 0"/>
+			<parent link="${prefix}link2"/>
+			<child link="${prefix}link3"/>
+			<axis xyz="0 0 1"/>
+			<limit lower="-3.1067" upper="3.1067" effort="66" velocity="3.1416"/>
+		</joint>
+
+		<!-- Link 4 -->
+		<link name="${prefix}link4">
+			<inertial>
+				<origin xyz="-0.00734397 0.04342803 0.01090610" />
+				<mass value="1.44022"/>
+				<inertia
+						ixx="0.00530332" ixy="-0.00059200" ixz="0.00012225"
+						iyy="0.00200619" iyz="-0.00069378" izz="0.00491970"/>
+			</inertial>
+			<visual>
+
+				<geometry>
+					<mesh filename="package://m6_srs_description/meshes/Link4.STL"/>
+				</geometry>
+				<material name="">
+					<color rgba="0 1 0 1"/>
+				</material>
+			</visual>
+			<collision>
+
+				<geometry>
+					<mesh filename="package://m6_srs_description/meshes/Link4.STL"/>
+				</geometry>
+			</collision>
+		</link>
+
+		<!-- Joint 4 -->
+		<joint name="${prefix}joint4" type="revolute">
+			<origin xyz="0.018 0 0.287" rpy="1.5708 0 0"/>
+			<parent link="${prefix}link3"/>
+			<child link="${prefix}link4"/>
+			<axis xyz="0 0 1"/>
+			<limit lower="-2.5307" upper="1.0472" effort="66" velocity="3.1416"/>
+		</joint>
+
+		<!-- Link 5 -->
+		<link name="${prefix}link5">
+			<inertial>
+				<origin xyz="0.00003950 -0.00840978 0.19192382" />
+				<mass value="1.18638637"/>
+				<inertia
+						ixx="0.00379851" ixy="0.00000036" ixz="-0.00000177"
+						iyy="0.00343926" iyz="-0.00050064" izz="0.00133506"/>
+			</inertial>
+			<visual>
+
+				<geometry>
+					<mesh filename="package://m6_srs_description/meshes/Link5.STL"/>
+				</geometry>
+				<material name="">
+					<color rgba="0 0 1 1"/>
+				</material>
+			</visual>
+			<collision>
+
+				<geometry>
+					<mesh filename="package://m6_srs_description/meshes/Link5.STL"/>
+				</geometry>
+			</collision>
+		</link>
+
+		<!-- Joint 5 -->
+		<joint name="${prefix}joint5" type="revolute">
+			<origin xyz="-0.018 0 0" rpy="-1.5708 0 0"/>
+			<parent link="${prefix}link4"/>
+			<child link="${prefix}link5"/>
+			<axis xyz="0 0 1"/>
+			<limit lower="-3.1067" upper="3.1067" effort="18" velocity="3.1416"/>
+		</joint>
+
+		<!-- Link 6 -->
+		<link name="${prefix}link6">
+			<inertial>
+				<origin xyz="0.00001592 0.03649 -0.00142323" />
+				<mass value="1.04934394"/>
+				<inertia
+						ixx="0.00231171" ixy="-0.00000121" ixz="-0.00000025"
+						iyy="0.00065728" iyz="0.00006690" izz="0.00243087"/>
+			</inertial>
+			<visual>
+
+				<geometry>
+					<mesh filename="package://m6_srs_description/meshes/Link6.STL"/>
+				</geometry>
+				<material name="">
+					<color rgba="1 0 0 1"/>
+				</material>
+			</visual>
+			<collision>
+
+				<geometry>
+					<mesh filename="package://m6_srs_description/meshes/Link6.STL"/>
+				</geometry>
+			</collision>
+		</link>
+
+		<!-- Joint 6 -->
+		<joint name="${prefix}joint6" type="revolute">
+			<origin xyz="0 0 0.242" rpy="1.5708 0 0"/>
+			<parent link="${prefix}link5"/>
+			<child link="${prefix}link6"/>
+			<axis xyz="0 0 1"/>
+			<limit lower="-1.9199" upper="1.9199" effort="18" velocity="3.1416"/>
+		</joint>
+
+		<!-- Link 7 -->
+		<link name="${prefix}link7">
+			<inertial>
+				<origin xyz="-7.58E-05 1.6597E-04 0.1183953"/>
+				<mass value="0.5268"/>
+				<inertia
+						ixx="0.00768725" ixy="0.00000094" ixz="-0.00000609"
+						iyy="0.00768792" iyz="-0.00001163" izz="0.00038293"/>
+			</inertial>
+			<visual>
+				<geometry>
+					<mesh filename="package://m6_srs_description/meshes/Link7.STL" scale="1 ${direction} 1"/>
+				</geometry>
+				<material name="">
+					<color rgba="0 1 0 1"/>
+				</material>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://m6_srs_description/meshes/Link7.STL" scale="1 ${direction} 1"/>
+				</geometry>
+			</collision>
+		</link>
+
+		<!-- Joint 7 -->
+		<joint name="${prefix}joint7" type="revolute">
+			<origin xyz="0 0 0" rpy="-1.5708 0 0"/>
+			<parent link="${prefix}link6"/>
+			<child link="${prefix}link7"/>
+			<axis xyz="0 0 1"/>
+			<limit lower="-3.1067" upper="3.1067" effort="18" velocity="3.1416"/>
+		</joint>
+
+	</xacro:macro>
+</robot>
