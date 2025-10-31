@@ -16,13 +16,12 @@ colcon build --packages-up-to m6_srs_description --symlink-install
     source ~/ros2_ws/install/setup.bash
     ros2 launch robot_common_launch manipulator.launch.py robot:=m6_srs
     ```
-  ![rokae_ar5](../../.images/rokae_ar5.png)
+  ![m6_srs](../.images/m6_srs.png)
 * Right Arm
     ```bash
     source ~/ros2_ws/install/setup.bash
     ros2 launch robot_common_launch manipulator.launch.py robot:=m6_srs type:=right
     ```
-  ![rokae_ar5](../../.images/rokae_ar5_right.png)
 
 ## 3. OCS2 Demo
 
@@ -31,12 +30,12 @@ colcon build --packages-up-to m6_srs_description --symlink-install
 * Left Arm
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator_ocs2.launch.py robot_name:=rokae_ar5
+  ros2 launch robot_common_launch manipulator_ocs2.launch.py robot_name:=m6_srs
   ```
 * Right Arm
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator_ocs2.launch.py robot_name:=rokae_ar5 type:=right
+  ros2 launch robot_common_launch manipulator_ocs2.launch.py robot_name:=m6_srs type:=right
   ```
 
 ### 3.2 OCS2 Arm Controller Demo
@@ -45,10 +44,10 @@ colcon build --packages-up-to m6_srs_description --symlink-install
   ```bash
   # Left Arm
   source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=rokae_ar5 
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_srs 
   ```
     ```bash
   # Right Arm
   source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=rokae_ar5 type:=right
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_srs type:=right
   ```

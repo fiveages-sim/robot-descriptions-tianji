@@ -1,6 +1,6 @@
 # Blender 4.5.3 LTS
 # www.blender.org
-mtllib base.mtl
+mtllib materials.mtl
 o Base
 v -0.039123 -0.037123 0.006000
 v -0.039123 -0.037123 -0.000000

@@ -1,6 +1,6 @@
 # Blender 4.5.3 LTS
 # www.blender.org
-mtllib link5.mtl
+mtllib materials.mtl
 o Link5
 v 0.000000 -0.038500 -0.192500
 v 0.000000 -0.038500 -0.198000

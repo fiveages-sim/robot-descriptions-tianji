@@ -43,7 +43,7 @@ ocs2_arm_controller:
     state_interfaces:
       - position
 
-    robot_name: rokae_ar5
+    robot_name: m6_srs
 
     # Future time offset for trajectory prediction (in seconds)
     future_time_offset: 2.0

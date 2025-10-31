@@ -4,7 +4,7 @@
 	<xacro:macro name="M6_SRS" params="name:='' direction:=1 collider:=convex">
 		<xacro:property name="prefix" value="${name + '_' if name else ''}"/>
 
-		<!-- Base Link -->
+		<!-- Base link -->
 		<link name="${prefix}base_link">
 			<inertial>
 				<origin xyz="0.0001427 1.626E-05 0.039067" />
@@ -15,20 +15,17 @@
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="package://m6_srs_description/meshes/Base.STL"/>
+					<mesh filename="file://$(find m6_srs_description)/meshes/base.obj"/>
 				</geometry>
-				<material name="">
-					<color rgba="1 0 0 1"/>
-				</material>
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="package://m6_srs_description/meshes/Base.STL"/>
+					<mesh filename="file://$(find m6_srs_description)/meshes/base.obj"/>
 				</geometry>
 			</collision>
 		</link>
 
-		<!-- Link 1 -->
+		<!-- link 1 -->
 		<link name="${prefix}link1">
 			<inertial>
 				<origin xyz="1.875E-05 0.006003 0.1438" />
@@ -38,18 +35,13 @@
 						iyy="0.0055553" iyz="0.00038404" izz="0.00198037"/>
 			</inertial>
 			<visual>
-
 				<geometry>
-					<mesh filename="package://m6_srs_description/meshes/Link1.STL"/>
+					<mesh filename="file://$(find m6_srs_description)/meshes/link1.obj"/>
 				</geometry>
-				<material name="">
-					<color rgba="0 1 0 1"/>
-				</material>
 			</visual>
 			<collision>
-
 				<geometry>
-					<mesh filename="package://m6_srs_description/meshes/Link1.STL"/>
+					<mesh filename="file://$(find m6_srs_description)/meshes/link1.obj"/>
 				</geometry>
 			</collision>
 		</link>
@@ -63,7 +55,7 @@
 			<limit lower="-3.1067" upper="3.1067" effort="108" velocity="3.1416"/>
 		</joint>
 
-		<!-- Link 2 -->
+		<!-- link 2 -->
 		<link name="${prefix}link2">
 			<inertial>
 				<origin xyz="-7.03E-06 0.05542 0.010995" />
@@ -74,15 +66,12 @@
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="package://m6_srs_description/meshes/Link2.STL"/>
+					<mesh filename="file://$(find m6_srs_description)/meshes/link2.obj"/>
 				</geometry>
-				<material name="">
-					<color rgba="0 0 1 1"/>
-				</material>
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="package://m6_srs_description/meshes/Link2.STL"/>
+					<mesh filename="file://$(find m6_srs_description)/meshes/link2.obj"/>
 				</geometry>
 			</collision>
 		</link>
@@ -96,7 +85,7 @@
 			<limit lower="-2.0944" upper="2.0944" effort="108" velocity="3.1416"/>
 		</joint>
 
-		<!-- Link 3 -->
+		<!-- link 3 -->
 		<link name="${prefix}link3">
 			<inertial>
 				<origin xyz="0.0087411 0.0019043 0.23487" />
@@ -106,18 +95,13 @@
 						iyy="0.00689453" iyz="0.00017675" izz="0.00164437"/>
 			</inertial>
 			<visual>
-
 				<geometry>
-					<mesh filename="package://m6_srs_description/meshes/Link3.STL"/>
+					<mesh filename="file://$(find m6_srs_description)/meshes/link3.obj"/>
 				</geometry>
-				<material name="">
-					<color rgba="1 0 0 1"/>
-				</material>
 			</visual>
 			<collision>
-
 				<geometry>
-					<mesh filename="package://m6_srs_description/meshes/Link3.STL"/>
+					<mesh filename="file://$(find m6_srs_description)/meshes/link3.obj"/>
 				</geometry>
 			</collision>
 		</link>
@@ -131,7 +115,7 @@
 			<limit lower="-3.1067" upper="3.1067" effort="66" velocity="3.1416"/>
 		</joint>
 
-		<!-- Link 4 -->
+		<!-- link 4 -->
 		<link name="${prefix}link4">
 			<inertial>
 				<origin xyz="-0.00734397 0.04342803 0.01090610" />
@@ -141,18 +125,13 @@
 						iyy="0.00200619" iyz="-0.00069378" izz="0.00491970"/>
 			</inertial>
 			<visual>
-
 				<geometry>
-					<mesh filename="package://m6_srs_description/meshes/Link4.STL"/>
+					<mesh filename="file://$(find m6_srs_description)/meshes/link4.obj"/>
 				</geometry>
-				<material name="">
-					<color rgba="0 1 0 1"/>
-				</material>
 			</visual>
 			<collision>
-
 				<geometry>
-					<mesh filename="package://m6_srs_description/meshes/Link4.STL"/>
+					<mesh filename="file://$(find m6_srs_description)/meshes/link4.obj"/>
 				</geometry>
 			</collision>
 		</link>
@@ -166,7 +145,7 @@
 			<limit lower="-2.5307" upper="1.0472" effort="66" velocity="3.1416"/>
 		</joint>
 
-		<!-- Link 5 -->
+		<!-- link 5 -->
 		<link name="${prefix}link5">
 			<inertial>
 				<origin xyz="0.00003950 -0.00840978 0.19192382" />
@@ -176,18 +155,13 @@
 						iyy="0.00343926" iyz="-0.00050064" izz="0.00133506"/>
 			</inertial>
 			<visual>
-
 				<geometry>
-					<mesh filename="package://m6_srs_description/meshes/Link5.STL"/>
+					<mesh filename="file://$(find m6_srs_description)/meshes/link5.obj"/>
 				</geometry>
-				<material name="">
-					<color rgba="0 0 1 1"/>
-				</material>
 			</visual>
 			<collision>
-
 				<geometry>
-					<mesh filename="package://m6_srs_description/meshes/Link5.STL"/>
+					<mesh filename="file://$(find m6_srs_description)/meshes/link5.obj"/>
 				</geometry>
 			</collision>
 		</link>
@@ -201,7 +175,7 @@
 			<limit lower="-3.1067" upper="3.1067" effort="18" velocity="3.1416"/>
 		</joint>
 
-		<!-- Link 6 -->
+		<!-- link 6 -->
 		<link name="${prefix}link6">
 			<inertial>
 				<origin xyz="0.00001592 0.03649 -0.00142323" />
@@ -213,7 +187,7 @@
 			<visual>
 
 				<geometry>
-					<mesh filename="package://m6_srs_description/meshes/Link6.STL"/>
+					<mesh filename="file://$(find m6_srs_description)/meshes/link6.obj"/>
 				</geometry>
 				<material name="">
 					<color rgba="1 0 0 1"/>
@@ -222,7 +196,7 @@
 			<collision>
 
 				<geometry>
-					<mesh filename="package://m6_srs_description/meshes/Link6.STL"/>
+					<mesh filename="file://$(find m6_srs_description)/meshes/link6.obj"/>
 				</geometry>
 			</collision>
 		</link>
@@ -236,7 +210,7 @@
 			<limit lower="-1.9199" upper="1.9199" effort="18" velocity="3.1416"/>
 		</joint>
 
-		<!-- Link 7 -->
+		<!-- link 7 -->
 		<link name="${prefix}link7">
 			<inertial>
 				<origin xyz="-7.58E-05 1.6597E-04 0.1183953"/>
@@ -247,7 +221,7 @@
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="package://m6_srs_description/meshes/Link7.STL" scale="1 ${direction} 1"/>
+					<mesh filename="file://$(find m6_srs_description)/meshes/link7.obj" scale="1 ${direction} 1"/>
 				</geometry>
 				<material name="">
 					<color rgba="0 1 0 1"/>
@@ -255,7 +229,7 @@
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="package://m6_srs_description/meshes/Link7.STL" scale="1 ${direction} 1"/>
+					<mesh filename="file://$(find m6_srs_description)/meshes/link7.obj" scale="1 ${direction} 1"/>
 				</geometry>
 			</collision>
 		</link>
