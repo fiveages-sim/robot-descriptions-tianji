@@ -30,7 +30,14 @@
       </xacro:if>
     </hardware>
 
-    <xacro:m6_interfaces name=""/>
+    <xacro:if value="${'$(arg type)' == 'dual'}">
+      <xacro:m6_interfaces name="left"/>
+      <xacro:m6_interfaces name="right"/>
+    </xacro:if>
+
+    <xacro:unless value="${'$(arg type)' == 'dual'}">
+      <xacro:m6_interfaces name=""/>
+    </xacro:unless>
 
   </ros2_control>
 

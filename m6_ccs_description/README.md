@@ -23,6 +23,13 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
     ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=right
     ```
 
+* Dual Arm
+    ```bash
+    source ~/ros2_ws/install/setup.bash
+    ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual
+    ```
+
+
 ## 3. OCS2 Demo
 
 ### 3.1 Official OCS2 Mobile Manipulator Demo
@@ -50,4 +57,9 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
   # Right Arm
   source ~/ros2_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=right
+  ```
+    ```bash
+  # Dual Arm
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual
   ```
