@@ -14,20 +14,26 @@
 	</xacro:if>
 
 	<xacro:if value="${'$(arg type)' == 'dual'}">
-		<link name="base_link"/>
+		<link name="base_link">
+			<visual>
+				<geometry>
+					<mesh filename="file://$(find m6_ccs_description)/meshes/dual_base.obj"/>
+				</geometry>
+			</visual>
+		</link>
 
 		<!-- Left Arm -->
 		<joint name="left_arm_base_joint" type="fixed">
 			<parent link="base_link"/>
 			<child link="left_base_link"/>
-			<origin rpy="-1.5708 1.5708 0" xyz="0.0 0.05 0"/>
+			<origin rpy="-1.5708 1.5708 0" xyz="0.0 0.12 0.701"/>
 		</joint>
 
 		<!-- Right Arm -->
 		<joint name="right_arm_base_joint" type="fixed">
 			<parent link="base_link"/>
 			<child link="right_base_link"/>
-			<origin rpy="1.5708 1.5708 0" xyz="0.0 -0.05 0"/>
+			<origin rpy="1.5708 1.5708 0" xyz="0.0 -0.12 0.701"/>
 		</joint>
 
 		<xacro:M6_CCS name="left"/>
