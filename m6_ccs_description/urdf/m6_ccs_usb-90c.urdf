@@ -9,7 +9,7 @@
   <joint name="base_joint" type="fixed">
     <parent link="base_link"/>
     <child link="base"/>
-    <origin rpy="0 0 -1.5707963267948966"/>
+    <origin rpy="0 0 0"/>
   </joint>
   <link name="base">
     <visual>

@@ -38,9 +38,12 @@
 					<xacro:if value="${'$(arg type)' == 'left'}">
 						<param name="left_right_arm">0</param>
 					</xacro:if>
-					<xacro:unless value="${'$(arg type)' == 'left'}">
-						<param name="left_right_arm">1</param>
-					</xacro:unless>
+					<xacro:if value="${'$(arg type)' == 'usb-90c'}">
+						<param name="left_right_arm">0</param>
+					</xacro:if>
+					<xacro:if value="${'$(arg type)' == 'right'}">
+						<param name="left_right_arm">0</param>
+					</xacro:if>
 				</xacro:unless>
 			</xacro:if>
 		</hardware>
