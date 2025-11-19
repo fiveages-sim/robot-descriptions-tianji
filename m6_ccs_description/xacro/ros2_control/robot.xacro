@@ -28,15 +28,35 @@
         <param name="sum_wrapped_joint_states">false</param>
         <param name="initialize_commands_from_state">true</param>
       </xacro:if>
+       <xacro:if value="${'$(arg ros2_control_hardware_type)' == 'real'}">
+        <plugin>tj2_ros2_control/TJ2Hardware</plugin>
+        
+        <xacro:if value="${'$(arg type)' == 'dual'}">
+          <param name="left_right_arm">2</param>
+        </xacro:if>
+         <xacro:unless value="${'$(arg type)' == 'dual'}">
+          <xacro:if value="${'$(arg type)' == 'left'}">
+            <param name="left_right_arm">0</param>
+          </xacro:if>
+          <xacro:unless value="${'$(arg type)' == 'left'}">
+            <param name="left_right_arm">1</param>
+        </xacro:unless>
+    </xacro:unless>
+      </xacro:if>
     </hardware>
 
     <xacro:if value="${'$(arg type)' == 'dual'}">
       <xacro:m6_interfaces name="left"/>
-      <xacro:m6_interfaces name="right"/>
+      <xacro:m6_interfaces name="right"/>  
     </xacro:if>
 
     <xacro:unless value="${'$(arg type)' == 'dual'}">
-      <xacro:m6_interfaces name=""/>
+       <xacro:if value="${'$(arg type)' == 'left'}">
+        <xacro:m6_interfaces name=""/>
+       </xacro:if>
+       <xacro:unless value="${'$(arg type)' == 'left'}">
+        <xacro:m6_interfaces name=""/>
+       </xacro:unless>
     </xacro:unless>
 
   </ros2_control>
