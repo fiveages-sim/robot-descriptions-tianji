@@ -12,7 +12,7 @@ controller_manager:
 ocs2_arm_controller:
   ros__parameters:
     # Joint configuration
-    update_rate: 50  # Hz
+    update_rate: 100  # Hz
     info_file_name: dual
     joints:
       - left_joint1
@@ -39,7 +39,7 @@ ocs2_arm_controller:
     robot_name: m6_ccs
 
     # Control parameters
-    home_pos: [ 0.5, -0.146, 0.0, 1.281, 0.0, 0.0, -0.722,
-                -0.5, 0.146, 0.0, 1.281, 0.0, 0.0, 0.722 ]
+    home_pos: [ 0.454, -0.872, 0.285, -0.964, -1.461, 0.458, -0.161,
+                -0.454, -0.872, -0.285, -0.964, -1.461, -0.458, 0.161 ]
     rest_pos: [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]

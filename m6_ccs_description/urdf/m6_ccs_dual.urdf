@@ -10,6 +10,12 @@
         <mesh filename="package://m6_ccs_description/meshes/dual_base.obj"/>
       </geometry>
     </visual>
+    <collision>
+      <origin xyz="0 0 0.324331"/>
+      <geometry>
+        <box size="0.10045 0.100398 0.648662"/>
+      </geometry>
+    </collision>
   </link>
   <!-- Left Arm -->
   <joint name="left_arm_base_joint" type="fixed">
@@ -36,8 +42,9 @@
       </geometry>
     </visual>
     <collision>
+      <origin xyz="0 0 0.041832"/>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/base.obj"/>
+        <cylinder length="0.083664" radius="0.051277"/>
       </geometry>
     </collision>
   </link>
@@ -54,8 +61,9 @@
       </geometry>
     </visual>
     <collision>
+      <origin rpy="1.5708 0 0"/>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link1.obj"/>
+        <cylinder length="0.125958" radius="0.057588"/>
       </geometry>
     </collision>
   </link>
@@ -80,8 +88,9 @@
       </geometry>
     </visual>
     <collision>
+      <origin rpy="1.5708 0 0" xyz="0 0.099087 0"/>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link2.obj"/>
+        <cylinder length="0.078386" radius="0.046717"/>
       </geometry>
     </collision>
   </link>
@@ -106,8 +115,15 @@
       </geometry>
     </visual>
     <collision>
+      <origin xyz="0 0 -0.098932"/>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link3.obj"/>
+        <cylinder length="0.089056" radius="0.046717"/>
+      </geometry>
+    </collision>
+    <collision>
+      <origin rpy="1.5708 0 0" xyz="0.018119 0 0"/>
+      <geometry>
+        <cylinder length="0.117016" radius="0.049964"/>
       </geometry>
     </collision>
   </link>
@@ -132,8 +148,9 @@
       </geometry>
     </visual>
     <collision>
+      <origin rpy="1.5708 0 0" xyz="0.017721 -0.079733 0"/>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link4.obj"/>
+        <cylinder length="0.080203" radius="0.041759"/>
       </geometry>
     </collision>
   </link>
@@ -158,8 +175,9 @@
       </geometry>
     </visual>
     <collision>
+      <origin xyz="0 0 -0.117153"/>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link5.obj" scale="1 1 1"/>
+        <cylinder length="0.14268" radius="0.056747"/>
       </geometry>
     </collision>
   </link>
@@ -184,8 +202,9 @@
       </geometry>
     </visual>
     <collision>
+      <origin rpy="1.5708 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link6.obj"/>
+        <cylinder length="0.108046" radius="0.038348"/>
       </geometry>
     </collision>
   </link>
@@ -210,8 +229,9 @@
       </geometry>
     </visual>
     <collision>
+      <origin rpy="1.5708 0 0" xyz="0 -0.075732 0"/>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link7.obj"/>
+        <cylinder length="0.038392" radius="0.041707"/>
       </geometry>
     </collision>
   </link>
@@ -222,6 +242,12 @@
     <child link="left_link7"/>
     <axis xyz="0 0 1"/>
     <limit effort="18" lower="-1.5708" upper="1.5708" velocity="3.1416"/>
+  </joint>
+  <link name="left_eef"/>
+  <joint name="left_eef_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 -0.095296 0"/>
+    <parent link="left_link7"/>
+    <child link="left_eef"/>
   </joint>
   <!-- Base Link -->
   <link name="right_base_link">
@@ -236,8 +262,9 @@
       </geometry>
     </visual>
     <collision>
+      <origin xyz="0 0 0.041832"/>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/base.obj"/>
+        <cylinder length="0.083664" radius="0.051277"/>
       </geometry>
     </collision>
   </link>
@@ -254,8 +281,9 @@
       </geometry>
     </visual>
     <collision>
+      <origin rpy="1.5708 0 0"/>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link1.obj"/>
+        <cylinder length="0.125958" radius="0.057588"/>
       </geometry>
     </collision>
   </link>
@@ -280,8 +308,9 @@
       </geometry>
     </visual>
     <collision>
+      <origin rpy="1.5708 0 0" xyz="0 0.099087 0"/>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link2.obj"/>
+        <cylinder length="0.078386" radius="0.046717"/>
       </geometry>
     </collision>
   </link>
@@ -306,8 +335,15 @@
       </geometry>
     </visual>
     <collision>
+      <origin xyz="0 0 -0.098932"/>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link3.obj"/>
+        <cylinder length="0.089056" radius="0.046717"/>
+      </geometry>
+    </collision>
+    <collision>
+      <origin rpy="1.5708 0 0" xyz="0.018119 0 0"/>
+      <geometry>
+        <cylinder length="0.117016" radius="0.049964"/>
       </geometry>
     </collision>
   </link>
@@ -332,8 +368,9 @@
       </geometry>
     </visual>
     <collision>
+      <origin rpy="1.5708 0 0" xyz="0.017721 -0.079733 0"/>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link4.obj"/>
+        <cylinder length="0.080203" radius="0.041759"/>
       </geometry>
     </collision>
   </link>
@@ -358,8 +395,9 @@
       </geometry>
     </visual>
     <collision>
+      <origin xyz="0 0 -0.117153"/>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link5.obj" scale="1 -1 1"/>
+        <cylinder length="0.14268" radius="0.056747"/>
       </geometry>
     </collision>
   </link>
@@ -384,8 +422,9 @@
       </geometry>
     </visual>
     <collision>
+      <origin rpy="1.5708 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link6.obj"/>
+        <cylinder length="0.108046" radius="0.038348"/>
       </geometry>
     </collision>
   </link>
@@ -410,8 +449,9 @@
       </geometry>
     </visual>
     <collision>
+      <origin rpy="1.5708 0 0" xyz="0 -0.075732 0"/>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link7_r.obj"/>
+        <cylinder length="0.038392" radius="0.041707"/>
       </geometry>
     </collision>
   </link>
@@ -422,5 +462,11 @@
     <child link="right_link7"/>
     <axis xyz="0 0 1"/>
     <limit effort="18" lower="-1.5708" upper="1.5708" velocity="3.1416"/>
+  </joint>
+  <link name="right_eef"/>
+  <joint name="right_eef_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 -0.095296 0"/>
+    <parent link="right_link7"/>
+    <child link="right_eef"/>
   </joint>
 </robot>

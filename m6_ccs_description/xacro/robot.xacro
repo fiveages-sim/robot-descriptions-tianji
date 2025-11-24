@@ -7,10 +7,10 @@
 	<xacro:include filename="$(find m6_ccs_description)/xacro/arm.xacro"/>
 
 	<xacro:if value="${'$(arg type)' == 'left'}">
-		<xacro:M6_CCS/>
+		<xacro:M6_CCS collider="$(arg collider)"/>
 	</xacro:if>
 	<xacro:if value="${'$(arg type)' == 'right'}">
-		<xacro:M6_CCS direction="-1"/>
+		<xacro:M6_CCS direction="-1" collider="$(arg collider)"/>
 	</xacro:if>
 
 	<xacro:if value="${'$(arg type)' == 'dual'}">
@@ -20,6 +20,12 @@
 					<mesh filename="file://$(find m6_ccs_description)/meshes/dual_base.obj"/>
 				</geometry>
 			</visual>
+			<collision>
+				<origin xyz="0 0 0.324331"/>
+				<geometry>
+					<box size="0.10045 0.100398 0.648662"/>
+				</geometry>
+			</collision>
 		</link>
 
 		<!-- Left Arm -->
@@ -36,8 +42,8 @@
 			<origin rpy="1.5708 0 0" xyz="0.0 -0.12 0.701"/>
 		</joint>
 
-		<xacro:M6_CCS name="left"/>
-		<xacro:M6_CCS name="right" direction="-1"/>
+		<xacro:M6_CCS name="left" collider="$(arg collider)"/>
+		<xacro:M6_CCS name="right" direction="-1" collider="$(arg collider)"/>
 	</xacro:if>
 
 	<xacro:if value="${'$(arg type)' == 'usb-90c'}">
@@ -55,6 +61,12 @@
 					<mesh filename="file://$(find m6_ccs_description)/meshes/dual_base.obj"/>
 				</geometry>
 			</visual>
+			<collision>
+				<origin xyz="0 0 0.324331"/>
+				<geometry>
+					<box size="0.10045 0.100398 0.648662"/>
+				</geometry>
+			</collision>
 		</link>
 
 		<!-- Left Arm -->
@@ -64,7 +76,7 @@
 			<origin rpy="-${PI/2} 0 0" xyz="0.0 0.12 0.701"/>
 		</joint>
 
-		<xacro:M6_CCS name="left"/>
+		<xacro:M6_CCS name="left" collider="$(arg collider)"/>
 
 		<xacro:include filename="$(find changingtek_description)/xacro/AG2F90-C.xacro"/>
 		<xacro:AG2F90-C name="" use_flange="true"/>

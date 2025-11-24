@@ -18,11 +18,21 @@
 					<mesh filename="file://$(find m6_ccs_description)/meshes/base.obj"/>
 				</geometry>
 			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="file://$(find m6_ccs_description)/meshes/base.obj"/>
-				</geometry>
-			</collision>
+			<xacro:if value="${collider == 'convex'}">
+				<collision>
+					<geometry>
+						<mesh filename="file://$(find m6_ccs_description)/meshes/base.obj"/>
+					</geometry>
+				</collision>
+			</xacro:if>
+			<xacro:if value="${collider == 'simple'}">
+				<collision>
+					<origin xyz="0 0 0.041832"/>
+					<geometry>
+						<cylinder length="0.083664" radius="0.051277"/>
+					</geometry>
+				</collision>
+			</xacro:if>
 		</link>
 
 		<!-- Link 1 -->
@@ -39,11 +49,21 @@
 					<mesh filename="file://$(find m6_ccs_description)/meshes/link1.obj"/>
 				</geometry>
 			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="file://$(find m6_ccs_description)/meshes/link1.obj"/>
-				</geometry>
-			</collision>
+			<xacro:if value="${collider == 'convex'}">
+				<collision>
+					<geometry>
+						<mesh filename="file://$(find m6_ccs_description)/meshes/link1.obj"/>
+					</geometry>
+				</collision>
+			</xacro:if>
+			<xacro:if value="${collider == 'simple'}">
+				<collision>
+					<origin rpy="1.5708 0 0"/>
+					<geometry>
+						<cylinder length="0.125958" radius="0.057588"/>
+					</geometry>
+				</collision>
+			</xacro:if>
 		</link>
 
 		<!-- Joint 1 -->
@@ -69,11 +89,21 @@
 					<mesh filename="file://$(find m6_ccs_description)/meshes/link2.obj"/>
 				</geometry>
 			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="file://$(find m6_ccs_description)/meshes/link2.obj"/>
-				</geometry>
-			</collision>
+			<xacro:if value="${collider == 'convex'}">
+				<collision>
+					<geometry>
+						<mesh filename="file://$(find m6_ccs_description)/meshes/link2.obj"/>
+					</geometry>
+				</collision>
+			</xacro:if>
+			<xacro:if value="${collider == 'simple'}">
+				<collision>
+					<origin xyz="0 0.099087 0" rpy="1.5708 0 0"/>
+					<geometry>
+						<cylinder length="0.078386" radius="0.046717"/>
+					</geometry>
+				</collision>
+			</xacro:if>
 		</link>
 
 		<!-- Joint 2 -->
@@ -99,11 +129,27 @@
 					<mesh filename="file://$(find m6_ccs_description)/meshes/link3.obj"/>
 				</geometry>
 			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="file://$(find m6_ccs_description)/meshes/link3.obj"/>
-				</geometry>
-			</collision>
+			<xacro:if value="${collider == 'convex'}">
+				<collision>
+					<geometry>
+						<mesh filename="file://$(find m6_ccs_description)/meshes/link3.obj"/>
+					</geometry>
+				</collision>
+			</xacro:if>
+			<xacro:if value="${collider == 'simple'}">
+				<collision>
+					<origin xyz="0 0 -0.098932"/>
+					<geometry>
+						<cylinder length="0.089056" radius="0.046717"/>
+					</geometry>
+				</collision>
+				<collision>
+					<origin xyz="0.018119 0 0" rpy="1.5708 0 0"/>
+					<geometry>
+						<cylinder length="0.117016" radius="0.049964"/>
+					</geometry>
+				</collision>
+			</xacro:if>
 		</link>
 
 		<!-- Joint 3 -->
@@ -129,11 +175,21 @@
 					<mesh filename="file://$(find m6_ccs_description)/meshes/link4.obj"/>
 				</geometry>
 			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="file://$(find m6_ccs_description)/meshes/link4.obj"/>
-				</geometry>
-			</collision>
+			<xacro:if value="${collider == 'convex'}">
+				<collision>
+					<geometry>
+						<mesh filename="file://$(find m6_ccs_description)/meshes/link4.obj"/>
+					</geometry>
+				</collision>
+			</xacro:if>
+			<xacro:if value="${collider == 'simple'}">
+				<collision>
+					<origin xyz="0.017721 -0.079733 0" rpy="1.5708 0 0"/>
+					<geometry>
+						<cylinder length="0.080203" radius="0.041759"/>
+					</geometry>
+				</collision>
+			</xacro:if>
 		</link>
 
 		<!-- Joint 4 -->
@@ -159,11 +215,21 @@
 					<mesh filename="file://$(find m6_ccs_description)/meshes/link5.obj" scale="1 ${direction} 1"/>
 				</geometry>
 			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="file://$(find m6_ccs_description)/meshes/link5.obj" scale="1 ${direction} 1"/>
-				</geometry>
-			</collision>
+			<xacro:if value="${collider == 'convex'}">
+				<collision>
+					<geometry>
+						<mesh filename="file://$(find m6_ccs_description)/meshes/link5.obj" scale="1 ${direction} 1"/>
+					</geometry>
+				</collision>
+			</xacro:if>
+			<xacro:if value="${collider == 'simple'}">
+				<collision>
+					<origin xyz="0 0 -0.117153"/>
+					<geometry>
+						<cylinder length="0.14268" radius="0.056747"/>
+					</geometry>
+				</collision>
+			</xacro:if>
 		</link>
 
 		<!-- Joint 5 -->
@@ -189,11 +255,21 @@
 					<mesh filename="file://$(find m6_ccs_description)/meshes/link6.obj"/>
 				</geometry>
 			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="file://$(find m6_ccs_description)/meshes/link6.obj"/>
-				</geometry>
-			</collision>
+			<xacro:if value="${collider == 'convex'}">
+				<collision>
+					<geometry>
+						<mesh filename="file://$(find m6_ccs_description)/meshes/link6.obj"/>
+					</geometry>
+				</collision>
+			</xacro:if>
+			<xacro:if value="${collider == 'simple'}">
+				<collision>
+					<origin xyz="0 0 0" rpy="1.5708 0 0"/>
+					<geometry>
+						<cylinder length="0.108046" radius="0.038348"/>
+					</geometry>
+				</collision>
+			</xacro:if>
 		</link>
 
 		<!-- Joint 6 -->
@@ -224,16 +300,21 @@
 					</xacro:if>
 				</geometry>
 			</visual>
-			<collision>
-				<geometry>
-					<xacro:if value="${direction == 1}">
+			<xacro:if value="${collider == 'convex'}">
+				<collision>
+					<geometry>
 						<mesh filename="file://$(find m6_ccs_description)/meshes/link7.obj"/>
-					</xacro:if>
-					<xacro:if value="${direction == -1}">
-						<mesh filename="file://$(find m6_ccs_description)/meshes/link7_r.obj"/>
-					</xacro:if>
-				</geometry>
-			</collision>
+					</geometry>
+				</collision>
+			</xacro:if>
+			<xacro:if value="${collider == 'simple'}">
+				<collision>
+					<origin xyz="0 -0.075732 0" rpy="1.5708 0 0"/>
+					<geometry>
+						<cylinder length="0.038392" radius="0.041707"/>
+					</geometry>
+				</collision>
+			</xacro:if>
 		</link>
 
 		<!-- Joint 7 -->
@@ -243,6 +324,13 @@
 			<child link="${prefix}link7"/>
 			<axis xyz="0 0 1"/>
 			<limit lower="-1.5708" upper="1.5708" effort="18" velocity="3.1416"/>
+		</joint>
+
+		<link name="${prefix}eef"/>
+		<joint name="${prefix}eef_joint" type="fixed">
+			<origin rpy="0 0 0" xyz="0 -0.095296 0"/>
+			<parent link="${prefix}link7"/>
+			<child link="${prefix}eef"/>
 		</joint>
 
 	</xacro:macro>

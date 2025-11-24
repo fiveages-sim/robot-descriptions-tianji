@@ -9,8 +9,8 @@ model_information {
   ; base frame of the robot (from URDF)
   baseFrame                       "base_link"
   ; end-effector frame of the robot (from URDF)
-  eeFrame                         "left_link7"
-  eeFrame1                        "right_link7"
+  eeFrame                         "left_eef"
+  eeFrame1                        "right_eef"
 }
 
 model_settings
@@ -74,14 +74,14 @@ rollout
 ; MPC settings
 mpc
 {
-  timeHorizon                     2.0   ; [s]
-  solutionTimeWindow              0.4   ; [s]
+  timeHorizon                     1.0   ; [s]
+  solutionTimeWindow              0.2   ; [s]
   coldStart                       false
   
   debugPrint                      false
 
   mpcDesiredFrequency             100   ; [Hz]
-  mrtDesiredFrequency             500   ; [Hz]
+  mrtDesiredFrequency             400   ; [Hz]
 }
 
 ; initial state
@@ -237,31 +237,38 @@ finalEndEffector
 selfCollision
 { 
   ; activate self-collision constraint
-  activate  false
+  activate  true
 
   ; Self Collision raw object pairs
   collisionObjectPairs
   {
-      [0] "1, 5",
-      [1] "1, 8",
-      [2] "4, 11",
-      [3] "7, 11"，
-      [4] "1, 11"
   }
 
   ; Self Collision pairs
   collisionLinkPairs
   {
+      [0] "base_link, left_link4",
+      [1] "base_link, left_link5",
+      [2] "base_link, left_link7",
+      [3] "base_link, right_link4",
+      [4] "base_link, right_link5",
+      [5] "base_link, right_link7",
   }
 
   ; minimum distance allowed between the pairs
+  ; 最小允许距离，单位：米
+  ; 参考 unitree G1: 0.01m，可以根据实际需求调整
   minimumDistance  0.01
 
   ; relaxed log barrier mu
-  mu      1e-3
+  ; 松弛对数障碍参数 mu
+  ; 参考 unitree G1: 1e-3
+  mu      1e-2
 
   ; relaxed log barrier delta
-  delta   1e-4
+  ; 松弛对数障碍参数 delta
+  ; 参考 unitree G1: 1e-4
+  delta   1e-3
 }
 
 ; Only applied for arm joints: limits parsed from URDF
