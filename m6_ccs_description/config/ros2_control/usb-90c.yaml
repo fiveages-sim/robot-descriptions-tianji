@@ -8,6 +8,10 @@ controller_manager:
 
     ocs2_arm_controller:
       type: ocs2_arm_controller/Ocs2ArmController
+    
+    hand_controller:
+      type: adaptive_gripper_controller/AdaptiveGripperController
+
 
 ocs2_arm_controller:
   ros__parameters:
@@ -36,3 +40,9 @@ ocs2_arm_controller:
 
     # Control parameters
     home_pos: [-0.14572882399465162, 1.5859330686406343, 1.8827988311450752, -1.1513946609523293, -1.6226311621458172, -0.36113406474710086, -0.24404795439517177]
+
+hand_controller:
+  ros__parameters:
+    update_rate: 10  # Hz
+    joint: gripper_joint
+    use_effort_interface: false
