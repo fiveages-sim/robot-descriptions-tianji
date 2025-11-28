@@ -29,7 +29,7 @@
 				<param name="initialize_commands_from_state">true</param>
 			</xacro:if>
 			<xacro:if value="${'$(arg ros2_control_hardware_type)' == 'real'}">
-				<plugin>tj2_ros2_control/TJ2Hardware</plugin>
+				<plugin>marvin_ros2_control/MarvinHardware</plugin>
 
 				<xacro:if value="${'$(arg type)' == 'dual'}">
 					<param name="left_right_arm">2</param>
@@ -42,7 +42,7 @@
 						<param name="left_right_arm">0</param>
 					</xacro:if>
 					<xacro:if value="${'$(arg type)' == 'right'}">
-						<param name="left_right_arm">0</param>
+						<param name="left_right_arm">1</param>
 					</xacro:if>
 				</xacro:unless>
 			</xacro:if>
