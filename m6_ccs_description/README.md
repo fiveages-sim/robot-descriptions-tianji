@@ -38,6 +38,11 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
     source ~/ros2_ws/install/setup.bash
     ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=usb-90c
     ```
+* Dual Arm on Desktop
+    ```bash
+    source ~/ros2_ws/install/setup.bash
+    ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual_desktop
+    ```
 
 ## 3. OCS2 Demo
 

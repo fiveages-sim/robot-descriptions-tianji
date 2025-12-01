@@ -14,6 +14,40 @@
 	</xacro:if>
 
 	<xacro:if value="${'$(arg type)' == 'dual'}">
+		<link name="base_link"/>
+		<link name="arm_base">
+			<collision>
+				<origin xyz="0.0091 0 -0.086"/>
+				<geometry>
+					<box size="0.2509 0.35 0.5029"/>
+				</geometry>
+			</collision>
+		</link>
+
+		<joint name="arm_base_joint" type="fixed">
+			<parent link="base_link"/>
+			<child link="arm_base"/>
+		</joint>
+
+		<!-- Left Arm -->
+		<joint name="left_arm_base_joint" type="fixed">
+			<parent link="arm_base"/>
+			<child link="left_base_link"/>
+			<origin rpy="-1.5708 0 0" xyz="0.0 0.062 0"/>
+		</joint>
+
+		<!-- Right Arm -->
+		<joint name="right_arm_base_joint" type="fixed">
+			<parent link="arm_base"/>
+			<child link="right_base_link"/>
+			<origin rpy="1.5708 0 0" xyz="0 -0.062 0"/>
+		</joint>
+
+		<xacro:M6_CCS name="left" collider="$(arg collider)"/>
+		<xacro:M6_CCS name="right" direction="-1" collider="$(arg collider)"/>
+	</xacro:if>
+
+	<xacro:if value="${'$(arg type)' == 'dual_desktop'}">
 		<link name="base_link">
 			<visual>
 				<geometry>
