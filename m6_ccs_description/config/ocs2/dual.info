@@ -247,12 +247,12 @@ selfCollision
   ; Self Collision pairs
   collisionLinkPairs
   {
-      [0] "base_link, left_link4",
-      [1] "base_link, left_link5",
-      [2] "base_link, left_link7",
-      [3] "base_link, right_link4",
-      [4] "base_link, right_link5",
-      [5] "base_link, right_link7",
+      [0] "arm_base, left_link4",
+      [1] "arm_base, left_link5",
+      [2] "arm_base, left_link7",
+      [3] "arm_base, right_link4",
+      [4] "arm_base, right_link5",
+      [5] "arm_base, right_link7",
   }
 
   ; minimum distance allowed between the pairs

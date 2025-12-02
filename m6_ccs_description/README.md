@@ -28,7 +28,7 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
 * Dual Arm
     ```bash
     source ~/ros2_ws/install/setup.bash
-    ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual
+    ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual collider:=simple
     ```
 
 ### 2.2 Arm Configuration for scene
