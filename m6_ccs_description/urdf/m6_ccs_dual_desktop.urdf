@@ -21,13 +21,13 @@
   <joint name="left_arm_base_joint" type="fixed">
     <parent link="base_link"/>
     <child link="left_base_link"/>
-    <origin rpy="-1.5708 0 0" xyz="0.0 0.12 0.701"/>
+    <origin rpy="-1.5707963267948966 0 0" xyz="0.0 0.12 0.701"/>
   </joint>
   <!-- Right Arm -->
   <joint name="right_arm_base_joint" type="fixed">
     <parent link="base_link"/>
     <child link="right_base_link"/>
-    <origin rpy="1.5708 0 0" xyz="0.0 -0.12 0.701"/>
+    <origin rpy="1.5707963267948966 0 0" xyz="0.0 -0.12 0.701"/>
   </joint>
   <!-- Base Link -->
   <link name="left_base_link">
@@ -61,7 +61,7 @@
       </geometry>
     </visual>
     <collision>
-      <origin rpy="1.5708 0 0"/>
+      <origin rpy="1.5707963267948966 0 0"/>
       <geometry>
         <cylinder length="0.125958" radius="0.057588"/>
       </geometry>
@@ -73,7 +73,7 @@
     <parent link="left_base_link"/>
     <child link="left_link1"/>
     <axis xyz="0 0 1"/>
-    <limit effort="108" lower="-3.1067" upper="3.1067" velocity="3.1416"/>
+    <limit effort="108" lower="-3.1067" upper="3.1067" velocity="3.141592653589793"/>
   </joint>
   <!-- Link 2 -->
   <link name="left_link2">
@@ -88,7 +88,7 @@
       </geometry>
     </visual>
     <collision>
-      <origin rpy="1.5708 0 0" xyz="0 0.099087 0"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0.099087 0"/>
       <geometry>
         <cylinder length="0.078386" radius="0.046717"/>
       </geometry>
@@ -96,11 +96,11 @@
   </link>
   <!-- Joint 2 -->
   <joint name="left_joint2" type="revolute">
-    <origin rpy="1.5708 0 0"/>
+    <origin rpy="1.5707963267948966 0 0"/>
     <parent link="left_link1"/>
     <child link="left_link2"/>
     <axis xyz="0 0 1"/>
-    <limit effort="108" lower="-2.0944" upper="2.0944" velocity="3.1416"/>
+    <limit effort="108" lower="-2.0944" upper="2.0944" velocity="3.141592653589793"/>
   </joint>
   <!-- Link 3 -->
   <link name="left_link3">
@@ -121,7 +121,7 @@
       </geometry>
     </collision>
     <collision>
-      <origin rpy="1.5708 0 0" xyz="0.018119 0 0"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0.018119 0 0"/>
       <geometry>
         <cylinder length="0.117016" radius="0.049964"/>
       </geometry>
@@ -129,11 +129,11 @@
   </link>
   <!-- Joint 3 -->
   <joint name="left_joint3" type="revolute">
-    <origin rpy="-1.5708 0 0" xyz="0 0.287 0"/>
+    <origin rpy="-1.5707963267948966 0 0" xyz="0 0.287 0"/>
     <parent link="left_link2"/>
     <child link="left_link3"/>
     <axis xyz="0 0 1"/>
-    <limit effort="66" lower="-3.1067" upper="3.1067" velocity="3.1416"/>
+    <limit effort="66" lower="-3.1067" upper="3.1067" velocity="3.141592653589793"/>
   </joint>
   <!-- Link 4 -->
   <link name="left_link4">
@@ -148,7 +148,7 @@
       </geometry>
     </visual>
     <collision>
-      <origin rpy="1.5708 0 0" xyz="0.017721 -0.079733 0"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0.017721 -0.079733 0"/>
       <geometry>
         <cylinder length="0.080203" radius="0.041759"/>
       </geometry>
@@ -156,11 +156,11 @@
   </link>
   <!-- Joint 4 -->
   <joint name="left_joint4" type="revolute">
-    <origin rpy="-1.5708 0 3.1416" xyz="0.018 0 0"/>
+    <origin rpy="-1.5707963267948966 0 3.141592653589793" xyz="0.018 0 0"/>
     <parent link="left_link3"/>
     <child link="left_link4"/>
     <axis xyz="0 0 1"/>
-    <limit effort="66" lower="-2.5307" upper="1.0472" velocity="3.1416"/>
+    <limit effort="66" lower="-2.5307" upper="1.0472" velocity="3.141592653589793"/>
   </joint>
   <!-- Link 5 - Mirrored COM and partial inertia -->
   <link name="left_link5">
@@ -183,11 +183,11 @@
   </link>
   <!-- Joint 5 -->
   <joint name="left_joint5" type="revolute">
-    <origin rpy="-1.5708 0 3.1416" xyz="0.018 -0.314 0"/>
+    <origin rpy="-1.5707963267948966 0 3.141592653589793" xyz="0.018 -0.314 0"/>
     <parent link="left_link4"/>
     <child link="left_link5"/>
     <axis xyz="0 0 1"/>
-    <limit effort="18" lower="-3.1067" upper="3.1067" velocity="3.1416"/>
+    <limit effort="18" lower="-3.1067" upper="3.1067" velocity="3.141592653589793"/>
   </joint>
   <!-- Link 6 - Partially mirrored COM and inertia -->
   <link name="left_link6">
@@ -202,7 +202,7 @@
       </geometry>
     </visual>
     <collision>
-      <origin rpy="1.5708 0 0" xyz="0 0 0"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
       <geometry>
         <cylinder length="0.108046" radius="0.038348"/>
       </geometry>
@@ -210,11 +210,11 @@
   </link>
   <!-- Joint 6 -->
   <joint name="left_joint6" type="revolute">
-    <origin rpy="1.5708 -1.5708 0"/>
+    <origin rpy="1.5707963267948966 -1.5707963267948966 0"/>
     <parent link="left_link5"/>
     <child link="left_link6"/>
     <axis xyz="0 0 1"/>
-    <limit effort="18" lower="-1.0472" upper="1.0472" velocity="3.1416"/>
+    <limit effort="18" lower="-1.0472" upper="1.0472" velocity="3.141592653589793"/>
   </joint>
   <!-- Link 7 -->
   <link name="left_link7">
@@ -229,7 +229,7 @@
       </geometry>
     </visual>
     <collision>
-      <origin rpy="1.5708 0 0" xyz="0 -0.075732 0"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 -0.075732 0"/>
       <geometry>
         <cylinder length="0.038392" radius="0.041707"/>
       </geometry>
@@ -237,11 +237,11 @@
   </link>
   <!-- Joint 7 -->
   <joint name="left_joint7" type="revolute">
-    <origin rpy="1.5708 -1.5708 0"/>
+    <origin rpy="1.5707963267948966 -1.5707963267948966 0"/>
     <parent link="left_link6"/>
     <child link="left_link7"/>
     <axis xyz="0 0 1"/>
-    <limit effort="18" lower="-1.5708" upper="1.5708" velocity="3.1416"/>
+    <limit effort="18" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="3.141592653589793"/>
   </joint>
   <link name="left_eef"/>
   <joint name="left_eef_joint" type="fixed">
@@ -281,7 +281,7 @@
       </geometry>
     </visual>
     <collision>
-      <origin rpy="1.5708 0 0"/>
+      <origin rpy="1.5707963267948966 0 0"/>
       <geometry>
         <cylinder length="0.125958" radius="0.057588"/>
       </geometry>
@@ -293,7 +293,7 @@
     <parent link="right_base_link"/>
     <child link="right_link1"/>
     <axis xyz="0 0 1"/>
-    <limit effort="108" lower="-3.1067" upper="3.1067" velocity="3.1416"/>
+    <limit effort="108" lower="-3.1067" upper="3.1067" velocity="3.141592653589793"/>
   </joint>
   <!-- Link 2 -->
   <link name="right_link2">
@@ -308,7 +308,7 @@
       </geometry>
     </visual>
     <collision>
-      <origin rpy="1.5708 0 0" xyz="0 0.099087 0"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0.099087 0"/>
       <geometry>
         <cylinder length="0.078386" radius="0.046717"/>
       </geometry>
@@ -316,11 +316,11 @@
   </link>
   <!-- Joint 2 -->
   <joint name="right_joint2" type="revolute">
-    <origin rpy="1.5708 0 0"/>
+    <origin rpy="1.5707963267948966 0 0"/>
     <parent link="right_link1"/>
     <child link="right_link2"/>
     <axis xyz="0 0 1"/>
-    <limit effort="108" lower="-2.0944" upper="2.0944" velocity="3.1416"/>
+    <limit effort="108" lower="-2.0944" upper="2.0944" velocity="3.141592653589793"/>
   </joint>
   <!-- Link 3 -->
   <link name="right_link3">
@@ -341,7 +341,7 @@
       </geometry>
     </collision>
     <collision>
-      <origin rpy="1.5708 0 0" xyz="0.018119 0 0"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0.018119 0 0"/>
       <geometry>
         <cylinder length="0.117016" radius="0.049964"/>
       </geometry>
@@ -349,11 +349,11 @@
   </link>
   <!-- Joint 3 -->
   <joint name="right_joint3" type="revolute">
-    <origin rpy="-1.5708 0 0" xyz="0 0.287 0"/>
+    <origin rpy="-1.5707963267948966 0 0" xyz="0 0.287 0"/>
     <parent link="right_link2"/>
     <child link="right_link3"/>
     <axis xyz="0 0 1"/>
-    <limit effort="66" lower="-3.1067" upper="3.1067" velocity="3.1416"/>
+    <limit effort="66" lower="-3.1067" upper="3.1067" velocity="3.141592653589793"/>
   </joint>
   <!-- Link 4 -->
   <link name="right_link4">
@@ -368,7 +368,7 @@
       </geometry>
     </visual>
     <collision>
-      <origin rpy="1.5708 0 0" xyz="0.017721 -0.079733 0"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0.017721 -0.079733 0"/>
       <geometry>
         <cylinder length="0.080203" radius="0.041759"/>
       </geometry>
@@ -376,11 +376,11 @@
   </link>
   <!-- Joint 4 -->
   <joint name="right_joint4" type="revolute">
-    <origin rpy="-1.5708 0 3.1416" xyz="0.018 0 0"/>
+    <origin rpy="-1.5707963267948966 0 3.141592653589793" xyz="0.018 0 0"/>
     <parent link="right_link3"/>
     <child link="right_link4"/>
     <axis xyz="0 0 1"/>
-    <limit effort="66" lower="-2.5307" upper="1.0472" velocity="3.1416"/>
+    <limit effort="66" lower="-2.5307" upper="1.0472" velocity="3.141592653589793"/>
   </joint>
   <!-- Link 5 - Mirrored COM and partial inertia -->
   <link name="right_link5">
@@ -403,11 +403,11 @@
   </link>
   <!-- Joint 5 -->
   <joint name="right_joint5" type="revolute">
-    <origin rpy="-1.5708 0 3.1416" xyz="0.018 -0.314 0"/>
+    <origin rpy="-1.5707963267948966 0 3.141592653589793" xyz="0.018 -0.314 0"/>
     <parent link="right_link4"/>
     <child link="right_link5"/>
     <axis xyz="0 0 1"/>
-    <limit effort="18" lower="-3.1067" upper="3.1067" velocity="3.1416"/>
+    <limit effort="18" lower="-3.1067" upper="3.1067" velocity="3.141592653589793"/>
   </joint>
   <!-- Link 6 - Partially mirrored COM and inertia -->
   <link name="right_link6">
@@ -422,7 +422,7 @@
       </geometry>
     </visual>
     <collision>
-      <origin rpy="1.5708 0 0" xyz="0 0 0"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
       <geometry>
         <cylinder length="0.108046" radius="0.038348"/>
       </geometry>
@@ -430,11 +430,11 @@
   </link>
   <!-- Joint 6 -->
   <joint name="right_joint6" type="revolute">
-    <origin rpy="1.5708 -1.5708 0"/>
+    <origin rpy="1.5707963267948966 -1.5707963267948966 0"/>
     <parent link="right_link5"/>
     <child link="right_link6"/>
     <axis xyz="0 0 1"/>
-    <limit effort="18" lower="-1.0472" upper="1.0472" velocity="3.1416"/>
+    <limit effort="18" lower="-1.0472" upper="1.0472" velocity="3.141592653589793"/>
   </joint>
   <!-- Link 7 -->
   <link name="right_link7">
@@ -449,7 +449,7 @@
       </geometry>
     </visual>
     <collision>
-      <origin rpy="1.5708 0 0" xyz="0 -0.075732 0"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 -0.075732 0"/>
       <geometry>
         <cylinder length="0.038392" radius="0.041707"/>
       </geometry>
@@ -457,11 +457,11 @@
   </link>
   <!-- Joint 7 -->
   <joint name="right_joint7" type="revolute">
-    <origin rpy="1.5708 -1.5708 0"/>
+    <origin rpy="1.5707963267948966 -1.5707963267948966 0"/>
     <parent link="right_link6"/>
     <child link="right_link7"/>
     <axis xyz="0 0 1"/>
-    <limit effort="18" lower="-1.5708" upper="1.5708" velocity="3.1416"/>
+    <limit effort="18" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="3.141592653589793"/>
   </joint>
   <link name="right_eef"/>
   <joint name="right_eef_joint" type="fixed">
