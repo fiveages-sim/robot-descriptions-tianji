@@ -243,11 +243,11 @@
     <axis xyz="0 0 1"/>
     <limit effort="18" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="3.141592653589793"/>
   </joint>
-  <link name="left_eef"/>
-  <joint name="left_eef_joint" type="fixed">
+  <link name="left_tcp"/>
+  <joint name="left_tcp_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0 -0.095296 0"/>
     <parent link="left_link7"/>
-    <child link="left_eef"/>
+    <child link="left_tcp"/>
   </joint>
   <!-- Base Link -->
   <link name="right_base_link">
@@ -463,10 +463,20 @@
     <axis xyz="0 0 1"/>
     <limit effort="18" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="3.141592653589793"/>
   </joint>
-  <link name="right_eef"/>
-  <joint name="right_eef_joint" type="fixed">
+  <link name="right_tcp"/>
+  <joint name="right_tcp_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0 -0.095296 0"/>
     <parent link="right_link7"/>
+    <child link="right_tcp"/>
+  </joint>
+  <link name="right_eef"/>
+  <joint name="right_eef_joint" type="fixed">
+    <parent link="right_tcp"/>
     <child link="right_eef"/>
+  </joint>
+  <link name="left_eef"/>
+  <joint name="left_eef_joint" type="fixed">
+    <parent link="left_tcp"/>
+    <child link="left_eef"/>
   </joint>
 </robot>

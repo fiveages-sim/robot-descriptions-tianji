@@ -4,12 +4,14 @@ model_information {
   
   ; motion joints in the URDF to consider fixed
   removeJoints {
+    [0]  "left_gripper_joint"
+    [1]  "right_gripper_joint"
   }
 
   ; base frame of the robot (from URDF)
   baseFrame                       "base_link"
   ; end-effector frame of the robot (from URDF)
-  eeFrame                         "link7" // gripper_base
+  eeFrame                         "tcp" // gripper_base
 }
 
 model_settings

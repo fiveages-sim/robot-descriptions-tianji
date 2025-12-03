@@ -218,10 +218,10 @@
     <axis xyz="0 0 1"/>
     <limit effort="18" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="3.141592653589793"/>
   </joint>
-  <link name="eef"/>
-  <joint name="eef_joint" type="fixed">
+  <link name="tcp"/>
+  <joint name="tcp_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0 -0.095296 0"/>
     <parent link="link7"/>
-    <child link="eef"/>
+    <child link="tcp"/>
   </joint>
 </robot>

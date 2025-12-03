@@ -13,7 +13,7 @@
 		<xacro:M6_CCS direction="-1" collider="$(arg collider)"/>
 	</xacro:if>
 
-	<xacro:if value="${'$(arg type)' == 'dual'}">
+	<xacro:if value="${'$(arg type)' == 'dual' or '$(arg type)' == 'dual_ag2f90' or '$(arg type)' == 'dual_rg75'}">
 		<link name="base_link"/>
 		<link name="arm_base">
 			<collision>
@@ -45,6 +45,23 @@
 
 		<xacro:M6_CCS name="left" collider="$(arg collider)"/>
 		<xacro:M6_CCS name="right" direction="-1" collider="$(arg collider)"/>
+
+		<xacro:if value="${'$(arg type)' == 'dual_ag2f90'}">
+			<xacro:include filename="$(find changingtek_description)/xacro/AG2F90-C.xacro"/>
+			<xacro:AG2F90-C name="left" use_flange="true"/>
+			<joint name="left_gripper_fix" type="fixed">
+				<parent link="left_link7"/>
+				<child link="left_flange"/>
+				<origin xyz="0 -0.0995 0" rpy=" ${PI/2} 0 0"/>
+			</joint>
+
+			<xacro:AG2F90-C name="right" use_flange="true"/>
+			<joint name="right_gripper_fix" type="fixed">
+				<parent link="right_link7"/>
+				<child link="right_flange"/>
+				<origin xyz="0 -0.0995 0" rpy=" ${PI/2} 0 0"/>
+			</joint>
+		</xacro:if>
 	</xacro:if>
 
 	<xacro:if value="${'$(arg type)' == 'dual_desktop'}">

@@ -32,7 +32,7 @@
 			<xacro:if value="${'$(arg ros2_control_hardware_type)' == 'real'}">
 				<plugin>marvin_ros2_control/MarvinHardware</plugin>
 
-				<xacro:if value="${'$(arg type)' == 'dual'}">
+				<xacro:if value="${'$(arg type)' == 'dual' or '$(arg type)' == 'dual_ag2f90'}">
 					<param name="left_right_arm">2</param>
 				</xacro:if>
 				<xacro:unless value="${'$(arg type)' == 'dual'}">
@@ -48,26 +48,31 @@
 				</xacro:unless>
 			</xacro:if>
 
-       <xacro:if value="${'$(arg ctrl_mode)' == 'position'}">
-          <param name="ctrl_mode">2</param>
-        </xacro:if>
+			<xacro:if value="${'$(arg ctrl_mode)' == 'position'}">
+				<param name="ctrl_mode">2</param>
+			</xacro:if>
 
-        <xacro:unless value="${'$(arg ctrl_mode)' == 'position'}">
-          <xacro:if value="${'$(arg ctrl_mode)' == 'joint_imp'}">
-            <param name="ctrl_mode">3</param>
-          </xacro:if>
-          <xacro:unless value="${'$(arg ctrl_mode)' == 'joint_imp'}">
-            <param name="ctrl_mode">4</param>
-          </xacro:unless>
-        </xacro:unless>
+			<xacro:unless value="${'$(arg ctrl_mode)' == 'position'}">
+				<xacro:if value="${'$(arg ctrl_mode)' == 'joint_imp'}">
+					<param name="ctrl_mode">3</param>
+				</xacro:if>
+				<xacro:unless value="${'$(arg ctrl_mode)' == 'joint_imp'}">
+					<param name="ctrl_mode">4</param>
+				</xacro:unless>
+			</xacro:unless>
 		</hardware>
 
-		<xacro:if value="${'$(arg type)' == 'dual'}">
+		<xacro:if value="${'$(arg type)' == 'dual' or '$(arg type)' == 'dual_ag2f90'}">
 			<xacro:m6_interfaces name="left"/>
 			<xacro:m6_interfaces name="right"/>
+			<xacro:if value="${'$(arg type)' == 'dual_ag2f90'}">
+				<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
+				<xacro:ag2f90c_interfaces name="left"/>
+				<xacro:ag2f90c_interfaces name="right"/>
+			</xacro:if>
 		</xacro:if>
 
-		<xacro:unless value="${'$(arg type)' == 'dual'}">
+		<xacro:unless value="${'$(arg type)' == 'dual' or '$(arg type)' == 'dual_ag2f90'}">
 
 			<xacro:if value="${'$(arg type)' == 'usb-90c'}">
 				<xacro:m6_interfaces name="left"/>
