@@ -46,6 +46,19 @@
 					</xacro:if>
 				</xacro:unless>
 			</xacro:if>
+
+       <xacro:if value="${'$(arg ctrl_mode)' == 'position'}">
+          <param name="ctrl_mode">2</param>
+        </xacro:if>
+
+        <xacro:unless value="${'$(arg ctrl_mode)' == 'position'}">
+          <xacro:if value="${'$(arg ctrl_mode)' == 'joint_imp'}">
+            <param name="ctrl_mode">3</param>
+          </xacro:if>
+          <xacro:unless value="${'$(arg ctrl_mode)' == 'joint_imp'}">
+            <param name="ctrl_mode">4</param>
+          </xacro:unless>
+        </xacro:unless>
 		</hardware>
 
 		<xacro:if value="${'$(arg type)' == 'dual'}">
