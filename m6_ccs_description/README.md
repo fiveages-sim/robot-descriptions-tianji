@@ -46,10 +46,15 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
 
 ### 2.3 Arm configuration for humannoid
 
-* Dual Arm with AG2F90
+* Dual Arm with ChangingTek AG2F90
   ```bash
   source ~/ros2_ws/install/setup.bash
   ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual_ag2f90 collider:=simple
+  ```
+* Dual Arm with Jodell RG75
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual_rg75 collider:=simple
   ```
 
 ## 3. OCS2 Demo
@@ -85,10 +90,14 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
   source ~/ros2_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual
   ```
+* Mock Component With End Effector
   ```bash
-  # Dual Arm
   source ~/ros2_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_ag2f90
+  ```
+    ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_rg75
   ```
 ### 3.3 USB HIL task
 

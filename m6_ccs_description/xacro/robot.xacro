@@ -62,6 +62,23 @@
 				<origin xyz="0 -0.0995 0" rpy=" ${PI/2} 0 0"/>
 			</joint>
 		</xacro:if>
+		<xacro:if value="${'$(arg type)' == 'dual_rg75'}">
+			<xacro:include filename="$(find jodell_description)/xacro/RG75-300.xacro"/>
+			<xacro:RG75-300 name="left" use_flange="true"/>
+			<xacro:RG75-300 name="right" use_flange="true"/>
+
+			<joint name="left_gripper_base_joint" type="fixed">
+				<origin xyz="0 0 -0.0045" rpy="${PI/2} 0 0"/>
+				<parent link="left_tcp"/>
+				<child link="left_flange"/>
+			</joint>
+
+			<joint name="right_gripper_base_joint" type="fixed">
+				<origin xyz="0 0 -0.0045" rpy="${PI/2} 0 0"/>
+				<parent link="right_tcp"/>
+				<child link="right_flange"/>
+			</joint>
+		</xacro:if>
 	</xacro:if>
 
 	<xacro:if value="${'$(arg type)' == 'dual_desktop'}">
