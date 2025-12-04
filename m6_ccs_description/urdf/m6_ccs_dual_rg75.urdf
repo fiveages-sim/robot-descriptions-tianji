@@ -744,12 +744,12 @@
     <origin xyz="0 0 0.22"/>
   </joint>
   <joint name="left_gripper_base_joint" type="fixed">
-    <origin rpy="1.5707963267948966 0 0" xyz="0 0 -0.0045"/>
+    <origin rpy="-1.5707963267948966 0 3.141592653589793"/>
     <parent link="left_tcp"/>
     <child link="left_flange"/>
   </joint>
   <joint name="right_gripper_base_joint" type="fixed">
-    <origin rpy="1.5707963267948966 0 0" xyz="0 0 -0.0045"/>
+    <origin rpy="1.5707963267948966 0 0"/>
     <parent link="right_tcp"/>
     <child link="right_flange"/>
   </joint>
