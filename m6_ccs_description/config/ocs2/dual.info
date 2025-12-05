@@ -208,15 +208,15 @@ endEffector
   dualArmMode      true
   leftArm
     {
-      muPosition      10.0
-      muOrientation    5.0
+      muPosition      100.0
+      muOrientation    10.0
     }
 
     ; 右臂特定配置
   rightArm
     {
-      muPosition      10.0
-      muOrientation    5.0
+      muPosition      100.0
+      muOrientation    10.0
     }
 }
 
@@ -225,15 +225,15 @@ finalEndEffector
   dualArmMode      true
   leftArm
     {
-      muPosition      10.0
-      muOrientation    5.0
+      muPosition      100.0
+      muOrientation    10.0
     }
 
     ; 右臂特定配置
   rightArm
     {
-      muPosition      10.0
-      muOrientation    5.0
+      muPosition      100.0
+      muOrientation    10.0
     }
 }
 selfCollision
@@ -255,6 +255,8 @@ selfCollision
       [3] "arm_base, right_link4",
       [4] "arm_base, right_link5",
       [5] "arm_base, right_link7",
+      [6] "arm_base, right_link3",
+      [7] "arm_base, left_link3",
   }
 
   ; minimum distance allowed between the pairs
