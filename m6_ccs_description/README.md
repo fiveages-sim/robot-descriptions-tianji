@@ -14,35 +14,35 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
 ### 2.1 Basic Arm Configuration
 
 * Left Arm
-    ```bash
-    source ~/ros2_ws/install/setup.bash
-    ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs
-    ```
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs
+  ```
   ![Marvin M6 CCS](../.images/m6_ccs.png)
 * Right Arm
-    ```bash
-    source ~/ros2_ws/install/setup.bash
-    ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=right
-    ```
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=right
+  ```
 
 * Dual Arm
-    ```bash
-    source ~/ros2_ws/install/setup.bash
-    ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual collider:=simple
-    ```
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual collider:=simple
+  ```
 
 ### 2.2 Arm Configuration for scene
 
 * USB HIL task with AG2F90-C Gripper
-    ```bash
-    source ~/ros2_ws/install/setup.bash
-    ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=usb-90c
-    ```
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=usb-90c
+  ```
 * Dual Arm on Desktop
-    ```bash
-    source ~/ros2_ws/install/setup.bash
-    ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual_desktop
-    ```
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual_desktop
+  ```
 
 ### 2.3 Arm configuration for humannoid
 
@@ -95,10 +95,11 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
   source ~/ros2_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_ag2f90
   ```
-    ```bash
+  ```bash
   source ~/ros2_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_rg75
   ```
+
 ### 3.3 USB HIL task
 
 #### 3.3.1 Simulation
@@ -109,9 +110,9 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
   source ~/ros2_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=usb-90c
   ```
-  
 
 ## 4. Real Robot Deploy
+
 * 左臂
   ```bash
   source ~/ros2_ws/install/setup.bash

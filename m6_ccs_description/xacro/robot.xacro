@@ -50,16 +50,16 @@
 			<xacro:include filename="$(find changingtek_description)/xacro/AG2F90-C.xacro"/>
 			<xacro:AG2F90-C name="left" use_flange="true"/>
 			<joint name="left_gripper_fix" type="fixed">
-				<parent link="left_link7"/>
+				<parent link="left_tcp"/>
 				<child link="left_flange"/>
-				<origin xyz="0 -0.0995 0" rpy=" ${PI/2} 0 0"/>
+				<origin xyz="0 0 0.0045"/>
 			</joint>
 
 			<xacro:AG2F90-C name="right" use_flange="true"/>
 			<joint name="right_gripper_fix" type="fixed">
-				<parent link="right_link7"/>
+				<parent link="right_tcp"/>
 				<child link="right_flange"/>
-				<origin xyz="0 -0.0995 0" rpy=" ${PI/2} 0 0"/>
+				<origin xyz="0 0 0.0045"/>
 			</joint>
 		</xacro:if>
 
@@ -69,13 +69,11 @@
 			<xacro:RG75-300 name="right" use_flange="true"/>
 
 			<joint name="left_gripper_base_joint" type="fixed">
-				<origin rpy="${-PI/2} 0 ${PI}"/>
 				<parent link="left_tcp"/>
 				<child link="left_flange"/>
 			</joint>
 
 			<joint name="right_gripper_base_joint" type="fixed">
-				<origin rpy="${PI/2} 0 0"/>
 				<parent link="right_tcp"/>
 				<child link="right_flange"/>
 			</joint>

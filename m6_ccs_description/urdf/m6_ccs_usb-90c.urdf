@@ -246,7 +246,7 @@
   </joint>
   <link name="left_tcp"/>
   <joint name="left_tcp_joint" type="fixed">
-    <origin rpy="0 0 0" xyz="0 -0.095296 0"/>
+    <origin rpy="1.5707963267948966 -1.5707963267948966 0" xyz="0 -0.095 0"/>
     <parent link="left_link7"/>
     <child link="left_tcp"/>
   </joint>
@@ -536,6 +536,6 @@
   <joint name="gripper_fix" type="fixed">
     <parent link="left_link7"/>
     <child link="flange"/>
-    <origin rpy=" 1.5707963267948966 0 0" xyz="0 -0.0995 0"/>
+    <origin rpy="1.5707963267948966 0 0" xyz="0 -0.0995 0"/>
   </joint>
 </robot>
