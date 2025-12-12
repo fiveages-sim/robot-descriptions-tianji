@@ -2,6 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="AR5">
 	<xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
 	<xacro:arg name="ctrl_mode" default="position"/>
+	<xacro:arg name="type" default="left"/>
 
 	<link name="world"/>
 
@@ -11,6 +12,7 @@
 		<origin/>
 	</joint>
 
+	<!-- Include robot.xacro，它会解析 type 并设置 selected_arm_config 和 selected_gripper_type -->
 	<xacro:include filename="$(find m6_ccs_description)/xacro/robot.xacro"/>
 	<xacro:include filename="$(find m6_ccs_description)/xacro/ros2_control/interfaces.xacro"/>
 
@@ -31,64 +33,45 @@
 			</xacro:if>
 			<xacro:if value="${'$(arg ros2_control_hardware_type)' == 'real'}">
 				<plugin>marvin_ros2_control/MarvinHardware</plugin>
-
-				<xacro:if value="${'$(arg type)' == 'dual' or '$(arg type)' == 'dual_ag2f90' or '$(arg type)' == 'dual_rg75'}">
-					<param name="left_right_arm">2</param>
-				</xacro:if>
-				<xacro:unless value="${'$(arg type)' == 'dual'}">
-					<xacro:if value="${'$(arg type)' == 'left'}">
-						<param name="left_right_arm">0</param>
-					</xacro:if>
-					<xacro:if value="${'$(arg type)' == 'usb-90c'}">
-						<param name="left_right_arm">0</param>
-					</xacro:if>
-					<xacro:if value="${'$(arg type)' == 'right'}">
-						<param name="left_right_arm">1</param>
-					</xacro:if>
-				</xacro:unless>
+				<param name="arm_type">${selected_arm_config}</param>
+				<param name="ctrl_mode">position</param>
+				<param name="gripper_type">${selected_gripper_type}</param>
+				<param name="max_velocity">40</param>
+				<param name="max_acceleration">10</param>
 			</xacro:if>
-
-			<xacro:if value="${'$(arg ctrl_mode)' == 'position'}">
-				<param name="ctrl_mode">2</param>
-			</xacro:if>
-
-			<xacro:unless value="${'$(arg ctrl_mode)' == 'position'}">
-				<xacro:if value="${'$(arg ctrl_mode)' == 'joint_imp'}">
-					<param name="ctrl_mode">3</param>
-				</xacro:if>
-				<xacro:unless value="${'$(arg ctrl_mode)' == 'joint_imp'}">
-					<param name="ctrl_mode">4</param>
-				</xacro:unless>
-			</xacro:unless>
 		</hardware>
 
-		<xacro:if value="${'$(arg type)' == 'dual' or '$(arg type)' == 'dual_ag2f90'  or '$(arg type)' == 'dual_rg75'}">
+		<!-- 使用 robot.xacro 中已解析的属性 -->
+		<!-- 双臂配置 -->
+		<xacro:if value="${selected_arm_config == 'dual'}">
 			<xacro:m6_interfaces name="left"/>
 			<xacro:m6_interfaces name="right"/>
-			<xacro:if value="${'$(arg type)' == 'dual_ag2f90'}">
+			
+			<xacro:if value="${selected_gripper_type == 'ag2f90'}">
 				<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
 				<xacro:ag2f90c_interfaces name="left"/>
 				<xacro:ag2f90c_interfaces name="right"/>
 			</xacro:if>
 
-			<xacro:if value="${'$(arg type)' == 'dual_rg75'}">
+			<xacro:if value="${selected_gripper_type == 'rg75'}">
 				<xacro:include filename="$(find jodell_description)/xacro/ros2_control/RG75-300.xacro"/>
 				<xacro:rg75_interfaces name="left"/>
 				<xacro:rg75_interfaces name="right"/>
 			</xacro:if>
 		</xacro:if>
 
-		<xacro:unless value="${'$(arg type)' == 'dual' or '$(arg type)' == 'dual_ag2f90'  or '$(arg type)' == 'dual_rg75'}">
-
-			<xacro:if value="${'$(arg type)' == 'usb-90c'}">
-				<xacro:m6_interfaces name="left"/>
-				<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
-				<xacro:ag2f90c_interfaces name=""/>
-			</xacro:if>
-
-			<xacro:unless value="${'$(arg type)' == 'usb-90c'}">
+		<!-- 单臂配置 -->
+		<xacro:unless value="${selected_arm_config == 'dual'}">
+			<xacro:if value="${selected_arm_config == 'left'}">
 				<xacro:m6_interfaces name=""/>
-			</xacro:unless>
+				<xacro:if value="${selected_gripper_type == 'ag2f90'}">
+					<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
+					<xacro:ag2f90c_interfaces name=""/>
+				</xacro:if>
+			</xacro:if>
+			<xacro:if value="${selected_arm_config == 'right'}">
+				<xacro:m6_interfaces name=""/>
+			</xacro:if>
 		</xacro:unless>
 
 	</ros2_control>
@@ -98,10 +81,10 @@
 	<xacro:if value="$(arg gazebo)">
 		<gazebo>
 			<plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-				<xacro:if value="${'$(arg type)' == 'left'}">
+				<xacro:if value="${selected_arm_config == 'left'}">
 					<parameters>$(find rokae_ar5_description)/config/ros2_control/ros2_controllers.yaml</parameters>
 				</xacro:if>
-				<xacro:if value="${'$(arg type)' == 'right'}">
+				<xacro:if value="${selected_arm_config == 'right'}">
 					<parameters>$(find rokae_ar5_description)/config/ros2_control/right.yaml</parameters>
 				</xacro:if>
 			</plugin>

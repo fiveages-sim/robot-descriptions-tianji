@@ -3,50 +3,125 @@
 <robot name="M6_CCS" xmlns:xacro="http://www.ros.org/wiki/xacro">
 	<xacro:arg name="collider" default="convex"/>
 	<xacro:arg name="type" default="left"/>
+	<xacro:arg name="scene" default=""/>
+
+	<!-- 从 type 参数解析出 arm_config、gripper_type 和 scene -->
+	<xacro:property name="type_arg" value="$(arg type)"/>
+
+	<!-- 默认值 -->
+	<xacro:property name="selected_arm_config" value="dual"/>
+	<xacro:property name="selected_gripper_type" value="none"/>
+	<xacro:property name="selected_scene" value=""/>
+
+	<!-- 从 type 解析 arm_config 和 gripper_type -->
+	<!-- 单臂配置 -->
+	<xacro:if value="${type_arg == 'left'}">
+		<xacro:property name="selected_arm_config" value="left"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'right'}">
+		<xacro:property name="selected_arm_config" value="right"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'usb-90c'}">
+		<xacro:property name="selected_arm_config" value="left"/>
+		<xacro:property name="selected_gripper_type" value="ag2f90"/>
+		<xacro:property name="selected_scene" value="usb-90c"/>
+	</xacro:if>
+	<!-- 双臂配置 -->
+	<xacro:if value="${type_arg == 'dual_ag2f90'}">
+		<xacro:property name="selected_gripper_type" value="ag2f90"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'dual_rg75'}">
+		<xacro:property name="selected_gripper_type" value="rg75"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'dual_desktop'}">
+		<xacro:property name="selected_scene" value="desktop"/>
+	</xacro:if>
+
 
 	<xacro:include filename="$(find m6_ccs_description)/xacro/arm.xacro"/>
 
-	<xacro:if value="${'$(arg type)' == 'left'}">
+	<!-- 单左臂（不包括 usb-90c 场景） -->
+	<xacro:if value="${selected_arm_config == 'left' and selected_scene != 'usb-90c'}">
 		<xacro:M6_CCS collider="$(arg collider)"/>
 	</xacro:if>
-	<xacro:if value="${'$(arg type)' == 'right'}">
+
+	<!-- 单右臂 -->
+	<xacro:if value="${selected_arm_config == 'right'}">
 		<xacro:M6_CCS direction="-1" collider="$(arg collider)"/>
 	</xacro:if>
 
-	<xacro:if value="${'$(arg type)' == 'dual' or '$(arg type)' == 'dual_ag2f90' or '$(arg type)' == 'dual_rg75'}">
-		<link name="base_link"/>
-		<link name="arm_base">
-			<collision>
-				<origin xyz="0.0091 0 -0.2"/>
-				<geometry>
-					<box size="0.2000 0.32 0.5029"/>
-				</geometry>
-			</collision>
-		</link>
+	<!-- 双臂配置 -->
+	<xacro:if value="${selected_arm_config == 'dual'}">
+		<!-- Base link 和 arm_base 根据 scene 设置 -->
+		<xacro:if value="${selected_scene == 'desktop'}">
+			<!-- Desktop 场景：base_link 有视觉和碰撞，没有 arm_base -->
+			<link name="base_link">
+				<visual>
+					<geometry>
+						<mesh filename="file://$(find m6_ccs_description)/meshes/dual_base.obj"/>
+					</geometry>
+				</visual>
+				<collision>
+					<origin xyz="0 0 0.324331"/>
+					<geometry>
+						<box size="0.10045 0.100398 0.648662"/>
+					</geometry>
+				</collision>
+			</link>
 
-		<joint name="arm_base_joint" type="fixed">
-			<parent link="base_link"/>
-			<child link="arm_base"/>
-		</joint>
+			<!-- Left Arm -->
+			<joint name="left_arm_base_joint" type="fixed">
+				<parent link="base_link"/>
+				<child link="left_base_link"/>
+				<origin rpy="-${PI/2} 0 0" xyz="0.0 0.12 0.701"/>
+			</joint>
 
-		<!-- Left Arm -->
-		<joint name="left_arm_base_joint" type="fixed">
-			<parent link="arm_base"/>
-			<child link="left_base_link"/>
-			<origin rpy="-${PI/2} 0 0" xyz="0.0 0.062 0"/>
-		</joint>
+			<!-- Right Arm -->
+			<joint name="right_arm_base_joint" type="fixed">
+				<parent link="base_link"/>
+				<child link="right_base_link"/>
+				<origin rpy="${PI/2} 0 0" xyz="0.0 -0.12 0.701"/>
+			</joint>
+		</xacro:if>
 
-		<!-- Right Arm -->
-		<joint name="right_arm_base_joint" type="fixed">
-			<parent link="arm_base"/>
-			<child link="right_base_link"/>
-			<origin rpy="${PI/2} 0 0" xyz="0 -0.062 0"/>
-		</joint>
+		<xacro:unless value="${selected_scene == 'desktop'}">
+			<!-- 非 Desktop 场景：base_link 为空，有 arm_base -->
+			<link name="base_link"/>
+			<link name="arm_base">
+				<collision>
+					<origin xyz="0.0091 0 -0.2"/>
+					<geometry>
+						<box size="0.2000 0.32 0.5029"/>
+					</geometry>
+				</collision>
+			</link>
 
+			<joint name="arm_base_joint" type="fixed">
+				<parent link="base_link"/>
+				<child link="arm_base"/>
+			</joint>
+
+			<!-- Left Arm -->
+			<joint name="left_arm_base_joint" type="fixed">
+				<parent link="arm_base"/>
+				<child link="left_base_link"/>
+				<origin rpy="-${PI/2} 0 0" xyz="0.0 0.062 0"/>
+			</joint>
+
+			<!-- Right Arm -->
+			<joint name="right_arm_base_joint" type="fixed">
+				<parent link="arm_base"/>
+				<child link="right_base_link"/>
+				<origin rpy="${PI/2} 0 0" xyz="0 -0.062 0"/>
+			</joint>
+		</xacro:unless>
+
+		<!-- 双臂和末端执行器（两种场景共用） -->
 		<xacro:M6_CCS name="left" collider="$(arg collider)"/>
 		<xacro:M6_CCS name="right" direction="-1" collider="$(arg collider)"/>
 
-		<xacro:if value="${'$(arg type)' == 'dual_ag2f90'}">
+		<!-- 双臂末端执行器 -->
+		<xacro:if value="${selected_gripper_type == 'ag2f90'}">
 			<xacro:include filename="$(find changingtek_description)/xacro/AG2F90-C.xacro"/>
 			<xacro:AG2F90-C name="left" use_flange="true"/>
 			<joint name="left_gripper_fix" type="fixed">
@@ -63,7 +138,7 @@
 			</joint>
 		</xacro:if>
 
-		<xacro:if value="${'$(arg type)' == 'dual_rg75'}">
+		<xacro:if value="${selected_gripper_type == 'rg75'}">
 			<xacro:include filename="$(find jodell_description)/xacro/RG75-300.xacro"/>
 			<xacro:RG75-300 name="left" use_flange="true"/>
 			<xacro:RG75-300 name="right" use_flange="true"/>
@@ -80,40 +155,8 @@
 		</xacro:if>
 	</xacro:if>
 
-	<xacro:if value="${'$(arg type)' == 'dual_desktop'}">
-		<link name="base_link">
-			<visual>
-				<geometry>
-					<mesh filename="file://$(find m6_ccs_description)/meshes/dual_base.obj"/>
-				</geometry>
-			</visual>
-			<collision>
-				<origin xyz="0 0 0.324331"/>
-				<geometry>
-					<box size="0.10045 0.100398 0.648662"/>
-				</geometry>
-			</collision>
-		</link>
-
-		<!-- Left Arm -->
-		<joint name="left_arm_base_joint" type="fixed">
-			<parent link="base_link"/>
-			<child link="left_base_link"/>
-			<origin rpy="-${PI/2} 0 0" xyz="0.0 0.12 0.701"/>
-		</joint>
-
-		<!-- Right Arm -->
-		<joint name="right_arm_base_joint" type="fixed">
-			<parent link="base_link"/>
-			<child link="right_base_link"/>
-			<origin rpy="${PI/2} 0 0" xyz="0.0 -0.12 0.701"/>
-		</joint>
-
-		<xacro:M6_CCS name="left" collider="$(arg collider)"/>
-		<xacro:M6_CCS name="right" direction="-1" collider="$(arg collider)"/>
-	</xacro:if>
-
-	<xacro:if value="${'$(arg type)' == 'usb-90c'}">
+	<!-- USB-90C 配置 -->
+	<xacro:if value="${selected_arm_config == 'left' and selected_scene == 'usb-90c'}">
 		<link name="base_link"/>
 		<!-- Left Arm -->
 		<joint name="base_joint" type="fixed">
@@ -145,12 +188,15 @@
 
 		<xacro:M6_CCS name="left" collider="$(arg collider)"/>
 
-		<xacro:include filename="$(find changingtek_description)/xacro/AG2F90-C.xacro"/>
-		<xacro:AG2F90-C name="" use_flange="true"/>
-		<joint name="gripper_fix" type="fixed">
-			<parent link="left_link7"/>
-			<child link="flange"/>
-			<origin xyz="0 -0.0995 0" rpy=" ${PI/2} 0 0"/>
-		</joint>
+		<!-- USB-90C 默认使用 AG2F90 末端 -->
+		<xacro:if value="${selected_gripper_type == 'ag2f90' or selected_gripper_type == 'none'}">
+			<xacro:include filename="$(find changingtek_description)/xacro/AG2F90-C.xacro"/>
+			<xacro:AG2F90-C name="" use_flange="true"/>
+			<joint name="gripper_fix" type="fixed">
+				<parent link="left_link7"/>
+				<child link="flange"/>
+				<origin xyz="0 -0.0995 0" rpy=" ${PI/2} 0 0"/>
+			</joint>
+		</xacro:if>
 	</xacro:if>
 </robot>

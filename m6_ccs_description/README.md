@@ -113,17 +113,35 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
 
 ## 4. Real Robot Deploy
 
-* 左臂
+### 4.1 Build Hardware Interfaces
+
+```bash
+cd ~/ros2_ws
+colcon build --packages-up-to marvin_ros2_control --symlink-install
+```
+
+### 4.2 Launch Control
+
+#### 4.2.1 Launch without Gripper
+* Left Arm
   ```bash
   source ~/ros2_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real
   ```
-* 右臂
+* Right Arm
   ```bash
   source ~/ros2_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=right
   ```
-* 双臂
+* Dual Arm
   ```bash
   source ~/ros2_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=dual
+  ```
+
+#### 4.2.2 With ChangingTek AG2F90 Gripper
+* Dual Arm
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=dual_ag2f90
+  ```
