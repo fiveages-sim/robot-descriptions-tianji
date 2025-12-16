@@ -68,6 +68,10 @@
 					<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
 					<xacro:ag2f90c_interfaces name=""/>
 				</xacro:if>
+				<xacro:if value="${selected_gripper_type == 'rg75'}">
+					<xacro:include filename="$(find jodell_description)/xacro/ros2_control/RG75-300.xacro"/>
+					<xacro:rg75_interfaces name=""/>
+				</xacro:if>
 			</xacro:if>
 			<xacro:if value="${selected_arm_config == 'right'}">
 				<xacro:m6_interfaces name=""/>

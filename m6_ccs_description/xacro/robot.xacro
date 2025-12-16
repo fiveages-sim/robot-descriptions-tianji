@@ -18,6 +18,10 @@
 	<xacro:if value="${type_arg == 'left'}">
 		<xacro:property name="selected_arm_config" value="left"/>
 	</xacro:if>
+	<xacro:if value="${type_arg == 'rg75'}">
+		<xacro:property name="selected_arm_config" value="left"/>
+		<xacro:property name="selected_gripper_type" value="rg75"/>
+	</xacro:if>
 	<xacro:if value="${type_arg == 'right'}">
 		<xacro:property name="selected_arm_config" value="right"/>
 	</xacro:if>
@@ -43,6 +47,14 @@
 	<!-- 单左臂（不包括 usb-90c 场景） -->
 	<xacro:if value="${selected_arm_config == 'left' and selected_scene != 'usb-90c'}">
 		<xacro:M6_CCS collider="$(arg collider)"/>
+		<xacro:if value="${selected_gripper_type == 'rg75'}">
+			<xacro:include filename="$(find jodell_description)/xacro/RG75-300.xacro"/>
+			<xacro:RG75-300 name="" use_flange="true"/>
+			<joint name="gripper_base_joint" type="fixed">
+				<parent link="tcp"/>
+				<child link="flange"/>
+			</joint>
+		</xacro:if>
 	</xacro:if>
 
 	<!-- 单右臂 -->

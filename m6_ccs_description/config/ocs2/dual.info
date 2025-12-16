@@ -323,20 +323,20 @@ jointVelocityLimits
     ; velocity limits for the arm DOFs
     arm
     {
-      (0,0)  -0.27     ; left_arm_1 [rad/s]
-      (1,0)  -0.27     ; left_arm_2 [rad/s]
-      (2,0)  -0.27     ; left_arm_3 [rad/s]
-      (3,0)  -0.27     ; left_arm_4 [rad/s]
-      (4,0)  -0.27     ; left_arm_5 [rad/s]
-      (5,0)  -0.27     ; left_arm_6 [rad/s]
-      (6,0)  -0.27     ; left_arm_7 [rad/s]
-      (7,0)  -0.27     ; right_arm_1 [rad/s]
-      (8,0)  -0.27     ; right_arm_2 [rad/s]
-      (9,0)  -0.27     ; right_arm_3 [rad/s]
-      (10,0) -0.27     ; right_arm_4 [rad/s]
-      (11,0) -0.27     ; right_arm_5 [rad/s]
-      (12,0) -0.27     ; right_arm_6 [rad/s]
-      (13,0) -0.27     ; right_arm_7 [rad/s]
+      (0,0)  -0.57     ; left_arm_1 [rad/s]
+      (1,0)  -0.57     ; left_arm_2 [rad/s]
+      (2,0)  -0.57     ; left_arm_3 [rad/s]
+      (3,0)  -0.57     ; left_arm_4 [rad/s]
+      (4,0)  -0.57     ; left_arm_5 [rad/s]
+      (5,0)  -0.57     ; left_arm_6 [rad/s]
+      (6,0)  -0.57     ; left_arm_7 [rad/s]
+      (7,0)  -0.57     ; right_arm_1 [rad/s]
+      (8,0)  -0.57     ; right_arm_2 [rad/s]
+      (9,0)  -0.57     ; right_arm_3 [rad/s]
+      (10,0) -0.57     ; right_arm_4 [rad/s]
+      (11,0) -0.57     ; right_arm_5 [rad/s]
+      (12,0) -0.57     ; right_arm_6 [rad/s]
+      (13,0) -0.57     ; right_arm_7 [rad/s]
     }
   }
 
@@ -373,20 +373,20 @@ jointVelocityLimits
     ; velocity limits for the arm DOFs
     arm
     {
-      (0,0)  0.27      ; left_arm_1 [rad/s]
-      (1,0)  0.27      ; left_arm_2 [rad/s]
-      (2,0)  0.27      ; left_arm_3 [rad/s]
-      (3,0)  0.27      ; left_arm_4 [rad/s]
-      (4,0)  0.27      ; left_arm_5 [rad/s]
-      (5,0)  0.27      ; left_arm_6 [rad/s]
-      (6,0)  0.27      ; left_arm_7 [rad/s]
-      (7,0)  0.27      ; right_arm_1 [rad/s]
-      (8,0)  0.27      ; right_arm_2 [rad/s]
-      (9,0)  0.27      ; right_arm_3 [rad/s]
-      (10,0) 0.27      ; right_arm_4 [rad/s]
-      (11,0) 0.27      ; right_arm_5 [rad/s]
-      (12,0) 0.27      ; right_arm_6 [rad/s]
-      (13,0) 0.27      ; right_arm_7 [rad/s]
+      (0,0)  0.57      ; left_arm_1 [rad/s]
+      (1,0)  0.57      ; left_arm_2 [rad/s]
+      (2,0)  0.57      ; left_arm_3 [rad/s]
+      (3,0)  0.57      ; left_arm_4 [rad/s]
+      (4,0)  0.57      ; left_arm_5 [rad/s]
+      (5,0)  0.57      ; left_arm_6 [rad/s]
+      (6,0)  0.57      ; left_arm_7 [rad/s]
+      (7,0)  0.57      ; right_arm_1 [rad/s]
+      (8,0)  0.57      ; right_arm_2 [rad/s]
+      (9,0)  0.57      ; right_arm_3 [rad/s]
+      (10,0) 0.57      ; right_arm_4 [rad/s]
+      (11,0) 0.57      ; right_arm_5 [rad/s]
+      (12,0) 0.57      ; right_arm_6 [rad/s]
+      (13,0) 0.57      ; right_arm_7 [rad/s]
     }
   }
 }
