@@ -180,9 +180,9 @@ inputCost
       (1,1)  2.0  ; arm_2 velocity
       (2,2)  2.0  ; arm_3 velocity
       (3,3)  2.0  ; arm_4 velocity
-      (4,4)  2.0  ; arm_5 velocity
-      (5,5)  2.0  ; arm_6 velocity
-      (6,6)  2.0  ; arm_7 velocity
+      (4,4)  1.0  ; arm_5 velocity
+      (5,5)  1.0  ; arm_6 velocity
+      (6,6)  1.0  ; arm_7 velocity
     }
   }
 }
@@ -190,14 +190,14 @@ inputCost
 endEffector
 {
   ; end effector quadratic penalty scaling
-  muPosition      5.0
-  muOrientation    2.5
+  muPosition      10.0
+  muOrientation    5
 }
 
 finalEndEffector
 {
-  muPosition      5.0
-  muOrientation    2.5
+  muPosition      20.0
+  muOrientation    10
 }
 
 selfCollision
@@ -284,13 +284,13 @@ jointVelocityLimits
     ; velocity limits for the arm DOFs
     arm
     {
-      (0,0)  -1.57     ; arm_1 [rad/s]
-      (1,0)  -1.57	   ; arm_2 [rad/s]
-      (2,0)  -1.57	   ; arm_3 [rad/s]
-      (3,0)  -1.57	   ; arm_4 [rad/s]
-      (4,0)  -1.57	   ; arm_5 [rad/s]
-      (5,0)  -1.57	   ; arm_6 [rad/s]
-      (6,0)  -1.57	   ; arm_7 [rad/s]
+      (0,0)  -0.657     ; arm_1 [rad/s]
+      (1,0)  -0.657	   ; arm_2 [rad/s]
+      (2,0)  -0.657	   ; arm_3 [rad/s]
+      (3,0)  -0.657	   ; arm_4 [rad/s]
+      (4,0)  -0.657	   ; arm_5 [rad/s]
+      (5,0)  -0.657	   ; arm_6 [rad/s]
+      (6,0)  -0.657	   ; arm_7 [rad/s]
     }
   }
 
@@ -327,13 +327,13 @@ jointVelocityLimits
     ; velocity limits for the arm DOFs
     arm
     {
-      (0,0)  1.57      ; arm_1 [rad/s]
-      (1,0)  1.57	   ; arm_2 [rad/s]
-      (2,0)  1.57	   ; arm_3 [rad/s]
-      (3,0)  1.57	   ; arm_4 [rad/s]
-      (4,0)  1.57	   ; arm_5 [rad/s]
-      (5,0)  1.57	   ; arm_6 [rad/s]
-      (6,0)  1.57	   ; arm_7 [rad/s]
+      (0,0)  0.657      ; arm_1 [rad/s]
+      (1,0)  0.657	   ; arm_2 [rad/s]
+      (2,0)  0.657	   ; arm_3 [rad/s]
+      (3,0)  0.657	   ; arm_4 [rad/s]
+      (4,0)  0.657	   ; arm_5 [rad/s]
+      (5,0)  0.657	   ; arm_6 [rad/s]
+      (6,0)  0.657	   ; arm_7 [rad/s]
     }
   }
 }
