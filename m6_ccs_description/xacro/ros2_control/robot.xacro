@@ -63,7 +63,12 @@
 		<!-- 单臂配置 -->
 		<xacro:unless value="${selected_arm_config == 'dual'}">
 			<xacro:if value="${selected_arm_config == 'left'}">
-				<xacro:m6_interfaces name=""/>
+				<xacro:if value="${selected_scene == 'usb-90c'}">
+					<xacro:m6_interfaces name="left"/>
+				</xacro:if>
+				<xacro:unless value="${selected_scene == 'usb-90c'}">
+					<xacro:m6_interfaces name=""/>
+				</xacro:unless>
 				<xacro:if value="${selected_gripper_type == 'ag2f90c'}">
 					<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
 					<xacro:ag2f90c_interfaces name=""/>
