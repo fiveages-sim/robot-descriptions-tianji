@@ -208,15 +208,15 @@ endEffector
   dualArmMode      true
   leftArm
     {
-      muPosition      50.0
-      muOrientation    30.0
+      muPosition      10.0
+      muOrientation    5.0
     }
 
     ; 右臂特定配置
   rightArm
     {
-      muPosition      50.0
-      muOrientation    30.0
+      muPosition      10.0
+      muOrientation    5.0
     }
 }
 
@@ -225,15 +225,15 @@ finalEndEffector
   dualArmMode      true
   leftArm
     {
-      muPosition      100.0
-      muOrientation    30.0
+      muPosition      10.0
+      muOrientation    5.0
     }
 
     ; 右臂特定配置
   rightArm
     {
-      muPosition      100.0
-      muOrientation    30.0
+      muPosition      10.0
+      muOrientation    5.0
     }
 }
 selfCollision
@@ -249,24 +249,22 @@ selfCollision
   ; Self Collision pairs
   collisionLinkPairs
   {
-      [0] "arm_base, left_link4",
-      [1] "arm_base, left_link5",
-      [2] "arm_base, left_link7",
-      [3] "arm_base, right_link4",
-      [4] "arm_base, right_link5",
-      [5] "arm_base, right_link7",
-      [6] "arm_base, right_link3",
-      [7] "arm_base, left_link3",
+      [0] "arm_base, left_link5",
+      [1] "arm_base, left_link7",
+      [2] "arm_base, right_link5",
+      [3] "arm_base, right_link7",
+      [4] "arm_base, right_link3",
+      [5] "arm_base, left_link3",
   }
 
   ; minimum distance allowed between the pairs
-  minimumDistance  0.005
+  minimumDistance  0.05
 
   ; relaxed log barrier mu
   mu      1e-2
 
   ; relaxed log barrier delta
-  delta   1e-5
+  delta   1e-3
 }
 
 ; Only applied for arm joints: limits parsed from URDF
@@ -323,20 +321,20 @@ jointVelocityLimits
     ; velocity limits for the arm DOFs
     arm
     {
-      (0,0)  -0.57     ; left_arm_1 [rad/s]
-      (1,0)  -0.57     ; left_arm_2 [rad/s]
-      (2,0)  -0.57     ; left_arm_3 [rad/s]
-      (3,0)  -0.57     ; left_arm_4 [rad/s]
-      (4,0)  -0.57     ; left_arm_5 [rad/s]
-      (5,0)  -0.57     ; left_arm_6 [rad/s]
-      (6,0)  -0.57     ; left_arm_7 [rad/s]
-      (7,0)  -0.57     ; right_arm_1 [rad/s]
-      (8,0)  -0.57     ; right_arm_2 [rad/s]
-      (9,0)  -0.57     ; right_arm_3 [rad/s]
-      (10,0) -0.57     ; right_arm_4 [rad/s]
-      (11,0) -0.57     ; right_arm_5 [rad/s]
-      (12,0) -0.57     ; right_arm_6 [rad/s]
-      (13,0) -0.57     ; right_arm_7 [rad/s]
+      (0,0)  -1.07     ; left_arm_1 [rad/s]
+      (1,0)  -1.07     ; left_arm_2 [rad/s]
+      (2,0)  -1.07     ; left_arm_3 [rad/s]
+      (3,0)  -1.07     ; left_arm_4 [rad/s]
+      (4,0)  -1.07     ; left_arm_5 [rad/s]
+      (5,0)  -1.07     ; left_arm_6 [rad/s]
+      (6,0)  -1.07     ; left_arm_7 [rad/s]
+      (7,0)  -1.07     ; right_arm_1 [rad/s]
+      (8,0)  -1.07     ; right_arm_2 [rad/s]
+      (9,0)  -1.07     ; right_arm_3 [rad/s]
+      (10,0) -1.07     ; right_arm_4 [rad/s]
+      (11,0) -1.07     ; right_arm_5 [rad/s]
+      (12,0) -1.07     ; right_arm_6 [rad/s]
+      (13,0) -1.07     ; right_arm_7 [rad/s]
     }
   }
 
@@ -373,20 +371,20 @@ jointVelocityLimits
     ; velocity limits for the arm DOFs
     arm
     {
-      (0,0)  0.57      ; left_arm_1 [rad/s]
-      (1,0)  0.57      ; left_arm_2 [rad/s]
-      (2,0)  0.57      ; left_arm_3 [rad/s]
-      (3,0)  0.57      ; left_arm_4 [rad/s]
-      (4,0)  0.57      ; left_arm_5 [rad/s]
-      (5,0)  0.57      ; left_arm_6 [rad/s]
-      (6,0)  0.57      ; left_arm_7 [rad/s]
-      (7,0)  0.57      ; right_arm_1 [rad/s]
-      (8,0)  0.57      ; right_arm_2 [rad/s]
-      (9,0)  0.57      ; right_arm_3 [rad/s]
-      (10,0) 0.57      ; right_arm_4 [rad/s]
-      (11,0) 0.57      ; right_arm_5 [rad/s]
-      (12,0) 0.57      ; right_arm_6 [rad/s]
-      (13,0) 0.57      ; right_arm_7 [rad/s]
+      (0,0)  1.07      ; left_arm_1 [rad/s]
+      (1,0)  1.07      ; left_arm_2 [rad/s]
+      (2,0)  1.07      ; left_arm_3 [rad/s]
+      (3,0)  1.07      ; left_arm_4 [rad/s]
+      (4,0)  1.07      ; left_arm_5 [rad/s]
+      (5,0)  1.07      ; left_arm_6 [rad/s]
+      (6,0)  1.07      ; left_arm_7 [rad/s]
+      (7,0)  1.07      ; right_arm_1 [rad/s]
+      (8,0)  1.07      ; right_arm_2 [rad/s]
+      (9,0)  1.07      ; right_arm_3 [rad/s]
+      (10,0) 1.07      ; right_arm_4 [rad/s]
+      (11,0) 1.07      ; right_arm_5 [rad/s]
+      (12,0) 1.07      ; right_arm_6 [rad/s]
+      (13,0) 1.07      ; right_arm_7 [rad/s]
     }
   }
 }
