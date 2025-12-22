@@ -47,7 +47,7 @@
 			<xacro:m6_interfaces name="left"/>
 			<xacro:m6_interfaces name="right"/>
 			
-			<xacro:if value="${selected_gripper_type == 'ag2f90'}">
+			<xacro:if value="${selected_gripper_type == 'ag2f90c'}">
 				<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
 				<xacro:ag2f90c_interfaces name="left"/>
 				<xacro:ag2f90c_interfaces name="right"/>
@@ -64,7 +64,7 @@
 		<xacro:unless value="${selected_arm_config == 'dual'}">
 			<xacro:if value="${selected_arm_config == 'left'}">
 				<xacro:m6_interfaces name=""/>
-				<xacro:if value="${selected_gripper_type == 'ag2f90'}">
+				<xacro:if value="${selected_gripper_type == 'ag2f90c'}">
 					<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
 					<xacro:ag2f90c_interfaces name=""/>
 				</xacro:if>
