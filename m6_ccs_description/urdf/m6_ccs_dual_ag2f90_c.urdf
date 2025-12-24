@@ -115,12 +115,6 @@
       </geometry>
     </visual>
     <collision>
-      <origin xyz="0 0 -0.098932"/>
-      <geometry>
-        <cylinder length="0.089056" radius="0.046717"/>
-      </geometry>
-    </collision>
-    <collision>
       <origin rpy="1.5707963267948966 0 0" xyz="0.018119 0 0"/>
       <geometry>
         <cylinder length="0.117016" radius="0.049964"/>
@@ -334,12 +328,6 @@
         <mesh filename="package://m6_ccs_description/meshes/link3.obj"/>
       </geometry>
     </visual>
-    <collision>
-      <origin xyz="0 0 -0.098932"/>
-      <geometry>
-        <cylinder length="0.089056" radius="0.046717"/>
-      </geometry>
-    </collision>
     <collision>
       <origin rpy="1.5707963267948966 0 0" xyz="0.018119 0 0"/>
       <geometry>

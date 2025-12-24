@@ -51,10 +51,14 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
 
 ### 2.3 Arm configuration for humannoid
 
-* Dual Arm with ChangingTek AG2F90-C
+* Dual Arm with ChangingTek AG2F90-C or AG2F90-D
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual_ag2f90c collider:=simple
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual_ag2f90_c collider:=simple
+  ```
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual_ag2f90_d collider:=simple
   ```
 * Dual Arm with Jodell RG75
   ```bash
@@ -98,7 +102,11 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
 * Mock Component With End Effector
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_ag2f90c
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_ag2f90_c
+  ```
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_ag2f90_d
   ```
   ```bash
   source ~/ros2_ws/install/setup.bash
@@ -152,5 +160,5 @@ colcon build --packages-up-to marvin_ros2_control --symlink-install
 * Dual Arm
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=dual_ag2f90c
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=dual_ag2f90_c
   ```
