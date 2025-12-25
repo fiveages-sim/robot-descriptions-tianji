@@ -39,7 +39,7 @@
 				<param name="max_joint_acceleration">30</param>
 				<xacro:if value="${selected_scene == 'desktop'}">
 					<param name="device_ip">192.168.10.190</param>
-					<param name="ctrl_mode">JOINT_IMPEDANCE</param>
+					<param name="ctrl_mode">CART_IMPEDANCE</param>
 				</xacro:if>
 				<xacro:if value="${selected_scene == 'usb-90c'}">
 					<param name="device_ip">192.168.10.190</param>
