@@ -133,9 +133,9 @@
 			<link name="base_link"/>
 			<link name="arm_base">
 				<collision>
-					<origin xyz="0.0091 0 -0.2"/>
+					<origin xyz="0.0091 0 -0.25"/>
 					<geometry>
-						<box size="0.2000 0.32 0.5029"/>
+						<box size="0.2000 0.3 0.4029"/>
 					</geometry>
 				</collision>
 			</link>
