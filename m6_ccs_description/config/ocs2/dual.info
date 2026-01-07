@@ -258,7 +258,7 @@ selfCollision
   }
 
   ; minimum distance allowed between the pairs
-  minimumDistance  0.02
+  minimumDistance  0.025
 
   ; relaxed log barrier mu
   mu      1e-3
