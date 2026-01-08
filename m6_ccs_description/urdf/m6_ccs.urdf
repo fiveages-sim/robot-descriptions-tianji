@@ -4,6 +4,7 @@
 <!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED                                 | -->
 <!-- =================================================================================== -->
 <robot name="M6_CCS">
+  <!-- 双臂配置 -->
   <!-- Base Link -->
   <link name="base_link">
     <inertial>
@@ -48,7 +49,7 @@
     <parent link="base_link"/>
     <child link="link1"/>
     <axis xyz="0 0 1"/>
-    <limit effort="108" lower="-3.1067" upper="3.1067" velocity="3.141592653589793"/>
+    <limit effort="108" lower="-3.106686068549907" upper="3.106686068549907" velocity="3.141592653589793"/>
   </joint>
   <!-- Link 2 -->
   <link name="link2">
@@ -75,7 +76,7 @@
     <parent link="link1"/>
     <child link="link2"/>
     <axis xyz="0 0 1"/>
-    <limit effort="108" lower="-2.0944" upper="2.0944" velocity="3.141592653589793"/>
+    <limit effort="108" lower="-2.0594885173533086" upper="2.0594885173533086" velocity="3.141592653589793"/>
   </joint>
   <!-- Link 3 -->
   <link name="link3">
@@ -108,7 +109,7 @@
     <parent link="link2"/>
     <child link="link3"/>
     <axis xyz="0 0 1"/>
-    <limit effort="66" lower="-3.1067" upper="3.1067" velocity="3.141592653589793"/>
+    <limit effort="66" lower="-2.9321531433504737" upper="2.9321531433504737" velocity="3.141592653589793"/>
   </joint>
   <!-- Link 4 -->
   <link name="link4">
@@ -135,7 +136,7 @@
     <parent link="link3"/>
     <child link="link4"/>
     <axis xyz="0 0 1"/>
-    <limit effort="66" lower="-2.5307" upper="1.0472" velocity="3.141592653589793"/>
+    <limit effort="66" lower="-2.4958208303518914" upper="1.0122909661567112" velocity="3.141592653589793"/>
   </joint>
   <!-- Link 5 - Mirrored COM and partial inertia -->
   <link name="link5">
@@ -162,7 +163,7 @@
     <parent link="link4"/>
     <child link="link5"/>
     <axis xyz="0 0 1"/>
-    <limit effort="18" lower="-3.1067" upper="3.1067" velocity="3.141592653589793"/>
+    <limit effort="18" lower="-2.9321531433504737" upper="2.9321531433504737" velocity="3.141592653589793"/>
   </joint>
   <!-- Link 6 - Partially mirrored COM and inertia -->
   <link name="link6">
@@ -177,7 +178,7 @@
       </geometry>
     </visual>
     <collision>
-      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
+      <origin rpy="1.5707963267948966 0 0"/>
       <geometry>
         <cylinder length="0.108046" radius="0.038348"/>
       </geometry>
@@ -189,7 +190,7 @@
     <parent link="link5"/>
     <child link="link6"/>
     <axis xyz="0 0 1"/>
-    <limit effort="18" lower="-1.0472" upper="1.0472" velocity="3.141592653589793"/>
+    <limit effort="18" lower="-1.0122909661567112" upper="1.0122909661567112" velocity="3.141592653589793"/>
   </joint>
   <!-- Link 7 -->
   <link name="link7">
@@ -216,7 +217,7 @@
     <parent link="link6"/>
     <child link="link7"/>
     <axis xyz="0 0 1"/>
-    <limit effort="18" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="3.141592653589793"/>
+    <limit effort="18" lower="-1.361356816555577" upper="1.361356816555577" velocity="3.141592653589793"/>
   </joint>
   <link name="tcp"/>
   <joint name="tcp_joint" type="fixed">
