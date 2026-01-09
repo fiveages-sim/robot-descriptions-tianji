@@ -54,6 +54,17 @@
 		<xacro:property name="selected_scene" value="desktop"/>
 		<xacro:property name="selected_gripper_type" value="ag2f90_c"/>
 	</xacro:if>
+	
+	<!-- LinkerHand dexterous hand configurations -->
+	<xacro:if value="${type_arg == 'dual_o6'}">
+		<xacro:property name="selected_gripper_type" value="linkerhand_o6"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'dual_l6'}">
+		<xacro:property name="selected_gripper_type" value="linkerhand_l6"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'dual_o7'}">
+		<xacro:property name="selected_gripper_type" value="linkerhand_o7"/>
+	</xacro:if>
 
 
 	<xacro:include filename="$(find m6_ccs_description)/xacro/arm.xacro"/>
