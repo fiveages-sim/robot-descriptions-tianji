@@ -10,11 +10,11 @@ controller_manager:
       type: ocs2_arm_controller/Ocs2ArmController
 
     # 左手夹爪控制器
-    left_hand_controller:
+    left_gripper_controller:
       type: adaptive_gripper_controller/AdaptiveGripperController
 
     # 右手夹爪控制器
-    right_hand_controller:
+    right_gripper_controller:
       type: adaptive_gripper_controller/AdaptiveGripperController
 
 ocs2_arm_controller:
@@ -54,13 +54,13 @@ ocs2_arm_controller:
               -0.6442281058130649, -0.8006151719245751, -0.2090513559178685, -1.0929367063902564, 1.3835079398382908, -0.750040162475667, 0.420097305783184 ]
 
 # 左手夹爪控制器配置
-left_hand_controller:
+left_gripper_controller:
   ros__parameters:
     joint: left_gripper_joint
     use_effort_interface: false
 
 # 右手夹爪控制器配置
-right_hand_controller:
+right_gripper_controller:
   ros__parameters:
     joint: right_gripper_joint
     use_effort_interface: false

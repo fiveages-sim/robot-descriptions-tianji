@@ -38,3 +38,18 @@ ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_desktop
 source ~/ros2_ws/install/setup.bash
 ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_desktop_90c
 ```
+
+### 3.2 Isaac Sim
+* Only Dual Arm
+
+```bash
+source ~/ros2_ws/install/setup.bash
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_desktop hardware:=isaac
+```
+
+* Dual Arm with AG2F90C Gripper
+
+```bash
+source ~/ros2_ws/install/setup.bash
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_desktop_90c hardware:=isaac
+```
