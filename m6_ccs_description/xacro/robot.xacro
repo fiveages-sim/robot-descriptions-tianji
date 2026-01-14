@@ -11,6 +11,7 @@
 	<!-- 默认值 -->
 	<xacro:property name="selected_arm_config" value="dual"/>
 	<xacro:property name="selected_gripper_type" value="none"/>
+	<xacro:property name="selected_gripper_pad" value="default"/>
 	<xacro:property name="selected_scene" value=""/>
 
 	<!-- 从 type 解析 arm_config 和 gripper_type -->
@@ -53,6 +54,12 @@
 	<xacro:if value="${type_arg == 'dual_desktop_90c'}">
 		<xacro:property name="selected_scene" value="desktop"/>
 		<xacro:property name="selected_gripper_type" value="ag2f90_c"/>
+	</xacro:if>
+
+	<xacro:if value="${type_arg == 'dual_desktop_90c_soft'}">
+		<xacro:property name="selected_scene" value="desktop"/>
+		<xacro:property name="selected_gripper_type" value="ag2f90_c"/>
+		<xacro:property name="selected_gripper_pad" value="soft"/>
 	</xacro:if>
 
 
@@ -167,14 +174,16 @@
 		<!-- 双臂末端执行器 -->
 		<xacro:if value="${selected_gripper_type == 'ag2f90_c' or selected_gripper_type == 'ag2f90_d'}">
 			<xacro:include filename="$(find changingtek_description)/xacro/AG2F90-C.xacro"/>
-			<xacro:AG2F90-C name="left" use_flange="true"/>
+
+			<xacro:AG2F90-C name="left" use_flange="true" pad="${selected_gripper_pad}"/>
+			<xacro:AG2F90-C name="right" use_flange="true" pad="${selected_gripper_pad}"/>
+
 			<joint name="left_gripper_fix" type="fixed">
 				<parent link="left_tcp"/>
 				<child link="left_flange"/>
 				<origin xyz="0 0 0.0045"/>
 			</joint>
 
-			<xacro:AG2F90-C name="right" use_flange="true"/>
 			<joint name="right_gripper_fix" type="fixed">
 				<parent link="right_tcp"/>
 				<child link="right_flange"/>

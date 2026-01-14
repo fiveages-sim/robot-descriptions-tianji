@@ -22,6 +22,13 @@ source ~/ros2_ws/install/setup.bash
 ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual_desktop_90c collider:=simple
 ```
 
+* Dual Arm with AG2F90C Gripper and Soft Pad
+
+```bash
+source ~/ros2_ws/install/setup.bash
+ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual_desktop_90c_soft collider:=simple
+```
+
 ## 3. OCS2 Arm Controller
 ### 3.1 Mock Components
 
@@ -39,6 +46,13 @@ source ~/ros2_ws/install/setup.bash
 ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_desktop_90c
 ```
 
+* Dual Arm with AG2F90C Gripper and Soft Pad
+
+```bash
+source ~/ros2_ws/install/setup.bash
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_desktop_90c_soft
+```
+
 ### 3.2 Isaac Sim
 * Only Dual Arm
 
@@ -52,4 +66,11 @@ ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_desktop 
 ```bash
 source ~/ros2_ws/install/setup.bash
 ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_desktop_90c hardware:=isaac
+```
+
+* Dual Arm with AG2F90C Gripper and Soft Pad
+
+```bash
+source ~/ros2_ws/install/setup.bash
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_desktop_90c_soft hardware:=isaac
 ```
