@@ -3,6 +3,17 @@
 	<xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
 	<xacro:arg name="ctrl_mode" default="position"/>
 	<xacro:arg name="type" default="left"/>
+	
+	<!-- LinkerHand 质量中心偏移参数 (单位: 米) - 从 hand.xacro 中获取，默认为 0 -->
+	<xacro:arg name="com_offset_o6_x" default="0"/>
+	<xacro:arg name="com_offset_o6_y" default="0"/>
+	<xacro:arg name="com_offset_o6_z" default="0"/>
+	<xacro:arg name="com_offset_l6_x" default="0"/>
+	<xacro:arg name="com_offset_l6_y" default="0"/>
+	<xacro:arg name="com_offset_l6_z" default="0"/>
+	<xacro:arg name="com_offset_o7_x" default="0"/>
+	<xacro:arg name="com_offset_o7_y" default="0"/>
+	<xacro:arg name="com_offset_o7_z" default="0"/>
 
 	<link name="world"/>
 
@@ -37,11 +48,38 @@
 				<param name="gripper_type">${selected_gripper_type}</param>
 				<param name="max_joint_speed">50</param>
 				<param name="max_joint_acceleration">30</param>
+				<!-- Device IP address for network communication (default: 192.168.1.190) -->
+				<xacro:arg name="device_ip" default="192.168.1.190"/>
+				<param name="device_ip">$(arg device_ip)</param>
+				<!-- 如果是手（o6/l6/o7），设置手的质量参数 -->
+				<xacro:if value="${selected_hand_type == 'linkerhand_o6'}">
+					<xacro:include filename="$(find linkerhand_description)/xacro/o6.xacro"/>
+					<param name="left_dyn_param"><xacro:LinkerHandO6_DynParams direction="1" com_offset_x="$(arg com_offset_o6_x)" com_offset_y="$(arg com_offset_o6_y)" com_offset_z="$(arg com_offset_o6_z)"/></param>
+					<param name="right_dyn_param"><xacro:LinkerHandO6_DynParams direction="-1" com_offset_x="$(arg com_offset_o6_x)" com_offset_y="$(arg com_offset_o6_y)" com_offset_z="$(arg com_offset_o6_z)"/></param>
+				</xacro:if>
+				<xacro:if value="${selected_hand_type == 'linkerhand_l6'}">
+					<xacro:include filename="$(find linkerhand_description)/xacro/l6.xacro"/>
+					<param name="left_dyn_param"><xacro:LinkerHandL6_DynParams direction="1" com_offset_x="$(arg com_offset_l6_x)" com_offset_y="$(arg com_offset_l6_y)" com_offset_z="$(arg com_offset_l6_z)"/></param>
+					<param name="right_dyn_param"><xacro:LinkerHandL6_DynParams direction="-1" com_offset_x="$(arg com_offset_l6_x)" com_offset_y="$(arg com_offset_l6_y)" com_offset_z="$(arg com_offset_l6_z)"/></param>
+				</xacro:if>
+				<xacro:if value="${selected_hand_type == 'linkerhand_o7'}">
+					<xacro:include filename="$(find linkerhand_description)/xacro/o7.xacro"/>
+					<param name="left_dyn_param"><xacro:LinkerHandO7_DynParams direction="1" com_offset_x="$(arg com_offset_o7_x)" com_offset_y="$(arg com_offset_o7_y)" com_offset_z="$(arg com_offset_o7_z)"/></param>
+					<param name="right_dyn_param"><xacro:LinkerHandO7_DynParams direction="-1" com_offset_x="$(arg com_offset_o7_x)" com_offset_y="$(arg com_offset_o7_y)" com_offset_z="$(arg com_offset_o7_z)"/></param>
+				</xacro:if>
+				<!-- desktop 场景的 dyn_param（只在不是手的情况下设置） -->
+				<xacro:if value="${selected_scene == 'desktop' and selected_hand_type != 'linkerhand_o6' and selected_hand_type != 'linkerhand_l6' and selected_hand_type != 'linkerhand_o7'}">
+					<param name="left_dyn_param">1.2874,-10.145,30,114.65,0,0,0,0,0,0</param>
+					<param name="right_dyn_param">1.2874,-30.145,-10,147.85,0,0,0,0,0,0</param>
+				</xacro:if>
+				<!-- 如果没有 tool（既不是手也不是 desktop 场景），设置 dyn_param 为 0 -->
+				<xacro:if value="${selected_hand_type != 'linkerhand_o6' and selected_hand_type != 'linkerhand_l6' and selected_hand_type != 'linkerhand_o7' and (selected_gripper_type == 'none' or selected_gripper_type == '') and selected_scene != 'desktop'}">
+					<param name="left_dyn_param">0,0,0,0,0,0,0,0,0,0</param>
+					<param name="right_dyn_param">0,0,0,0,0,0,0,0,0,0</param>
+				</xacro:if>
 				<xacro:if value="${selected_scene == 'desktop'}">
 					<param name="device_ip">192.168.10.190</param>
 					<param name="ctrl_mode">CART_IMPEDANCE</param>
-					<param name="left_dyn_param">1.2874,-10.145,30,114.65,0,0,0,0,0,0</param>
-					<param name="right_dyn_param">1.2874,-30.145,-10,147.85,0,0,0,0,0,0</param>
 				</xacro:if>
 				<xacro:if value="${selected_scene == 'usb-90c'}">
 					<param name="device_ip">192.168.10.190</param>
@@ -67,41 +105,6 @@
 				<xacro:rg75_interfaces name="left"/>
 				<xacro:rg75_interfaces name="right"/>
 			</xacro:if>
-			
-			<!-- LinkerHand dexterous hand interfaces -->
-			<!-- Note: LinkerHand requires separate hardware interface (Modbus), so interfaces are included here -->
-			<!-- but the actual hardware will be handled by separate DexterousHandHardware instances -->
-			<xacro:if value="${selected_gripper_type == 'linkerhand_o6' or selected_gripper_type == 'linkerhand_l6'}">
-				<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o6.xacro"/>
-				<!-- Left hand -->
-				<xacro:linkerhand_o6_interfaces name="left"/>
-				<!-- Right hand -->
-				<xacro:linkerhand_o6_interfaces name="right"/>
-			</xacro:if>
-			<xacro:if value="${selected_gripper_type == 'linkerhand_o7'}">
-				<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o7.xacro"/>
-				<!-- Left hand -->
-				<xacro:linkerhand_o7_interfaces name="left"/>
-				<!-- Right hand -->
-				<xacro:linkerhand_o7_interfaces name="right"/>
-			</xacro:if>
-		</xacro:if>
-		
-		<!-- LinkerHand separate ros2_control systems (for real hardware with Modbus) -->
-		<!-- These are separate systems because LinkerHand uses DexterousHandHardware, not MarvinHardware -->
-		<xacro:if value="${selected_gripper_type == 'linkerhand_o6' or selected_gripper_type == 'linkerhand_l6' or selected_gripper_type == 'linkerhand_o7'}">
-			<!-- Left hand system -->
-			<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/hand.xacro">
-				<xacro:arg name="type" value="${selected_gripper_type == 'linkerhand_o6' ? 'o6' : (selected_gripper_type == 'linkerhand_l6' ? 'l6' : 'o7')}"/>
-				<xacro:arg name="direction" value="1"/>
-				<xacro:arg name="ros2_control_hardware_type" value="$(arg ros2_control_hardware_type)"/>
-			</xacro:include>
-			<!-- Right hand system -->
-			<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/hand.xacro">
-				<xacro:arg name="type" value="${selected_gripper_type == 'linkerhand_o6' ? 'o6' : (selected_gripper_type == 'linkerhand_l6' ? 'l6' : 'o7')}"/>
-				<xacro:arg name="direction" value="-1"/>
-				<xacro:arg name="ros2_control_hardware_type" value="$(arg ros2_control_hardware_type)"/>
-			</xacro:include>
 		</xacro:if>
 
 		<!-- 单臂配置 -->
@@ -128,54 +131,52 @@
 		</xacro:unless>
 
 	</ros2_control>
-	
+
 	<!-- LinkerHand separate ros2_control systems (for real hardware with Modbus) -->
 	<!-- These are separate systems because LinkerHand uses DexterousHandHardware, not MarvinHardware -->
-	<!-- Left hand system -->
-	<xacro:if value="${selected_gripper_type == 'linkerhand_o6'}">
+	<!-- 如果是手（o6/l6/o7），创建手的 ros2_control 系统 -->
+	<xacro:if value="${selected_hand_type == 'linkerhand_o6'}">
+		<!-- Left hand system -->
 		<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/hand.xacro">
 			<xacro:arg name="type" value="o6"/>
 			<xacro:arg name="direction" value="1"/>
 			<xacro:arg name="ros2_control_hardware_type" value="$(arg ros2_control_hardware_type)"/>
 		</xacro:include>
-	</xacro:if>
-	<xacro:if value="${selected_gripper_type == 'linkerhand_l6'}">
-		<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/hand.xacro">
-			<xacro:arg name="type" value="l6"/>
-			<xacro:arg name="direction" value="1"/>
-			<xacro:arg name="ros2_control_hardware_type" value="$(arg ros2_control_hardware_type)"/>
-		</xacro:include>
-	</xacro:if>
-	<xacro:if value="${selected_gripper_type == 'linkerhand_o7'}">
-		<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/hand.xacro">
-			<xacro:arg name="type" value="o7"/>
-			<xacro:arg name="direction" value="1"/>
-			<xacro:arg name="ros2_control_hardware_type" value="$(arg ros2_control_hardware_type)"/>
-		</xacro:include>
-	</xacro:if>
-	<!-- Right hand system -->
-	<xacro:if value="${selected_gripper_type == 'linkerhand_o6'}">
+		<!-- Right hand system -->
 		<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/hand.xacro">
 			<xacro:arg name="type" value="o6"/>
 			<xacro:arg name="direction" value="-1"/>
 			<xacro:arg name="ros2_control_hardware_type" value="$(arg ros2_control_hardware_type)"/>
 		</xacro:include>
 	</xacro:if>
-	<xacro:if value="${selected_gripper_type == 'linkerhand_l6'}">
+	<xacro:if value="${selected_hand_type == 'linkerhand_l6'}">
+		<!-- Left hand system -->
+		<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/hand.xacro">
+			<xacro:arg name="type" value="l6"/>
+			<xacro:arg name="direction" value="1"/>
+			<xacro:arg name="ros2_control_hardware_type" value="$(arg ros2_control_hardware_type)"/>
+		</xacro:include>
+		<!-- Right hand system -->
 		<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/hand.xacro">
 			<xacro:arg name="type" value="l6"/>
 			<xacro:arg name="direction" value="-1"/>
 			<xacro:arg name="ros2_control_hardware_type" value="$(arg ros2_control_hardware_type)"/>
 		</xacro:include>
 	</xacro:if>
-	<xacro:if value="${selected_gripper_type == 'linkerhand_o7'}">
+	<xacro:if value="${selected_hand_type == 'linkerhand_o7'}">
+		<!-- Left hand system -->
+		<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/hand.xacro">
+			<xacro:arg name="type" value="o7"/>
+			<xacro:arg name="direction" value="1"/>
+			<xacro:arg name="ros2_control_hardware_type" value="$(arg ros2_control_hardware_type)"/>
+		</xacro:include>
+		<!-- Right hand system -->
 		<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/hand.xacro">
 			<xacro:arg name="type" value="o7"/>
 			<xacro:arg name="direction" value="-1"/>
 			<xacro:arg name="ros2_control_hardware_type" value="$(arg ros2_control_hardware_type)"/>
 		</xacro:include>
 	</xacro:if>
-
 
 	<xacro:arg name="gazebo" default="false"/>
 	<xacro:if value="$(arg gazebo)">

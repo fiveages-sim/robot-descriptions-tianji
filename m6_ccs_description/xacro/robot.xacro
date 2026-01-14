@@ -4,6 +4,23 @@
 	<xacro:arg name="collider" default="convex"/>
 	<xacro:arg name="type" default="left"/>
 	<xacro:arg name="scene" default=""/>
+	
+	<!-- 质量中心偏移参数 (单位: 米) - 用于 LinkerHand 的 dyn_param 计算 -->
+	<!-- 这些参数可以通过 launch 文件传递，用于调整手部的质量中心位置 -->
+	<xacro:arg name="com_offset_left_x" default="0"/>
+	<xacro:arg name="com_offset_left_y" default="0"/>
+	<xacro:arg name="com_offset_left_z" default="0"/>
+	<xacro:arg name="com_offset_right_x" default="0"/>
+	<xacro:arg name="com_offset_right_y" default="0"/>
+	<xacro:arg name="com_offset_right_z" default="0"/>
+	
+	<!-- 将参数值设置为 property，以便在 ros2_control/robot.xacro 中读取 -->
+	<xacro:property name="com_offset_left_x" value="$(arg com_offset_left_x)"/>
+	<xacro:property name="com_offset_left_y" value="$(arg com_offset_left_y)"/>
+	<xacro:property name="com_offset_left_z" value="$(arg com_offset_left_z)"/>
+	<xacro:property name="com_offset_right_x" value="$(arg com_offset_right_x)"/>
+	<xacro:property name="com_offset_right_y" value="$(arg com_offset_right_y)"/>
+	<xacro:property name="com_offset_right_z" value="$(arg com_offset_right_z)"/>
 
 	<!-- 从 type 参数解析出 arm_config、gripper_type 和 scene -->
 	<xacro:property name="type_arg" value="$(arg type)"/>
@@ -57,13 +74,23 @@
 	
 	<!-- LinkerHand dexterous hand configurations -->
 	<xacro:if value="${type_arg == 'dual_o6'}">
-		<xacro:property name="selected_gripper_type" value="linkerhand_o6"/>
+		<xacro:property name="selected_gripper_type" value="o6"/>
 	</xacro:if>
 	<xacro:if value="${type_arg == 'dual_l6'}">
-		<xacro:property name="selected_gripper_type" value="linkerhand_l6"/>
+		<xacro:property name="selected_gripper_type" value="l6"/>
 	</xacro:if>
 	<xacro:if value="${type_arg == 'dual_o7'}">
-		<xacro:property name="selected_gripper_type" value="linkerhand_o7"/>
+		<xacro:property name="selected_gripper_type" value="o7"/>
+	</xacro:if>
+	<!-- Support for linkerhand_o6, linkerhand_l6, linkerhand_o7 (from fiveages_w2_description) -->
+	<xacro:if value="${type_arg == 'linkerhand_o6'}">
+		<xacro:property name="selected_gripper_type" value="o6"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'linkerhand_l6'}">
+		<xacro:property name="selected_gripper_type" value="l6"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'linkerhand_o7'}">
+		<xacro:property name="selected_gripper_type" value="o7"/>
 	</xacro:if>
 
 
@@ -119,7 +146,7 @@
 			</joint>
 
 			<!-- Right Arm -->
-			<joint name="right_arm_base_joint" type="fixed">
+			<joint name="right_arm_base_joint" type="fixed">left
 				<parent link="arm_base"/>
 				<child link="right_base_link"/>
 				<origin rpy="${PI/2} 0 0" xyz="0.0 -0.12 0.701"/>
