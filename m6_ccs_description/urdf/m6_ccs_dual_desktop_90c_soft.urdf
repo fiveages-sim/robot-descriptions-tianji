@@ -9,7 +9,7 @@
   <link name="arm_base">
     <visual>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/dual_base.obj"/>
+        <mesh filename="package://m6_ccs_description/meshes/dual_base.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -44,7 +44,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/base.obj"/>
+        <mesh filename="package://m6_ccs_description/meshes/base.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -63,7 +63,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link1.obj"/>
+        <mesh filename="package://m6_ccs_description/meshes/link1.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -90,7 +90,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link2.obj"/>
+        <mesh filename="package://m6_ccs_description/meshes/link2.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -117,7 +117,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link3.obj"/>
+        <mesh filename="package://m6_ccs_description/meshes/link3.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -150,7 +150,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link4.obj"/>
+        <mesh filename="package://m6_ccs_description/meshes/link4.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -177,7 +177,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link5.obj" scale="1 1 1"/>
+        <mesh filename="package://m6_ccs_description/meshes/link5.glb" scale="1 1 1"/>
       </geometry>
     </visual>
     <collision>
@@ -204,7 +204,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link6.obj"/>
+        <mesh filename="package://m6_ccs_description/meshes/link6.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -231,7 +231,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link7.obj"/>
+        <mesh filename="package://m6_ccs_description/meshes/link7.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -264,7 +264,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/base.obj"/>
+        <mesh filename="package://m6_ccs_description/meshes/base.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -283,7 +283,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link1.obj"/>
+        <mesh filename="package://m6_ccs_description/meshes/link1.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -310,7 +310,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link2.obj"/>
+        <mesh filename="package://m6_ccs_description/meshes/link2.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -337,7 +337,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link3.obj"/>
+        <mesh filename="package://m6_ccs_description/meshes/link3.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -370,7 +370,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link4.obj"/>
+        <mesh filename="package://m6_ccs_description/meshes/link4.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -397,7 +397,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link5.obj" scale="1 -1 1"/>
+        <mesh filename="package://m6_ccs_description/meshes/link5.glb" scale="1 -1 1"/>
       </geometry>
     </visual>
     <collision>
@@ -424,7 +424,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link6.obj"/>
+        <mesh filename="package://m6_ccs_description/meshes/link6.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -451,7 +451,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/link7_r.obj"/>
+        <mesh filename="package://m6_ccs_description/meshes/link7_r.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -483,7 +483,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/flange.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/flange.glb"/>
       </geometry>
     </visual>
   </link>
@@ -500,7 +500,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/gripper_base.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/gripper_base.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -517,7 +517,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/link_1.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/link_1.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -541,7 +541,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/in_link.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/in_link.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -566,7 +566,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/up_link.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/up_link.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -591,12 +591,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/pad_link_soft.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/pad_link_soft.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/pad_link_soft.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/pad_link_soft.glb"/>
       </geometry>
     </collision>
   </link>
@@ -613,7 +613,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/link_2.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/link_2.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -638,7 +638,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/link_2.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/link_2.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -663,7 +663,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/link_1.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/link_1.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -688,7 +688,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/in_link.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/in_link.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -713,7 +713,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/up_link.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/up_link.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -738,12 +738,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/pad_link_soft.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/pad_link_soft.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/pad_link_soft.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/pad_link_soft.glb"/>
       </geometry>
     </collision>
   </link>
@@ -766,7 +766,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/flange.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/flange.glb"/>
       </geometry>
     </visual>
   </link>
@@ -783,7 +783,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/gripper_base.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/gripper_base.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -800,7 +800,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/link_1.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/link_1.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -824,7 +824,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/in_link.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/in_link.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -849,7 +849,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/up_link.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/up_link.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -874,12 +874,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/pad_link_soft.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/pad_link_soft.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/pad_link_soft.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/pad_link_soft.glb"/>
       </geometry>
     </collision>
   </link>
@@ -896,7 +896,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/link_2.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/link_2.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -921,7 +921,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/link_2.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/link_2.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -946,7 +946,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/link_1.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/link_1.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -971,7 +971,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/in_link.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/in_link.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -996,7 +996,7 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/up_link.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/up_link.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -1021,12 +1021,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/pad_link_soft.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/pad_link_soft.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/pad_link_soft.obj"/>
+        <mesh filename="package://changingtek_description/meshes/AG2F90-C/visual/pad_link_soft.glb"/>
       </geometry>
     </collision>
   </link>

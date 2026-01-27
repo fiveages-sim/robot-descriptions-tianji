@@ -91,7 +91,7 @@
 			<link name="arm_base">
 				<visual>
 					<geometry>
-						<mesh filename="file://$(find m6_ccs_description)/meshes/dual_base.obj"/>
+						<mesh filename="file://$(find m6_ccs_description)/meshes/desktop_base.glb"/>
 					</geometry>
 				</visual>
 				<collision>
@@ -220,7 +220,7 @@
 		<link name="base">
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find m6_ccs_description)/meshes/dual_base.obj"/>
+					<mesh filename="file://$(find m6_ccs_description)/meshes/desktop_base.glb"/>
 				</geometry>
 			</visual>
 			<collision>
