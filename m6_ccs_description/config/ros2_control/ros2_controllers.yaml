@@ -1,4 +1,4 @@
-# This config file is used by ros2_control
+# This config file of OpenArm Single is used by ros2_control
 controller_manager:
   ros__parameters:
     update_rate: 100  # Hz
@@ -9,46 +9,57 @@ controller_manager:
     ocs2_arm_controller:
       type: ocs2_arm_controller/Ocs2ArmController
 
+    # 左手夹爪控制器
+    left_gripper_controller:
+      type: adaptive_gripper_controller/AdaptiveGripperController
 
-arm_controller:
-  ros__parameters:
-    command_interfaces:
-      - position
-    state_interfaces:
-      - position
-      - velocity
-    joints:
-      - joint1
-      - joint2
-      - joint3
-      - joint4
-      - joint5
-      - joint6
+    # 右手夹爪控制器
+    right_gripper_controller:
+      type: adaptive_gripper_controller/AdaptiveGripperController
 
 ocs2_arm_controller:
   ros__parameters:
     # Joint configuration
     update_rate: 100  # Hz
     joints:
-      - joint1
-      - joint2
-      - joint3
-      - joint4
-      - joint5
-      - joint6
-      - joint7
-
+      - left_joint1
+      - left_joint2
+      - left_joint3
+      - left_joint4
+      - left_joint5
+      - left_joint6
+      - left_joint7
+      - right_joint1
+      - right_joint2
+      - right_joint3
+      - right_joint4
+      - right_joint5
+      - right_joint6
+      - right_joint7
+    
     command_interfaces:
       - position
     state_interfaces:
       - position
 
-    robot_name: m6_ccs
-
-    # Future time offset for trajectory prediction (in seconds)
     future_time_offset: 1.0
+    robot_name: m6_ccs
+    mpc_frequency: 50
 
     # Control parameters
-    home_1: [0.697135,0.185125,-0.380650,-2.504548,-1.298406,-0.256101,0.841441]
-    home_2: [0.518355,-0.481237,0.099947,-1.780635,-1.163660,-0.532128,0.807533]
-    home_3: [1.196480,0.061325,0.352437,-2.324074,0.007990,-0.797855,1.084214]
+    home_1: [ 1.457133809892805, -1.0633699963902674, -1.1994065285584414, -0.8074199090303408, -0.6949558811978124, -0.6864381599253574, -0.1295225067208675,
+                -1.457133809892805, -1.0633699963902674, 1.1994065285584414, -0.8074199090303408, 0.6949558811978124, -0.6864381599253574, 0.1295225067208675]
+    home_2: [ 2.502, -1.528, -1.562, -1.680, 0.0, -0.787, 0.0,
+              -2.502, -1.528, 1.562, -1.680, 0.0, -0.787, 0.0 ]
+
+# 左手夹爪控制器配置
+left_gripper_controller:
+  ros__parameters:
+    joint: left_gripper_joint
+    use_effort_interface: false
+
+# 右手夹爪控制器配置
+right_gripper_controller:
+  ros__parameters:
+    joint: right_gripper_joint
+    use_effort_interface: false

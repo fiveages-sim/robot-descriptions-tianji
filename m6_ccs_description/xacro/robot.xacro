@@ -2,7 +2,7 @@
 
 <robot name="M6_CCS" xmlns:xacro="http://www.ros.org/wiki/xacro">
 	<xacro:arg name="collider" default="convex"/>
-	<xacro:arg name="type" default="left"/>
+	<xacro:arg name="type" default="dual"/>
 	<xacro:arg name="scene" default=""/>
 
 	<!-- 从 type 参数解析出 arm_config、gripper_type 和 scene -->
@@ -19,10 +19,6 @@
 	<xacro:if value="${type_arg == 'left'}">
 		<xacro:property name="selected_arm_config" value="left"/>
 	</xacro:if>
-	<xacro:if value="${type_arg == 'rg75'}">
-		<xacro:property name="selected_arm_config" value="left"/>
-		<xacro:property name="selected_gripper_type" value="rg75"/>
-	</xacro:if>
 	<xacro:if value="${type_arg == 'right'}">
 		<xacro:property name="selected_arm_config" value="right"/>
 	</xacro:if>
@@ -34,29 +30,24 @@
 	<!-- 双臂配置 -->
 
 	<!-- 适用于人形机器人的配置 -->
-	<xacro:if value="${type_arg == 'dual_ag2f90'}">
-		<xacro:property name="selected_gripper_type" value="ag2f90d"/>
+	<xacro:if value="${type_arg == 'ag2f90'}">
+		<xacro:property name="selected_gripper_type" value="ag2f90_d"/>
 	</xacro:if>
-	<xacro:if value="${type_arg == 'dual_ag2f90_c'}">
+	<xacro:if value="${type_arg == 'ag2f90_c'}">
 		<xacro:property name="selected_gripper_type" value="ag2f90_c"/>
 	</xacro:if>
-	<xacro:if value="${type_arg == 'dual_ag2f90_d'}">
+	<xacro:if value="${type_arg == 'ag2f90_d'}">
 		<xacro:property name="selected_gripper_type" value="ag2f90_d"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'rg75'}">
+		<xacro:property name="selected_gripper_type" value="rg75"/>
 	</xacro:if>
 
 	<!-- 适用纯双臂演示场景的配置 -->
-	<xacro:if value="${type_arg == 'dual_rg75'}">
-		<xacro:property name="selected_gripper_type" value="rg75"/>
-	</xacro:if>
-	<xacro:if value="${type_arg == 'dual_desktop'}">
+	<xacro:if value="${type_arg == 'desktop'}">
 		<xacro:property name="selected_scene" value="desktop"/>
 	</xacro:if>
-	<xacro:if value="${type_arg == 'dual_desktop_90c'}">
-		<xacro:property name="selected_scene" value="desktop"/>
-		<xacro:property name="selected_gripper_type" value="ag2f90_c"/>
-	</xacro:if>
-
-	<xacro:if value="${type_arg == 'dual_desktop_90c_soft'}">
+	<xacro:if value="${type_arg == 'desktop_90c'}">
 		<xacro:property name="selected_scene" value="desktop"/>
 		<xacro:property name="selected_gripper_type" value="ag2f90_c"/>
 		<xacro:property name="selected_gripper_pad" value="soft"/>
@@ -67,7 +58,7 @@
 
 	<!-- 单左臂（不包括 usb-90c 场景） -->
 	<xacro:if value="${selected_arm_config == 'left' and selected_scene != 'usb-90c'}">
-		<xacro:M6_CCS collider="$(arg collider)"/>
+		<xacro:M6_CCS/>
 		<xacro:if value="${selected_gripper_type == 'rg75'}">
 			<xacro:include filename="$(find jodell_description)/xacro/RG75-300.xacro"/>
 			<xacro:RG75-300 name="" use_flange="true"/>
@@ -80,7 +71,7 @@
 
 	<!-- 单右臂 -->
 	<xacro:if value="${selected_arm_config == 'right'}">
-		<xacro:M6_CCS direction="-1" collider="$(arg collider)"/>
+		<xacro:M6_CCS direction="-1"/>
 	</xacro:if>
 
 	<!-- 双臂配置 -->
@@ -168,8 +159,8 @@
 		</xacro:unless>
 
 		<!-- 双臂和末端执行器（两种场景共用） -->
-		<xacro:M6_CCS name="left" collider="$(arg collider)"/>
-		<xacro:M6_CCS name="right" direction="-1" collider="$(arg collider)"/>
+		<xacro:M6_CCS name="left"/>
+		<xacro:M6_CCS name="right" direction="-1"/>
 
 		<!-- 双臂末端执行器 -->
 		<xacro:if value="${selected_gripper_type == 'ag2f90_c' or selected_gripper_type == 'ag2f90_d'}">
@@ -238,7 +229,7 @@
 			<origin rpy="-${PI/2} 0 0" xyz="0.0 0.12 0.701"/>
 		</joint>
 
-		<xacro:M6_CCS name="left" collider="$(arg collider)"/>
+		<xacro:M6_CCS name="left"/>
 
 		<xacro:include filename="$(find changingtek_description)/xacro/AG2F90-C.xacro"/>
 		<xacro:AG2F90-C name="" use_flange="true"/>

@@ -12,23 +12,22 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
 ## 2. Visualize the robot
 
 ### 2.1 Basic Arm Configuration
+* Dual Arm
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs collider:=simple
+  ```
 
 * Left Arm
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=left
   ```
   ![Marvin M6 CCS](../.images/m6_ccs.png)
 * Right Arm
   ```bash
   source ~/ros2_ws/install/setup.bash
   ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=right
-  ```
-
-* Dual Arm
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual collider:=simple
   ```
 
 ### 2.2 Arm Configuration for scene
@@ -41,12 +40,12 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
 * Dual Arm on Desktop
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual_desktop
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=desktop
   ```
 * Dual Arm on Desktop with AG2F90-C Gripper
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual_desktop_90c
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=desktop_90c
   ```
 
 ### 2.3 Arm configuration for humannoid
@@ -54,16 +53,16 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
 * Dual Arm with ChangingTek AG2F90-C or AG2F90-D
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual_ag2f90_c collider:=simple
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=ag2f90_c collider:=simple
   ```
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual_ag2f90_d collider:=simple
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=ag2f90_d collider:=simple
   ```
 * Dual Arm with Jodell RG75
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual_rg75 collider:=simple
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=rg75 collider:=simple
   ```
 
 ## 3. OCS2 Demo
@@ -102,17 +101,13 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
 * Mock Component With End Effector
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_ag2f90_c
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=ag2f90_c
   ```
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_ag2f90_d
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=ag2f90_d
   ```
   ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_rg75
-  ```
-   ```bash
   source ~/ros2_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=rg75
   ```
@@ -140,25 +135,24 @@ colcon build --packages-up-to marvin_ros2_control --symlink-install
 ### 4.2 Launch Control
 
 #### 4.2.1 Launch without Gripper
-* Left Arm
+* Dual Arm
   ```bash
   source ~/ros2_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real
   ```
-* Right Arm
+* Single Arm
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=left
+  ```
   ```bash
   source ~/ros2_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=right
-  ```
-* Dual Arm
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=dual
   ```
 
 #### 4.2.2 With ChangingTek AG2F90-C Gripper
 * Dual Arm
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=dual_ag2f90_c
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=ag2f90_c
   ```

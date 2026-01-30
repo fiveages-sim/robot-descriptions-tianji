@@ -21,7 +21,6 @@ ocs2_arm_controller:
   ros__parameters:
     # Joint configuration
     update_rate: 100  # Hz
-    info_file_name: dual
     joints:
       - left_joint1
       - left_joint2

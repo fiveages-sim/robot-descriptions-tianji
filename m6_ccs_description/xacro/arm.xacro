@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+	<xacro:arg name="collider" default="convex"/>
 	<xacro:property name="PI" value="3.1415926535897931"/>
-	<xacro:macro name="M6_CCS" params="name:='' direction:=1 collider:=convex">
+	<xacro:property name="collider_type" value="$(arg collider)"/>
+	<xacro:macro name="M6_CCS" params="name:='' direction:=1">
 		<xacro:property name="prefix" value="${name + '_' if name else ''}"/>
 
 		<!-- Base Link -->
@@ -18,14 +20,14 @@
 					<mesh filename="file://$(find m6_ccs_description)/meshes/base.glb"/>
 				</geometry>
 			</visual>
-			<xacro:if value="${collider == 'convex'}">
+			<xacro:if value="${collider_type == 'convex'}">
 				<collision>
 					<geometry>
 						<mesh filename="file://$(find m6_ccs_description)/meshes/base.glb"/>
 					</geometry>
 				</collision>
 			</xacro:if>
-			<xacro:if value="${collider == 'simple'}">
+			<xacro:if value="${collider_type == 'simple'}">
 				<collision>
 					<origin xyz="0 0 0.041832"/>
 					<geometry>
@@ -49,14 +51,14 @@
 					<mesh filename="file://$(find m6_ccs_description)/meshes/link1.glb"/>
 				</geometry>
 			</visual>
-			<xacro:if value="${collider == 'convex'}">
+			<xacro:if value="${collider_type == 'convex'}">
 				<collision>
 					<geometry>
 						<mesh filename="file://$(find m6_ccs_description)/meshes/link1.glb"/>
 					</geometry>
 				</collision>
 			</xacro:if>
-			<xacro:if value="${collider == 'simple'}">
+			<xacro:if value="${collider_type == 'simple'}">
 				<collision>
 					<origin rpy="${PI/2} 0 0"/>
 					<geometry>
@@ -89,14 +91,14 @@
 					<mesh filename="file://$(find m6_ccs_description)/meshes/link2.glb"/>
 				</geometry>
 			</visual>
-			<xacro:if value="${collider == 'convex'}">
+			<xacro:if value="${collider_type == 'convex'}">
 				<collision>
 					<geometry>
 						<mesh filename="file://$(find m6_ccs_description)/meshes/link2.glb"/>
 					</geometry>
 				</collision>
 			</xacro:if>
-			<xacro:if value="${collider == 'simple'}">
+			<xacro:if value="${collider_type == 'simple'}">
 				<collision>
 					<origin xyz="0 0.099087 0" rpy="${PI/2} 0 0"/>
 					<geometry>
@@ -129,14 +131,14 @@
 					<mesh filename="file://$(find m6_ccs_description)/meshes/link3.glb"/>
 				</geometry>
 			</visual>
-			<xacro:if value="${collider == 'convex'}">
+			<xacro:if value="${collider_type == 'convex'}">
 				<collision>
 					<geometry>
 						<mesh filename="file://$(find m6_ccs_description)/meshes/link3.glb"/>
 					</geometry>
 				</collision>
 			</xacro:if>
-			<xacro:if value="${collider == 'simple'}">
+			<xacro:if value="${collider_type == 'simple'}">
 				<collision>
 					<origin xyz="0 0 -0.098932"/>
 					<geometry>
@@ -175,14 +177,14 @@
 					<mesh filename="file://$(find m6_ccs_description)/meshes/link4.glb"/>
 				</geometry>
 			</visual>
-			<xacro:if value="${collider == 'convex'}">
+			<xacro:if value="${collider_type == 'convex'}">
 				<collision>
 					<geometry>
 						<mesh filename="file://$(find m6_ccs_description)/meshes/link4.glb"/>
 					</geometry>
 				</collision>
 			</xacro:if>
-			<xacro:if value="${collider == 'simple'}">
+			<xacro:if value="${collider_type == 'simple'}">
 				<collision>
 					<origin xyz="0.017721 -0.079733 0" rpy="${PI/2} 0 0"/>
 					<geometry>
@@ -215,14 +217,14 @@
 					<mesh filename="file://$(find m6_ccs_description)/meshes/link5.glb" scale="1 ${direction} 1"/>
 				</geometry>
 			</visual>
-			<xacro:if value="${collider == 'convex'}">
+			<xacro:if value="${collider_type == 'convex'}">
 				<collision>
 					<geometry>
 						<mesh filename="file://$(find m6_ccs_description)/meshes/link5.glb"/>
 					</geometry>
 				</collision>
 			</xacro:if>
-			<xacro:if value="${collider == 'simple'}">
+			<xacro:if value="${collider_type == 'simple'}">
 				<collision>
 					<origin xyz="0 0 -0.117153"/>
 					<geometry>
@@ -255,14 +257,14 @@
 					<mesh filename="file://$(find m6_ccs_description)/meshes/link6.glb"/>
 				</geometry>
 			</visual>
-			<xacro:if value="${collider == 'convex'}">
+			<xacro:if value="${collider_type == 'convex'}">
 				<collision>
 					<geometry>
 						<mesh filename="file://$(find m6_ccs_description)/meshes/link6.glb"/>
 					</geometry>
 				</collision>
 			</xacro:if>
-			<xacro:if value="${collider == 'simple'}">
+			<xacro:if value="${collider_type == 'simple'}">
 				<collision>
 					<origin rpy="${PI/2} 0 0"/>
 					<geometry>
@@ -300,20 +302,51 @@
 					</xacro:if>
 				</geometry>
 			</visual>
-			<xacro:if value="${collider == 'convex'}">
+			<xacro:if value="${collider_type == 'convex'}">
 				<collision>
 					<geometry>
 						<mesh filename="file://$(find m6_ccs_description)/meshes/link7.glb"/>
 					</geometry>
 				</collision>
 			</xacro:if>
-			<xacro:if value="${collider == 'simple'}">
+			<xacro:if value="${collider_type == 'simple'}">
 				<collision>
 					<origin xyz="0 -0.075732 0" rpy="${PI/2} 0 0"/>
 					<geometry>
 						<cylinder length="0.038392" radius="0.041707"/>
 					</geometry>
 				</collision>
+
+				<xacro:if value="${selected_gripper_type == 'rg75'}">
+					<collision>
+						<origin xyz="0 -0.175732 0" rpy="${PI/2} 0 0"/>
+						<geometry>
+							<cylinder length="0.138392" radius="0.05"/>
+						</geometry>
+					</collision>
+					<collision>
+						<origin xyz="0 -0.28 0" rpy="${PI/2} 0 0"/>
+						<geometry>
+							<cylinder length="0.08" radius="0.021707"/>
+						</geometry>
+					</collision>
+				</xacro:if>
+
+				<xacro:if value="${selected_gripper_type == 'ag2f90_c' or selected_gripper_type == 'ag2f90_d'}">
+					<collision>
+						<origin xyz="0 -0.175732 0" rpy="${PI/2} 0 0"/>
+						<geometry>
+							<cylinder length="0.138392" radius="0.041707"/>
+						</geometry>
+					</collision>
+					<collision>
+						<origin xyz="0 -0.28 0" rpy="${PI/2} 0 0"/>
+						<geometry>
+							<cylinder length="0.08" radius="0.021707"/>
+						</geometry>
+					</collision>
+				</xacro:if>
+
 			</xacro:if>
 		</link>
 
