@@ -21,13 +21,13 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
 * Left Arm
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=left
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=left collider:=simple
   ```
   ![Marvin M6 CCS](../.images/m6_ccs.png)
 * Right Arm
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=right
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=right collider:=simple
   ```
 
 ### 2.2 Arm Configuration for scene
@@ -35,17 +35,17 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
 * USB HIL task with AG2F90-C Gripper
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=usb-90c
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=usb-90c collider:=simple
   ```
 * Dual Arm on Desktop
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=desktop
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=desktop collider:=simple
   ```
 * Dual Arm on Desktop with AG2F90-C Gripper
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=desktop_90c
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=desktop_90c collider:=simple
   ```
 
 ### 2.3 Arm configuration for humannoid
