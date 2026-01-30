@@ -4,11 +4,12 @@
 <!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED                                 | -->
 <!-- =================================================================================== -->
 <robot name="M6_CCS">
+  <!-- 双臂配置 -->
   <link name="base_link"/>
   <link name="arm_base">
     <visual>
       <geometry>
-        <mesh filename="package://m6_ccs_description/meshes/dual_base.glb"/>
+        <mesh filename="package://m6_ccs_description/meshes/desktop_base.glb"/>
       </geometry>
     </visual>
     <collision>
@@ -33,6 +34,16 @@
     <parent link="arm_base"/>
     <child link="right_base_link"/>
     <origin rpy="1.5707963267948966 0 0" xyz="0.0 -0.12 0.701"/>
+  </joint>
+  <link name="right_eef"/>
+  <joint name="right_eef_joint" type="fixed">
+    <parent link="right_tcp"/>
+    <child link="right_eef"/>
+  </joint>
+  <link name="left_eef"/>
+  <joint name="left_eef_joint" type="fixed">
+    <parent link="left_tcp"/>
+    <child link="left_eef"/>
   </joint>
   <!-- Base Link -->
   <link name="left_base_link">
@@ -119,12 +130,12 @@
         <mesh filename="package://m6_ccs_description/meshes/link3.glb"/>
       </geometry>
     </visual>
-<!--    <collision>-->
-<!--      <origin xyz="0 0 -0.098932"/>-->
-<!--      <geometry>-->
-<!--        <cylinder length="0.089056" radius="0.046717"/>-->
-<!--      </geometry>-->
-<!--    </collision>-->
+    <collision>
+      <origin xyz="0 0 -0.098932"/>
+      <geometry>
+        <cylinder length="0.089056" radius="0.046717"/>
+      </geometry>
+    </collision>
     <collision>
       <origin rpy="1.5707963267948966 0 0" xyz="0.018119 0 0"/>
       <geometry>
@@ -192,7 +203,7 @@
     <parent link="left_link4"/>
     <child link="left_link5"/>
     <axis xyz="0 0 1"/>
-    <limit effort="18" lower="-3.1067" upper="3.1067" velocity="3.141592653589793"/>
+    <limit effort="18" lower="-2.9321531433504737" upper="2.9321531433504737" velocity="3.141592653589793"/>
   </joint>
   <!-- Link 6 - Partially mirrored COM and inertia -->
   <link name="left_link6">
@@ -207,7 +218,7 @@
       </geometry>
     </visual>
     <collision>
-      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
+      <origin rpy="1.5707963267948966 0 0"/>
       <geometry>
         <cylinder length="0.108046" radius="0.038348"/>
       </geometry>
@@ -339,12 +350,12 @@
         <mesh filename="package://m6_ccs_description/meshes/link3.glb"/>
       </geometry>
     </visual>
-<!--    <collision>-->
-<!--      <origin xyz="0 0 -0.098932"/>-->
-<!--      <geometry>-->
-<!--        <cylinder length="0.089056" radius="0.046717"/>-->
-<!--      </geometry>-->
-<!--    </collision>-->
+    <collision>
+      <origin xyz="0 0 -0.098932"/>
+      <geometry>
+        <cylinder length="0.089056" radius="0.046717"/>
+      </geometry>
+    </collision>
     <collision>
       <origin rpy="1.5707963267948966 0 0" xyz="0.018119 0 0"/>
       <geometry>
@@ -412,7 +423,7 @@
     <parent link="right_link4"/>
     <child link="right_link5"/>
     <axis xyz="0 0 1"/>
-    <limit effort="18" lower="-3.1067" upper="3.1067" velocity="3.141592653589793"/>
+    <limit effort="18" lower="-2.9321531433504737" upper="2.9321531433504737" velocity="3.141592653589793"/>
   </joint>
   <!-- Link 6 - Partially mirrored COM and inertia -->
   <link name="right_link6">
@@ -427,7 +438,7 @@
       </geometry>
     </visual>
     <collision>
-      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
+      <origin rpy="1.5707963267948966 0 0"/>
       <geometry>
         <cylinder length="0.108046" radius="0.038348"/>
       </geometry>
@@ -473,16 +484,5 @@
     <origin rpy="1.5707963267948966 -1.5707963267948966 0" xyz="0 -0.095 0"/>
     <parent link="right_link7"/>
     <child link="right_tcp"/>
-  </joint>
-
-  <link name="right_eef"/>
-  <joint name="right_eef_joint" type="fixed">
-    <parent link="right_tcp"/>
-    <child link="right_eef"/>
-  </joint>
-  <link name="left_eef"/>
-  <joint name="left_eef_joint" type="fixed">
-    <parent link="left_tcp"/>
-    <child link="left_eef"/>
   </joint>
 </robot>
