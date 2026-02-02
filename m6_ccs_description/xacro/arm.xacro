@@ -3,8 +3,22 @@
 	<xacro:arg name="collider" default="convex"/>
 	<xacro:property name="PI" value="3.1415926535897931"/>
 	<xacro:property name="collider_type" value="$(arg collider)"/>
-	<xacro:macro name="M6_CCS" params="name:='' direction:=1">
+	<xacro:macro name="M6_CCS" params="name:='' direction:=1 style:=default">
 		<xacro:property name="prefix" value="${name + '_' if name else ''}"/>
+		
+		<!-- Set visual and collision package/path based on style -->
+		<xacro:property name="visual_package" value="m6_ccs_description"/>
+		<xacro:property name="visual_path" value=""/>
+		<xacro:property name="collision_package" value="m6_ccs_description"/>
+		<xacro:property name="collision_path" value=""/>
+		<xacro:if value="${style == 'fiveages_w2'}">
+			<xacro:property name="visual_package" value="fiveages_w2_description"/>
+			<xacro:property name="visual_path" value="arm/"/>
+		</xacro:if>
+		<xacro:if value="${style == 'agibot_g2'}">
+			<xacro:property name="visual_package" value="agibot_g2_description"/>
+			<xacro:property name="visual_path" value="arm/"/>
+		</xacro:if>
 
 		<!-- Base Link -->
 		<link name="${prefix}base_link">
@@ -48,13 +62,13 @@
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find m6_ccs_description)/meshes/link1.glb"/>
+					<mesh filename="file://$(find ${visual_package})/meshes/${visual_path}link1.glb"/>
 				</geometry>
 			</visual>
 			<xacro:if value="${collider_type == 'convex'}">
 				<collision>
 					<geometry>
-						<mesh filename="file://$(find m6_ccs_description)/meshes/link1.glb"/>
+						<mesh filename="file://$(find ${collision_package})/meshes/${collision_path}link1.glb"/>
 					</geometry>
 				</collision>
 			</xacro:if>
@@ -88,13 +102,13 @@
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find m6_ccs_description)/meshes/link2.glb"/>
+					<mesh filename="file://$(find ${visual_package})/meshes/${visual_path}link2.glb" scale="1 1 ${direction}"/>
 				</geometry>
 			</visual>
 			<xacro:if value="${collider_type == 'convex'}">
 				<collision>
 					<geometry>
-						<mesh filename="file://$(find m6_ccs_description)/meshes/link2.glb"/>
+						<mesh filename="file://$(find ${collision_package})/meshes/${collision_path}link2.glb"/>
 					</geometry>
 				</collision>
 			</xacro:if>
@@ -128,13 +142,13 @@
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find m6_ccs_description)/meshes/link3.glb"/>
+					<mesh filename="file://$(find ${visual_package})/meshes/${visual_path}link3.glb"/>
 				</geometry>
 			</visual>
 			<xacro:if value="${collider_type == 'convex'}">
 				<collision>
 					<geometry>
-						<mesh filename="file://$(find m6_ccs_description)/meshes/link3.glb"/>
+						<mesh filename="file://$(find ${collision_package})/meshes/${collision_path}link3.glb"/>
 					</geometry>
 				</collision>
 			</xacro:if>
@@ -174,13 +188,13 @@
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find m6_ccs_description)/meshes/link4.glb"/>
+					<mesh filename="file://$(find ${visual_package})/meshes/${visual_path}link4.glb"/>
 				</geometry>
 			</visual>
 			<xacro:if value="${collider_type == 'convex'}">
 				<collision>
 					<geometry>
-						<mesh filename="file://$(find m6_ccs_description)/meshes/link4.glb"/>
+						<mesh filename="file://$(find ${collision_package})/meshes/${collision_path}link4.glb"/>
 					</geometry>
 				</collision>
 			</xacro:if>
@@ -214,13 +228,13 @@
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find m6_ccs_description)/meshes/link5.glb" scale="1 ${direction} 1"/>
+					<mesh filename="file://$(find ${visual_package})/meshes/${visual_path}link5.glb" scale="1 ${direction} 1"/>
 				</geometry>
 			</visual>
 			<xacro:if value="${collider_type == 'convex'}">
 				<collision>
 					<geometry>
-						<mesh filename="file://$(find m6_ccs_description)/meshes/link5.glb"/>
+						<mesh filename="file://$(find ${collision_package})/meshes/${collision_path}link5.glb"/>
 					</geometry>
 				</collision>
 			</xacro:if>
@@ -254,13 +268,13 @@
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find m6_ccs_description)/meshes/link6.glb"/>
+					<mesh filename="file://$(find ${visual_package})/meshes/${visual_path}link6.glb"/>
 				</geometry>
 			</visual>
 			<xacro:if value="${collider_type == 'convex'}">
 				<collision>
 					<geometry>
-						<mesh filename="file://$(find m6_ccs_description)/meshes/link6.glb"/>
+						<mesh filename="file://$(find ${collision_package})/meshes/${collision_path}link6.glb"/>
 					</geometry>
 				</collision>
 			</xacro:if>
@@ -295,17 +309,17 @@
 			<visual>
 				<geometry>
 					<xacro:if value="${direction == 1}">
-						<mesh filename="file://$(find m6_ccs_description)/meshes/link7.glb"/>
+						<mesh filename="file://$(find ${visual_package})/meshes/${visual_path}link7.glb"/>
 					</xacro:if>
 					<xacro:if value="${direction == -1}">
-						<mesh filename="file://$(find m6_ccs_description)/meshes/link7_r.glb"/>
+						<mesh filename="file://$(find ${visual_package})/meshes/${visual_path}link7_r.glb"/>
 					</xacro:if>
 				</geometry>
 			</visual>
 			<xacro:if value="${collider_type == 'convex'}">
 				<collision>
 					<geometry>
-						<mesh filename="file://$(find m6_ccs_description)/meshes/link7.glb"/>
+						<mesh filename="file://$(find ${collision_package})/meshes/${collision_path}link7.glb"/>
 					</geometry>
 				</collision>
 			</xacro:if>
