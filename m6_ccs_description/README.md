@@ -1,6 +1,6 @@
 # Tianji Marvin M6-S CCS Description
 
-This package contains the description files for Rokae AR5 Manipulator.
+This package contains the description files for Marvin M6 CCS Manipulator.
 
 ## 1. Build
 
@@ -17,7 +17,6 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
   source ~/ros2_ws/install/setup.bash
   ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs collider:=simple
   ```
-
 * Left Arm
   ```bash
   source ~/ros2_ws/install/setup.bash
@@ -86,7 +85,7 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
   ```bash
   # Left Arm
   source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs 
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=left
   ```
   ```bash
   # Right Arm
@@ -96,7 +95,7 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
   ```bash
   # Dual Arm
   source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs
   ```
 * Mock Component With End Effector
   ```bash

@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="AR5">
 	<xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
 	<xacro:arg name="ctrl_mode" default="position"/>
-	<xacro:arg name="type" default="left"/>
+	<xacro:arg name="type" default="dual"/>
 
 	<link name="world"/>
 
@@ -99,11 +99,14 @@
 	<xacro:if value="$(arg gazebo)">
 		<gazebo>
 			<plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+				<xacro:if value="${selected_arm_config == 'dual'}">
+					<parameters>$(find m6_ccs_description)/config/ros2_control/ros2_controllers.yaml</parameters>
+				</xacro:if>
 				<xacro:if value="${selected_arm_config == 'left'}">
-					<parameters>$(find rokae_ar5_description)/config/ros2_control/ros2_controllers.yaml</parameters>
+					<parameters>$(find m6_ccs_description)/config/ros2_control/left.yaml</parameters>
 				</xacro:if>
 				<xacro:if value="${selected_arm_config == 'right'}">
-					<parameters>$(find rokae_ar5_description)/config/ros2_control/right.yaml</parameters>
+					<parameters>$(find m6_ccs_description)/config/ros2_control/right.yaml</parameters>
 				</xacro:if>
 			</plugin>
 		</gazebo>
