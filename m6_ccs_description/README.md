@@ -110,10 +110,22 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
   source ~/ros2_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=rg75
   ```
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=desktop_90c
+  ```
+  
+### 3.3 Isaac Sim
 
-### 3.3 USB HIL task
+* Dual Arm on Desktop with AG2F90-C-Soft Gripper
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=desktop_90c hardware:=isaac
+  ```
 
-#### 3.3.1 Simulation
+### 3.4 USB HIL task
+
+#### 3.4.1 Simulation
 
 * Mock Component
   ```bash
