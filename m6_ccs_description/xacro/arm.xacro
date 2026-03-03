@@ -338,12 +338,22 @@
 							<cylinder length="0.138392" radius="0.05"/>
 						</geometry>
 					</collision>
-					<collision>
-						<origin xyz="0 -0.28 0" rpy="${PI/2} 0 0"/>
-						<geometry>
-							<cylinder length="0.08" radius="0.021707"/>
-						</geometry>
-					</collision>
+					<xacro:if value="${selected_gripper_pad == 'heavy_carry'}">
+						<collision>
+							<origin xyz="${-direction*0.02} -0.26 -0.05" rpy="${PI/2} 0 0"/>
+							<geometry>
+								<box size="0.1 0.1 0.08"/>
+							</geometry>
+						</collision>
+					</xacro:if>
+					<xacro:if value="${selected_gripper_pad == 'default'}">
+						<collision>
+							<origin xyz="0 -0.28 0" rpy="${PI/2} 0 0"/>
+							<geometry>
+								<cylinder length="0.08" radius="0.021707"/>
+							</geometry>
+						</collision>
+					</xacro:if>
 				</xacro:if>
 
 				<xacro:if value="${selected_gripper_type == 'ag2f90_c' or selected_gripper_type == 'ag2f90_d'}">
