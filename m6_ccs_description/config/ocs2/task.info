@@ -388,3 +388,13 @@ jointVelocityLimits
     }
   }
 }
+
+; Marvin M3S/M6S CCS: 6/7 joint coupling constraint
+joint67Coupling
+{
+  activate  true
+  ; penalty weight for |J6| - limit(|J7|) <= 0
+  mu  5.0
+  ; smoothing epsilon for abs() in constraint (for derivatives)
+  smoothAbsEps  1e-6
+}
