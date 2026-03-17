@@ -241,7 +241,7 @@
     <parent link="left_link6"/>
     <child link="left_link7"/>
     <axis xyz="0 0 1"/>
-    <limit effort="18" lower="-1.361356816555577" upper="1.361356816555577" velocity="3.141592653589793"/>
+    <limit effort="18" lower="-0.661356816555577" upper="0.661356816555577" velocity="3.141592653589793"/>
   </joint>
   <link name="left_tcp"/>
   <joint name="left_tcp_joint" type="fixed">
@@ -461,7 +461,7 @@
     <parent link="right_link6"/>
     <child link="right_link7"/>
     <axis xyz="0 0 1"/>
-    <limit effort="18" lower="-1.361356816555577" upper="1.361356816555577" velocity="3.141592653589793"/>
+    <limit effort="18" lower="-0.661356816555577" upper="0.661356816555577" velocity="3.141592653589793"/>
   </joint>
   <link name="right_tcp"/>
   <joint name="right_tcp_joint" type="fixed">
