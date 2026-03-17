@@ -39,6 +39,12 @@
 	<xacro:if value="${type_arg == 'ag2f90_d'}">
 		<xacro:property name="selected_gripper_type" value="ag2f90_d"/>
 	</xacro:if>
+	<xacro:if value="${type_arg == 'dual_ag2f90_c'}">
+		<xacro:property name="selected_gripper_type" value="ag2f90_c"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'dual_ag2f90_d'}">
+		<xacro:property name="selected_gripper_type" value="ag2f90_d"/>
+	</xacro:if>
 	<xacro:if value="${type_arg == 'rg75'}">
 		<xacro:property name="selected_gripper_type" value="rg75"/>
 	</xacro:if>

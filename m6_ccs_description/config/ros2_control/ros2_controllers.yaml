@@ -1,7 +1,7 @@
 # This config file of OpenArm Single is used by ros2_control
 controller_manager:
   ros__parameters:
-    update_rate: 100  # Hz
+    update_rate: 200  # Hz
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
@@ -20,7 +20,7 @@ controller_manager:
 ocs2_arm_controller:
   ros__parameters:
     # Joint configuration
-    update_rate: 100  # Hz
+    update_rate: 200  # Hz
     joints:
       - left_joint1
       - left_joint2

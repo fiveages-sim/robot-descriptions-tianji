@@ -26,7 +26,7 @@ ddp
 {
   algorithm                       SLQ
 
-  nThreads                        3
+  nThreads                        12
   threadPriority                  50
 
   maxNumIterations                1
@@ -182,7 +182,7 @@ inputCost
     ; input costs for the arm DOFs
     arm
     {
-      scaling 1e-3
+      scaling 2e-3
 
       (0,0)  0.1  ; left_arm_1 velocity
       (1,1)  0.1  ; left_arm_2 velocity
@@ -208,15 +208,15 @@ endEffector
   dualArmMode      true
   leftArm
     {
-      muPosition      10.0
-      muOrientation    5.0
+      muPosition      50.0
+      muOrientation    10.0
     }
 
     ; 右臂特定配置
   rightArm
     {
-      muPosition      10.0
-      muOrientation    5.0
+      muPosition      50.0
+      muOrientation    10.0
     }
 }
 
@@ -227,6 +227,8 @@ finalEndEffector
     {
       muPosition      10.0
       muOrientation    5.0
+      positionPenalty log
+      logPositionScale 2e-1
     }
 
     ; 右臂特定配置
@@ -234,6 +236,8 @@ finalEndEffector
     {
       muPosition      10.0
       muOrientation    5.0
+      positionPenalty log
+      logPositionScale 2e-1
     }
 }
 selfCollision
@@ -387,14 +391,4 @@ jointVelocityLimits
       (13,0) 1.07      ; right_arm_7 [rad/s]
     }
   }
-}
-
-; Marvin M3S/M6S CCS: 6/7 joint coupling constraint
-joint67Coupling
-{
-  activate  true
-  ; penalty weight for |J6| - limit(|J7|) <= 0
-  mu  5.0
-  ; smoothing epsilon for abs() in constraint (for derivatives)
-  smoothAbsEps  1e-6
 }
