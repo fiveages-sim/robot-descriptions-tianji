@@ -208,15 +208,15 @@ endEffector
   dualArmMode      true
   leftArm
     {
-      muPosition      10.0
-      muOrientation    5.0
+      muPosition      50.0
+      muOrientation    10.0
     }
 
     ; 右臂特定配置
   rightArm
     {
-      muPosition      10.0
-      muOrientation    5.0
+      muPosition      50.0
+      muOrientation    10.0
     }
 }
 
@@ -225,15 +225,15 @@ finalEndEffector
   dualArmMode      true
   leftArm
     {
-      muPosition      10.0
-      muOrientation    5.0
+      muPosition      100.0
+      muOrientation    50.0
     }
 
     ; 右臂特定配置
   rightArm
     {
-      muPosition      10.0
-      muOrientation    5.0
+      muPosition      100.0
+      muOrientation    50.0
     }
 }
 selfCollision
