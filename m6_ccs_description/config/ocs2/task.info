@@ -26,11 +26,11 @@ ddp
 {
   algorithm                       SLQ
 
-  nThreads                        12
+  nThreads                        3
   threadPriority                  50
 
-  maxNumIterations                1
-  minRelCost                      0.1
+  maxNumIterations                3
+  minRelCost                      0.01
   constraintTolerance             1e-3
 
   displayInfo                     false
@@ -76,8 +76,8 @@ rollout
 ; MPC settings
 mpc
 {
-  timeHorizon                     1.0   ; [s]
-  solutionTimeWindow              0.2   ; [s]
+  timeHorizon                     3.5   ; [s]
+  solutionTimeWindow              1.0   ; [s]
   coldStart                       false
   
   debugPrint                      false
@@ -182,7 +182,7 @@ inputCost
     ; input costs for the arm DOFs
     arm
     {
-      scaling 2e-3
+      scaling 1e-2
 
       (0,0)  0.1  ; left_arm_1 velocity
       (1,1)  0.1  ; left_arm_2 velocity
@@ -208,15 +208,19 @@ endEffector
   dualArmMode      true
   leftArm
     {
-      muPosition      50.0
-      muOrientation    10.0
+      muPosition      40.0
+      muOrientation    8.0
+      positionPenalty log
+      logPositionScale 0.5
     }
 
     ; 右臂特定配置
   rightArm
     {
-      muPosition      50.0
-      muOrientation    10.0
+      muPosition      40.0
+      muOrientation    8.0
+      positionPenalty log
+      logPositionScale 0.5
     }
 }
 
@@ -225,20 +229,28 @@ finalEndEffector
   dualArmMode      true
   leftArm
     {
-      muPosition      10.0
-      muOrientation    5.0
+      muPosition      50.0
+      muOrientation    10.0
       positionPenalty log
-      logPositionScale 2e-1
+      logPositionScale 0.5
     }
 
     ; 右臂特定配置
   rightArm
     {
-      muPosition      10.0
-      muOrientation    5.0
+      muPosition      50.0
+      muOrientation    10.0
       positionPenalty log
-      logPositionScale 2e-1
+      logPositionScale 0.5
     }
+}
+
+joint67Coupling
+{
+  ; enable joint 6/7 coupling constraint
+  activate  false
+  mu      0.05
+  smoothAbsEps  1e-6
 }
 selfCollision
 { 
