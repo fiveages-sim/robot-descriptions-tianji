@@ -1,0 +1,132 @@
+# Dedicated chained-controller config:
+#   ocs2_arm_controller (top) -> admittance_controller (middle/final writer) -> Marvin hardware
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    ocs2_arm_controller:
+      type: ocs2_arm_controller/Ocs2ArmController
+
+    left_gripper_controller:
+      type: adaptive_gripper_controller/AdaptiveGripperController
+
+    right_gripper_controller:
+      type: adaptive_gripper_controller/AdaptiveGripperController
+
+    admittance_controller:
+      type: admittance_controller/AdmittanceController
+
+ocs2_arm_controller:
+  ros__parameters:
+    update_rate: 100  # Hz
+    joints:
+      - left_joint1
+      - left_joint2
+      - left_joint3
+      - left_joint4
+      - left_joint5
+      - left_joint6
+      - left_joint7
+      - right_joint1
+      - right_joint2
+      - right_joint3
+      - right_joint4
+      - right_joint5
+      - right_joint6
+      - right_joint7
+
+    # Write into admittance reference interfaces:
+    #   admittance_controller/<joint>/position|velocity
+    command_prefix: admittance_controller
+    command_interfaces:
+      - position
+      - velocity
+    state_interfaces:
+      - position
+      - velocity
+
+    future_time_offset: 1.0
+    robot_name: m6_ccs
+    robot_type: ag2f90
+    mpc_frequency: 50
+
+    home_1: [ 1.457133809892805, -1.0633699963902674, -1.1994065285584414, -0.8074199090303408, -0.6949558811978124, -0.6864381599253574, -0.1295225067208675,
+              -1.457133809892805, -1.0633699963902674, 1.1994065285584414, -0.8074199090303408, 0.6949558811978124, -0.6864381599253574, 0.1295225067208675]
+    home_2: [ 2.502, -1.528, -1.562, -1.680, 0.0, -0.787, 0.0,
+              -2.502, -1.528, 1.562, -1.680, 0.0, -0.787, 0.0 ]
+
+left_gripper_controller:
+  ros__parameters:
+    joint: left_gripper_joint
+    use_effort_interface: false
+
+right_gripper_controller:
+  ros__parameters:
+    joint: right_gripper_joint
+    use_effort_interface: false
+
+admittance_controller:
+  ros__parameters:
+    joints:
+      - left_joint1
+      - left_joint2
+      - left_joint3
+      - left_joint4
+      - left_joint5
+      - left_joint6
+      - left_joint7
+      - right_joint1
+      - right_joint2
+      - right_joint3
+      - right_joint4
+      - right_joint5
+      - right_joint6
+      - right_joint7
+
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    chainable_command_interfaces:
+      - position
+      - velocity
+
+    kinematics:
+      plugin_package: kinematics_interface_kdl
+      plugin_name: kinematics_interface_kdl/KinematicsInterfaceKDL
+      # NOTE: this is a single TCP setup. For strict dual-arm admittance, split controllers per arm.
+      base: base_link
+      tip: left_tcp
+      alpha: 0.01
+
+    ft_sensor:
+      name: left_ft_sensor
+      frame:
+        id: left_tcp
+      filter_coefficient: 0.05
+
+    control:
+      frame:
+        id: left_tcp
+
+    fixed_world_frame:
+      frame:
+        id: world
+
+    gravity_compensation:
+      frame:
+        id: left_tcp
+      CoG:
+        pos: [0.0, 0.0, 0.0]
+        force: 0.0
+
+    admittance:
+      selected_axes: [true, true, true, true, true, true]
+      mass: [5.0, 5.0, 5.0, 0.3, 0.3, 0.3]
+      damping_ratio: [1.2, 1.2, 1.2, 1.2, 1.2, 1.2]
+      stiffness: [600.0, 600.0, 600.0, 35.0, 35.0, 35.0]
+      joint_damping: 5.0

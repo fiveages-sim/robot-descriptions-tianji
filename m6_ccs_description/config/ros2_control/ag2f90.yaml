@@ -17,6 +17,9 @@ controller_manager:
     right_gripper_controller:
       type: adaptive_gripper_controller/AdaptiveGripperController
 
+    admittance_controller:
+      type: admittance_controller/AdmittanceController
+
 ocs2_arm_controller:
   ros__parameters:
     # Joint configuration

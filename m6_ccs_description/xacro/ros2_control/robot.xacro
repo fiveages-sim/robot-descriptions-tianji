@@ -37,6 +37,10 @@
 				<param name="gripper_type">${selected_gripper_type}</param>
 				<param name="max_joint_speed">50</param>
 				<param name="max_joint_acceleration">30</param>
+				<!-- Virtual FT sensor wrench topics (geometry_msgs/WrenchStamped) -->
+				<!-- dual-arm -->
+				<param name="left_wrench_topic">/left_arm_external_wrench</param>
+				<param name="right_wrench_topic">/right_arm_external_wrench</param>
 				<xacro:if value="${selected_scene == 'desktop'}">
 					<param name="device_ip">192.168.10.190</param>
 					<param name="ctrl_mode">JOINT_IMPEDANCE</param>
@@ -55,6 +59,10 @@
 		<xacro:if value="${selected_arm_config == 'dual'}">
 			<xacro:m6_interfaces name="left"/>
 			<xacro:m6_interfaces name="right"/>
+
+			<!-- Virtual FT sensors (wrench estimated from joint external torques) -->
+			<xacro:m6_ft_sensor_interfaces sensor_name="left_ft_sensor"/>
+			<xacro:m6_ft_sensor_interfaces sensor_name="right_ft_sensor"/>
 			
 			<xacro:if value="${selected_gripper_type == 'ag2f90_c' or selected_gripper_type == 'ag2f90_d'}">
 				<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
@@ -78,6 +86,8 @@
 				<xacro:unless value="${selected_scene == 'usb-90c'}">
 					<xacro:m6_interfaces name=""/>
 				</xacro:unless>
+
+				<xacro:m6_ft_sensor_interfaces sensor_name="ft_sensor"/>
 				<xacro:if value="${selected_gripper_type == 'ag2f90_c' or selected_gripper_type == 'ag2f90_d'}">
 					<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
 					<xacro:ag2f90c_interfaces name=""/>

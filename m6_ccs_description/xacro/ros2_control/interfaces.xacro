@@ -55,4 +55,16 @@
 		</joint>
 
 	</xacro:macro>
+
+	<!-- Force-torque sensor semantic-component interfaces -->
+	<xacro:macro name="m6_ft_sensor_interfaces" params="sensor_name">
+		<sensor name="${sensor_name}">
+			<state_interface name="force.x"/>
+			<state_interface name="force.y"/>
+			<state_interface name="force.z"/>
+			<state_interface name="torque.x"/>
+			<state_interface name="torque.y"/>
+			<state_interface name="torque.z"/>
+		</sensor>
+	</xacro:macro>
 </robot>
