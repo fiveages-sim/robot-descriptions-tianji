@@ -182,7 +182,7 @@ inputCost
     ; input costs for the arm DOFs
     arm
     {
-      scaling 1e-2
+      scaling 3e-2
 
       (0,0)  0.1  ; left_arm_1 velocity
       (1,1)  0.1  ; left_arm_2 velocity
@@ -208,8 +208,8 @@ endEffector
   dualArmMode      true
   leftArm
     {
-      muPosition      40.0
-      muOrientation    8.0
+      muPosition      26.0
+      muOrientation    7.0
       positionPenalty log
       logPositionScale 0.5
     }
@@ -217,8 +217,8 @@ endEffector
     ; 右臂特定配置
   rightArm
     {
-      muPosition      40.0
-      muOrientation    8.0
+      muPosition      26.0
+      muOrientation    7.0
       positionPenalty log
       logPositionScale 0.5
     }
@@ -229,8 +229,8 @@ finalEndEffector
   dualArmMode      true
   leftArm
     {
-      muPosition      50.0
-      muOrientation    10.0
+      muPosition      20.0
+      muOrientation    5.0
       positionPenalty log
       logPositionScale 0.5
     }
@@ -238,8 +238,8 @@ finalEndEffector
     ; 右臂特定配置
   rightArm
     {
-      muPosition      50.0
-      muOrientation    10.0
+      muPosition      20.0
+      muOrientation    5.0
       positionPenalty log
       logPositionScale 0.5
     }
