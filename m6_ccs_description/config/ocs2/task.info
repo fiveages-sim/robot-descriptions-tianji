@@ -182,22 +182,22 @@ inputCost
     ; input costs for the arm DOFs
     arm
     {
-      scaling 1e-3
+      scaling 1e-2
 
-      (0,0)  0.1  ; left_arm_1 velocity
-      (1,1)  0.1  ; left_arm_2 velocity
-      (2,2)  0.1  ; left_arm_3 velocity
-      (3,3)  0.1  ; left_arm_4 velocity
-      (4,4)  0.2  ; left_arm_5 velocity
-      (5,5)  1.0  ; left_arm_6 velocity
-      (6,6)  1.0  ; left_arm_7 velocity
-      (7,7)  0.1  ; right_arm_1 velocity
-      (8,8)  0.1  ; right_arm_2 velocity
-      (9,9)  0.1  ; right_arm_3 velocity
-      (10,10)  0.1  ; right_arm_4 velocity
-      (11,11)  0.2  ; right_arm_5 velocity
-      (12,12)  1.0  ; right_arm_6 velocity
-      (13,13)  1.0  ; right_arm_7 velocity
+      (0,0)  5.0  ; left_arm_1 velocity
+      (1,1)  5.0  ; left_arm_2 velocity
+      (2,2)  5.0  ; left_arm_3 velocity
+      (3,3)  5.0  ; left_arm_4 velocity
+      (4,4)  5.0  ; left_arm_5 velocity
+      (5,5)  5.0  ; left_arm_6 velocity
+      (6,6)  5.0  ; left_arm_7 velocity
+      (7,7)  5.0  ; right_arm_1 velocity
+      (8,8)  5.0  ; right_arm_2 velocity
+      (9,9)  5.0  ; right_arm_3 velocity
+      (10,10)  5.0  ; right_arm_4 velocity
+      (11,11)  5.0  ; right_arm_5 velocity
+      (12,12)  5.0  ; right_arm_6 velocity
+      (13,13)  5.0  ; right_arm_7 velocity
     }
   }
 }
@@ -208,15 +208,15 @@ endEffector
   dualArmMode      true
   leftArm
     {
-      muPosition      10.0
-      muOrientation    5.0
+      muPosition      100.0
+      muOrientation    50.0
     }
 
     ; 右臂特定配置
   rightArm
     {
-      muPosition      10.0
-      muOrientation    5.0
+      muPosition      100.0
+      muOrientation    50.0
     }
 }
 
@@ -225,15 +225,15 @@ finalEndEffector
   dualArmMode      true
   leftArm
     {
-      muPosition      10.0
-      muOrientation    5.0
+      muPosition      100.0
+      muOrientation    50.0
     }
 
     ; 右臂特定配置
   rightArm
     {
-      muPosition      10.0
-      muOrientation    5.0
+      muPosition      100.0
+      muOrientation    50.0
     }
 }
 selfCollision
@@ -277,7 +277,7 @@ jointPositionLimits
   mu      1e-2
 
   ; relaxed log barrier delta
-  delta   1e-2
+  delta   1e-3
 }
 
 jointVelocityLimits
