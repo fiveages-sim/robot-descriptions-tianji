@@ -216,7 +216,7 @@
     <parent link="left_link5"/>
     <child link="left_link6"/>
     <axis xyz="0 0 1"/>
-    <limit effort="18" lower="-0.5" upper="0.5" velocity="3.141592653589793"/>
+    <limit effort="18" lower="-0.8" upper="0.8" velocity="3.141592653589793"/>
   </joint>
   <!-- Link 7 -->
   <link name="left_link7">
@@ -448,7 +448,7 @@
     <parent link="right_link5"/>
     <child link="right_link6"/>
     <axis xyz="0 0 1"/>
-    <limit effort="18" lower="-0.5" upper="0.5" velocity="3.141592653589793"/>
+    <limit effort="18" lower="-0.8" upper="0.8" velocity="3.141592653589793"/>
   </joint>
   <!-- Link 7 -->
   <link name="right_link7">
