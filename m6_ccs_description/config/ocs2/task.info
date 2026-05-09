@@ -71,6 +71,12 @@ rollout
   integratorType                  ODE45
   maxNumStepsPerSecond            100000
   checkNumericalStability         false
+  enforceJointLimits              true
+
+  ; Bake joint position limits into the dynamics as a smooth outward velocity attenuation.
+  ; This targets solver stability by making the model match the plant saturation near limits.
+  bakeJointPositionLimits         true
+  jointLimitEps                   0.02   ; [rad]
 }
 
 ; MPC settings
@@ -204,12 +210,13 @@ inputCost
 
 endEffector
 {
-  ; end effector quadratic penalty scaling
+  trackingError se3_log
+  se3Invariant  right   ; or left
   dualArmMode      true
   leftArm
     {
-      muPosition      26.0
-      muOrientation    7.0
+      muPosition      50.0
+      muOrientation    50.0
       positionPenalty log
       logPositionScale 0.5
     }
@@ -217,8 +224,8 @@ endEffector
     ; 右臂特定配置
   rightArm
     {
-      muPosition      26.0
-      muOrientation    7.0
+      muPosition      50.0
+      muOrientation    50.0
       positionPenalty log
       logPositionScale 0.5
     }
@@ -226,11 +233,13 @@ endEffector
 
 finalEndEffector
 {
+  trackingError se3_log
+  se3Invariant  right   ; or left
   dualArmMode      true
   leftArm
     {
-      muPosition      20.0
-      muOrientation    5.0
+      muPosition      50.0
+      muOrientation    50.0
       positionPenalty log
       logPositionScale 0.5
     }
@@ -238,8 +247,8 @@ finalEndEffector
     ; 右臂特定配置
   rightArm
     {
-      muPosition      20.0
-      muOrientation    5.0
+      muPosition      50.0
+      muOrientation    50.0
       positionPenalty log
       logPositionScale 0.5
     }
@@ -249,7 +258,20 @@ joint67Coupling
 {
   ; enable joint 6/7 coupling constraint
   activate  false
-  mu      0.05
+  ; "0/1-like" cost with smooth boundary (convex):
+  ; h' = limit(|q7|) - |q6| - margin
+  ; penalty is active only when h' < activationThreshold
+  mode          augmented_lagrangian
+  margin        0.10    ; rad (~5.7 deg)
+  mu                 0.02
+  delta              0.02
+  activationThreshold 0.02
+
+  ; AL parameters (used when mode=augmented_lagrangian)
+  alScale    80.0
+  alStepSize 1.0
+
+  ; (optional) smoothing for |q| in constraint
   smoothAbsEps  1e-6
 }
 selfCollision
@@ -274,10 +296,10 @@ selfCollision
   }
 
   ; minimum distance allowed between the pairs
-  minimumDistance  0.025
+  minimumDistance  0.05
 
   ; relaxed log barrier mu
-  mu      1e-3
+  mu      5e-3
 
   ; relaxed log barrier delta
   delta   1e-2
@@ -290,10 +312,10 @@ jointPositionLimits
   activate  true
 
   ; relaxed log barrier mu
-  mu      1e-2
+  mu      2e-3
 
   ; relaxed log barrier delta
-  delta   1e-2
+  delta   2e-2
 }
 
 jointVelocityLimits
