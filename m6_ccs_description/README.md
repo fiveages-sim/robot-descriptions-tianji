@@ -68,6 +68,21 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
   source ~/ros2_ws/install/setup.bash
   ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=rg75_heavy collider:=simple
   ```
+* Dual Arm with LinkerHand O6
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=linkerhand_o6 collider:=simple
+  ```
+* Dual Arm with LinkerHand L6
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=linkerhand_l6 collider:=simple
+  ```
+* Dual Arm with LinkerHand O7
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=linkerhand_o7 collider:=simple
+  ```
 
 ## 3. OCS2 Demo
 
@@ -118,6 +133,18 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
   ```bash
   source ~/ros2_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=rg75_heavy
+  ```
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=linkerhand_o6
+  ```
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=linkerhand_l6
+  ```
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=linkerhand_o7
   ```
 
 ### 3.3 USB HIL task

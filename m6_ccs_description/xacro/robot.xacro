@@ -11,6 +11,7 @@
 	<!-- 默认值 -->
 	<xacro:property name="selected_arm_config" value="dual"/>
 	<xacro:property name="selected_gripper_type" value="none"/>
+	<xacro:property name="selected_hand_type" value="none"/>
 	<xacro:property name="selected_gripper_pad" value="default"/>
 	<xacro:property name="selected_scene" value=""/>
 
@@ -45,6 +46,15 @@
 	<xacro:if value="${type_arg == 'rg75_heavy'}">
 		<xacro:property name="selected_gripper_type" value="rg75"/>
 		<xacro:property name="selected_gripper_pad" value="heavy_carry"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'linkerhand_o6'}">
+		<xacro:property name="selected_hand_type" value="linkerhand_o6"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'linkerhand_l6'}">
+		<xacro:property name="selected_hand_type" value="linkerhand_l6"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'linkerhand_o7'}">
+		<xacro:property name="selected_hand_type" value="linkerhand_o7"/>
 	</xacro:if>
 
 	<!-- 适用纯双臂演示场景的配置 -->
@@ -205,6 +215,57 @@
 				<xacro:if value="${selected_gripper_pad == 'heavy_carry'}">
 					<origin rpy="0 0 ${PI/2}"/>
 				</xacro:if>
+			</joint>
+		</xacro:if>
+
+		<xacro:if value="${selected_hand_type == 'linkerhand_o6'}">
+			<xacro:include filename="$(find linkerhand_description)/xacro/o6.xacro"/>
+			<xacro:LinkerHandO6 name="left_hand" direction="1" use_flange="true" fixed_joints="false"/>
+			<joint name="left_hand_base_joint" type="fixed">
+				<origin xyz="0 0 0.0045" rpy="0 0 ${PI}"/>
+				<parent link="left_tcp"/>
+				<child link="left_hand_flange"/>
+			</joint>
+
+			<xacro:LinkerHandO6 name="right_hand" direction="-1" use_flange="true" fixed_joints="false"/>
+			<joint name="right_hand_base_joint" type="fixed">
+				<parent link="right_tcp"/>
+				<child link="right_hand_flange"/>
+				<origin xyz="0 0 0.0045"/>
+			</joint>
+		</xacro:if>
+
+		<xacro:if value="${selected_hand_type == 'linkerhand_o7'}">
+			<xacro:include filename="$(find linkerhand_description)/xacro/o7.xacro"/>
+			<xacro:LinkerHandO7 name="left_hand" direction="1" use_flange="true" fixed_joints="false"/>
+			<joint name="left_hand_base_joint" type="fixed">
+				<origin rpy="0 0 ${PI/2}"/>
+				<parent link="left_tcp"/>
+				<child link="left_hand_flange"/>
+			</joint>
+
+			<xacro:LinkerHandO7 name="right_hand" direction="-1" use_flange="true" fixed_joints="false"/>
+			<joint name="right_hand_base_joint" type="fixed">
+				<origin rpy="0 0 ${-PI/2}"/>
+				<parent link="right_tcp"/>
+				<child link="right_hand_flange"/>
+			</joint>
+		</xacro:if>
+
+		<xacro:if value="${selected_hand_type == 'linkerhand_l6'}">
+			<xacro:include filename="$(find linkerhand_description)/xacro/l6.xacro"/>
+			<xacro:LinkerHandL6 name="left_hand" direction="1" use_flange="true" fixed_joints="false"/>
+			<joint name="left_hand_base_joint" type="fixed">
+				<origin xyz="0 0 0.0045" rpy="0 0 ${PI}"/>
+				<parent link="left_tcp"/>
+				<child link="left_hand_flange"/>
+			</joint>
+
+			<xacro:LinkerHandL6 name="right_hand" direction="-1" use_flange="true" fixed_joints="false"/>
+			<joint name="right_hand_base_joint" type="fixed">
+				<parent link="right_tcp"/>
+				<child link="right_hand_flange"/>
+				<origin xyz="0 0 0.0045"/>
 			</joint>
 		</xacro:if>
 	</xacro:if>

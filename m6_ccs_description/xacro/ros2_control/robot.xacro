@@ -34,7 +34,12 @@
 			<xacro:if value="${'$(arg ros2_control_hardware_type)' == 'real'}">
 				<plugin>marvin_ros2_control/MarvinHardware</plugin>
 				<param name="arm_type">${selected_arm_config}</param>
-				<param name="gripper_type">${selected_gripper_type}</param>
+				<xacro:if value="${selected_hand_type != 'none'}">
+					<param name="gripper_type">${selected_hand_type}</param>
+				</xacro:if>
+				<xacro:unless value="${selected_hand_type != 'none'}">
+					<param name="gripper_type">${selected_gripper_type}</param>
+				</xacro:unless>
 				<param name="max_joint_speed">50</param>
 				<param name="max_joint_acceleration">30</param>
 				<xacro:if value="${selected_scene == 'desktop'}">
@@ -66,6 +71,18 @@
 				<xacro:include filename="$(find jodell_description)/xacro/ros2_control/RG75-300.xacro"/>
 				<xacro:rg75_interfaces name="left"/>
 				<xacro:rg75_interfaces name="right"/>
+			</xacro:if>
+			
+			<xacro:if value="${selected_hand_type == 'linkerhand_o6' or selected_hand_type == 'linkerhand_l6'}">
+				<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o6.xacro"/>
+				<xacro:linkerhand_o6_interfaces name="left_hand"/>
+				<xacro:linkerhand_o6_interfaces name="right_hand"/>
+			</xacro:if>
+
+			<xacro:if value="${selected_hand_type == 'linkerhand_o7'}">
+				<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o7.xacro"/>
+				<xacro:linkerhand_o7_interfaces name="left_hand"/>
+				<xacro:linkerhand_o7_interfaces name="right_hand"/>
 			</xacro:if>
 		</xacro:if>
 
