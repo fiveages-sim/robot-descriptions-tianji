@@ -37,6 +37,10 @@
 	<xacro:if value="${type_arg == 'ag2f90_c'}">
 		<xacro:property name="selected_gripper_type" value="ag2f90_c"/>
 	</xacro:if>
+	<xacro:if value="${type_arg == 'ag2f90_c_soft'}">
+		<xacro:property name="selected_gripper_type" value="ag2f90_c"/>
+		<xacro:property name="selected_gripper_pad" value="soft"/>
+	</xacro:if>
 	<xacro:if value="${type_arg == 'ag2f90_d'}">
 		<xacro:property name="selected_gripper_type" value="ag2f90_d"/>
 	</xacro:if>
