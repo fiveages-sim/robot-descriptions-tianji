@@ -34,8 +34,8 @@
 			<xacro:if value="${'$(arg ros2_control_hardware_type)' == 'real'}">
 				<plugin>marvin_ros2_control/MarvinHardware</plugin>
 				<param name="arm_type">${selected_arm_config}</param>
-				<param name="left_ee_type">${selected_hand_type if selected_hand_type != 'none' else selected_gripper_type}</param>
-				<param name="right_ee_type">${selected_hand_type if selected_hand_type != 'none' else selected_gripper_type}</param>
+				<param name="left_ee_type">${left_hand_type if left_hand_type != '' else left_gripper_type}</param>
+				<param name="right_ee_type">${right_hand_type if right_hand_type != '' else right_gripper_type}</param>
 				<param name="max_joint_speed">50</param>
 				<param name="max_joint_acceleration">30</param>
 				<xacro:if value="${selected_scene == 'desktop'}">
