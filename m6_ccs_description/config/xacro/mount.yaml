@@ -1,0 +1,3 @@
+# Single source of truth: M6 CCS standalone dual-arm (non-desktop).
+arm_half_spacing: "0.062"
+arm_mount_z: "0.0"

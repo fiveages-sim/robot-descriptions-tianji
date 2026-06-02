@@ -4,9 +4,21 @@
 	<xacro:arg name="collider" default="convex"/>
 	<xacro:arg name="type" default="dual"/>
 	<xacro:arg name="scene" default=""/>
+	<xacro:arg name="left_type" default=""/>
+	<xacro:arg name="right_type" default=""/>
+	<xacro:arg name="eef_fixed_joints" default="false"/>
+	<!-- Arm mount: values from config/xacro/mount.yaml via launch (see arm_mount.xacro) -->
+	<xacro:arg name="arm_half_spacing" default=""/>
+	<xacro:arg name="arm_mount_z" default=""/>
 
 	<!-- 从 type 参数解析出 arm_config、gripper_type 和 scene -->
 	<xacro:property name="type_arg" value="$(arg type)"/>
+	<xacro:property name="left_type_arg" value="$(arg left_type)"/>
+	<xacro:property name="right_type_arg" value="$(arg right_type)"/>
+	<xacro:property name="arm_half_spacing_arg" value="$(arg arm_half_spacing)"/>
+	<xacro:property name="arm_mount_z_arg" value="$(arg arm_mount_z)"/>
+	<xacro:property name="effective_left_type" value="${left_type_arg if left_type_arg != '' else type_arg}"/>
+	<xacro:property name="effective_right_type" value="${right_type_arg if right_type_arg != '' else type_arg}"/>
 
 	<!-- 默认值 -->
 	<xacro:property name="selected_arm_config" value="dual"/>
@@ -73,6 +85,10 @@
 
 
 	<xacro:include filename="$(find m6_ccs_description)/xacro/arm.xacro"/>
+	<xacro:include filename="$(find m6_ccs_description)/xacro/arm_mount.xacro"/>
+	<xacro:set_arm_mount_properties
+		arm_half_spacing="${arm_half_spacing_arg}"
+		arm_mount_z="${arm_mount_z_arg}"/>
 
 	<!-- 单左臂（不包括 usb-90c 场景） -->
 	<xacro:if value="${selected_arm_config == 'left' and selected_scene != 'usb-90c'}">
@@ -116,19 +132,8 @@
 				<child link="arm_base"/>
 			</joint>
 
-			<!-- Left Arm -->
-			<joint name="left_arm_base_joint" type="fixed">
-				<parent link="arm_base"/>
-				<child link="left_base_link"/>
-				<origin rpy="-${PI/2} 0 0" xyz="0.0 0.12 0.701"/>
-			</joint>
-
-			<!-- Right Arm -->
-			<joint name="right_arm_base_joint" type="fixed">
-				<parent link="arm_base"/>
-				<child link="right_base_link"/>
-				<origin rpy="${PI/2} 0 0" xyz="0.0 -0.12 0.701"/>
-			</joint>
+			<!-- Left / Right Arm mounts (desktop preset: wider spacing + raised z) -->
+			<xacro:DualArmMountJoints parent="arm_base"/>
 
 			<xacro:if value="${selected_gripper_type == 'none'}">
 				<link name="right_eef"/>
@@ -161,117 +166,25 @@
 				<child link="arm_base"/>
 			</joint>
 
-			<!-- Left Arm -->
-			<joint name="left_arm_base_joint" type="fixed">
-				<parent link="arm_base"/>
-				<child link="left_base_link"/>
-				<origin rpy="-${PI/2} 0 0" xyz="0.0 0.062 0"/>
-			</joint>
-
-			<!-- Right Arm -->
-			<joint name="right_arm_base_joint" type="fixed">
-				<parent link="arm_base"/>
-				<child link="right_base_link"/>
-				<origin rpy="${PI/2} 0 0" xyz="0 -0.062 0"/>
-			</joint>
+			<xacro:DualArmMountJoints parent="arm_base"/>
 		</xacro:unless>
 
 		<!-- 双臂和末端执行器（两种场景共用） -->
 		<xacro:M6_CCS name="left"/>
 		<xacro:M6_CCS name="right" direction="-1"/>
 
-		<!-- 双臂末端执行器 -->
-		<xacro:if value="${selected_gripper_type == 'ag2f90_c' or selected_gripper_type == 'ag2f90_d'}">
-			<xacro:include filename="$(find changingtek_description)/xacro/AG2F90-C.xacro"/>
-
-			<xacro:AG2F90-C name="left" use_flange="true" pad="${selected_gripper_pad}"/>
-			<xacro:AG2F90-C name="right" use_flange="true" pad="${selected_gripper_pad}"/>
-
-			<joint name="left_gripper_fix" type="fixed">
-				<parent link="left_tcp"/>
-				<child link="left_flange"/>
-				<origin xyz="0 0 0.0045"/>
-			</joint>
-
-			<joint name="right_gripper_fix" type="fixed">
-				<parent link="right_tcp"/>
-				<child link="right_flange"/>
-				<origin xyz="0 0 0.0045"/>
-			</joint>
-		</xacro:if>
-
-		<xacro:if value="${selected_gripper_type == 'rg75'}">
-			<xacro:include filename="$(find jodell_description)/xacro/RG75-300.xacro"/>
-			<xacro:RG75-300 name="left" use_flange="true" pad="${selected_gripper_pad}"/>
-			<xacro:RG75-300 name="right" use_flange="true" pad="${selected_gripper_pad}"/>
-
-			<joint name="left_gripper_base_joint" type="fixed">
-				<parent link="left_tcp"/>
-				<child link="left_flange"/>
-				<xacro:if value="${selected_gripper_pad == 'heavy_carry'}">
-					<origin rpy="0 0 ${PI/2}"/>
-				</xacro:if>
-			</joint>
-
-			<joint name="right_gripper_base_joint" type="fixed">
-				<parent link="right_tcp"/>
-				<child link="right_flange"/>
-				<xacro:if value="${selected_gripper_pad == 'heavy_carry'}">
-					<origin rpy="0 0 ${PI/2}"/>
-				</xacro:if>
-			</joint>
-		</xacro:if>
-
-		<xacro:if value="${selected_hand_type == 'linkerhand_o6'}">
-			<xacro:include filename="$(find linkerhand_description)/xacro/o6.xacro"/>
-			<xacro:LinkerHandO6 name="left_hand" direction="1" use_flange="true" fixed_joints="false"/>
-			<joint name="left_hand_base_joint" type="fixed">
-				<origin xyz="0 0 0.0045" rpy="0 0 ${PI}"/>
-				<parent link="left_tcp"/>
-				<child link="left_hand_flange"/>
-			</joint>
-
-			<xacro:LinkerHandO6 name="right_hand" direction="-1" use_flange="true" fixed_joints="false"/>
-			<joint name="right_hand_base_joint" type="fixed">
-				<parent link="right_tcp"/>
-				<child link="right_hand_flange"/>
-				<origin xyz="0 0 0.0045"/>
-			</joint>
-		</xacro:if>
-
-		<xacro:if value="${selected_hand_type == 'linkerhand_o7'}">
-			<xacro:include filename="$(find linkerhand_description)/xacro/o7.xacro"/>
-			<xacro:LinkerHandO7 name="left_hand" direction="1" use_flange="true" fixed_joints="false"/>
-			<joint name="left_hand_base_joint" type="fixed">
-				<origin rpy="0 0 ${PI/2}"/>
-				<parent link="left_tcp"/>
-				<child link="left_hand_flange"/>
-			</joint>
-
-			<xacro:LinkerHandO7 name="right_hand" direction="-1" use_flange="true" fixed_joints="false"/>
-			<joint name="right_hand_base_joint" type="fixed">
-				<origin rpy="0 0 ${-PI/2}"/>
-				<parent link="right_tcp"/>
-				<child link="right_hand_flange"/>
-			</joint>
-		</xacro:if>
-
-		<xacro:if value="${selected_hand_type == 'linkerhand_l6'}">
-			<xacro:include filename="$(find linkerhand_description)/xacro/l6.xacro"/>
-			<xacro:LinkerHandL6 name="left_hand" direction="1" use_flange="true" fixed_joints="false"/>
-			<joint name="left_hand_base_joint" type="fixed">
-				<origin xyz="0 0 0.0045" rpy="0 0 ${PI}"/>
-				<parent link="left_tcp"/>
-				<child link="left_hand_flange"/>
-			</joint>
-
-			<xacro:LinkerHandL6 name="right_hand" direction="-1" use_flange="true" fixed_joints="false"/>
-			<joint name="right_hand_base_joint" type="fixed">
-				<parent link="right_tcp"/>
-				<child link="right_hand_flange"/>
-				<origin xyz="0 0 0.0045"/>
-			</joint>
-		</xacro:if>
+		<xacro:include filename="$(find m6_ccs_description)/xacro/eef_type_resolver.xacro"/>
+		<xacro:set_side_eef_types side="left" type_key="${effective_left_type}"/>
+		<xacro:set_side_eef_types side="right" type_key="${effective_right_type}"/>
+		<xacro:include filename="$(find m6_ccs_description)/xacro/eefs.xacro"/>
+		<xacro:EndEffectors
+			eef_fixed_joints="$(arg eef_fixed_joints)"
+			left_hand_type="${left_hand_type}"
+			left_gripper_type="${left_gripper_type}"
+			left_gripper_pad="${left_gripper_pad}"
+			right_hand_type="${right_hand_type}"
+			right_gripper_type="${right_gripper_type}"
+			right_gripper_pad="${right_gripper_pad}"/>
 	</xacro:if>
 
 	<!-- USB-90C 配置 -->
@@ -297,12 +210,7 @@
 			</collision>
 		</link>
 
-		<!-- Left Arm -->
-		<joint name="left_arm_base_joint" type="fixed">
-			<parent link="base"/>
-			<child link="left_base_link"/>
-			<origin rpy="-${PI/2} 0 0" xyz="0.0 0.12 0.701"/>
-		</joint>
+		<xacro:LeftArmMountJoint parent="base"/>
 
 		<xacro:M6_CCS name="left"/>
 

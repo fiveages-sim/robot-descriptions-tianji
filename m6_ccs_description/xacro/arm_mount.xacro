@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<xacro:property name="PI" value="3.1415926535897931"/>
+
+	<!--
+	  Dual-arm mount joints on arm_base (mechanism only).
+
+	  Spacing must be supplied via xacro args (from host config/xacro/mount.yaml
+	  through robot_common_launch). No built-in product presets here.
+	-->
+	<xacro:macro name="set_arm_mount_properties" params="arm_half_spacing arm_mount_z">
+		<xacro:property name="effective_arm_half_spacing" value="${arm_half_spacing}" scope="parent"/>
+		<xacro:property name="effective_arm_mount_z" value="${arm_mount_z}" scope="parent"/>
+	</xacro:macro>
+
+	<xacro:macro name="DualArmMountJoints" params="parent">
+		<joint name="left_arm_base_joint" type="fixed">
+			<parent link="${parent}"/>
+			<child link="left_base_link"/>
+			<origin rpy="-${PI/2} 0 0" xyz="0.0 ${effective_arm_half_spacing} ${effective_arm_mount_z}"/>
+		</joint>
+
+		<joint name="right_arm_base_joint" type="fixed">
+			<parent link="${parent}"/>
+			<child link="right_base_link"/>
+			<origin rpy="${PI/2} 0 0" xyz="0.0 ${-effective_arm_half_spacing} ${effective_arm_mount_z}"/>
+		</joint>
+	</xacro:macro>
+
+	<xacro:macro name="LeftArmMountJoint" params="parent">
+		<joint name="left_arm_base_joint" type="fixed">
+			<parent link="${parent}"/>
+			<child link="left_base_link"/>
+			<origin rpy="-${PI/2} 0 0" xyz="0.0 ${effective_arm_half_spacing} ${effective_arm_mount_z}"/>
+		</joint>
+	</xacro:macro>
+
+</robot>
