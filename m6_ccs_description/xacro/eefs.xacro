@@ -60,8 +60,13 @@
             </joint>
         </xacro:if>
 
-        <xacro:if value="${hand_type == 'linkerhand_o6' or hand_type == 'linkerhand_o7' or hand_type == 'linkerhand_l6'}">
-            <xacro:Ocs2SideEefFrame side="${side}" parent_link="${side}_hand_hand_base"/>
+        <!-- LinkerHand O6/L6/O7: built-in ${side}_hand_eef; alias ${side}_eef for OCS2 / task.info -->
+        <xacro:if value="${hand_type == 'linkerhand_o6' or hand_type == 'linkerhand_l6' or hand_type == 'linkerhand_o7'}">
+            <link name="${side}_eef"/>
+            <joint name="${side}_eef_joint" type="fixed">
+                <parent link="${side}_hand_eef"/>
+                <child link="${side}_eef"/>
+            </joint>
         </xacro:if>
     </xacro:macro>
 
