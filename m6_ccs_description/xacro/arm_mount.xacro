@@ -3,7 +3,6 @@
 
 	<xacro:property name="PI" value="3.1415926535897931"/>
 
-	<!-- Empty arm_base + dual mounts (standalone arms viz / component URDF). -->
 	<xacro:macro name="DualArmBase" params="
 		left_xyz:='0 0.062 0'
 		right_xyz:='0 -0.062 0'
@@ -16,10 +15,6 @@
 			left_rpy="${left_rpy}" right_rpy="${right_rpy}"/>
 	</xacro:macro>
 
-	<!--
-	  Dual-arm fixed mounts on an existing parent (e.g. W2 / G2 arm_base).
-	  Defaults: M6/W2 style (±Y, roll ±90°). Override xyz/rpy at call site when needed.
-	-->
 	<xacro:macro name="DualArmMount" params="
 		parent
 		left_xyz:='0 0.062 0'
