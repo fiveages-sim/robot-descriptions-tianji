@@ -116,30 +116,18 @@ control:
 ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs robot_profile:=/path/to/robot.local.yaml
 ```
 
-### 2.5 Arm mount (single source per host robot)
+### 2.5 Arm mount (`DualArmMount` macro)
 
-**唯一来源**：各宿主 description 包的 `config/xacro/mount.yaml`（仅 `arm_half_spacing` / `arm_mount_z`）。
+`m6_ccs_description/xacro/arm_mount.xacro` 提供 `DualArmMount`：在已有 `arm_base`（或任意 parent）上固定左右臂基座。
 
-| Package | File |
-|---------|------|
-| `fiveages_w2_description` | `config/xacro/mount.yaml` |
-| `m6_ccs_description` | `config/xacro/mount.yaml`（standalone） |
-| `m6_ccs_description` | `config/xacro/mount_desktop.yaml`（`type:=desktop` 时由 launch 选用） |
+- 默认：`left_xyz="0 0.062 0"`、`right_xyz="0 -0.062 0"`（与 W2 整机一致）
+- `type:=desktop` 时在 `robot.xacro` 内写死展台位姿：`0 0.12 0.701` / `0 -0.12 0.701`
+- 需要其它间距时，在调用处改 macro 参数，或 launch 传 xacro mapping：`left_xyz:=0.075 0 0`
 
-`robot_common_launch` 在 `robot:=…` 时读取该 yaml，注入 xacro mappings，用于：
-
-- 宿主 **ros2_control URDF**（如 W2 整机）
-- **分体 OCS2 planning URDF**（`planning_scope=arms`：臂链用 `ocs2_arm_controller.robot_name` 指定的包，**安装位姿仍来自 launch `robot` 宿主包**）
-
-```bash
-ros2 launch ocs2_arm_controller split_body.launch.py robot:=fiveages_w2
-# 控制 URDF + planning URDF 均使用 fiveages_w2/config/xacro/mount.yaml
-
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=desktop
-# 使用 m6_ccs/config/xacro/mount_desktop.yaml
+```xml
+<xacro:DualArmMount parent="arm_base"/>
+<xacro:DualArmMount parent="arm_base" left_xyz="0 0.12 0.701" right_xyz="0 -0.12 0.701"/>
 ```
-
-调试 override（不改变 SSOT 文件）：`xacro_arm_half_spacing:=0.075`
 
 ## 3. OCS2 Demo
 

@@ -3,36 +3,50 @@
 
 	<xacro:property name="PI" value="3.1415926535897931"/>
 
-	<!--
-	  Dual-arm mount joints on arm_base (mechanism only).
-
-	  Spacing must be supplied via xacro args (from host config/xacro/mount.yaml
-	  through robot_common_launch). No built-in product presets here.
-	-->
-	<xacro:macro name="set_arm_mount_properties" params="arm_half_spacing arm_mount_z">
-		<xacro:property name="effective_arm_half_spacing" value="${arm_half_spacing}" scope="parent"/>
-		<xacro:property name="effective_arm_mount_z" value="${arm_mount_z}" scope="parent"/>
+	<!-- Empty arm_base + dual mounts (standalone arms viz / component URDF). -->
+	<xacro:macro name="DualArmBase" params="
+		left_xyz:='0 0.062 0'
+		right_xyz:='0 -0.062 0'
+		left_rpy:=''
+		right_rpy:=''
+	">
+		<link name="arm_base"/>
+		<xacro:DualArmMount parent="arm_base"
+			left_xyz="${left_xyz}" right_xyz="${right_xyz}"
+			left_rpy="${left_rpy}" right_rpy="${right_rpy}"/>
 	</xacro:macro>
 
-	<xacro:macro name="DualArmMountJoints" params="parent">
+	<!--
+	  Dual-arm fixed mounts on an existing parent (e.g. W2 / G2 arm_base).
+	  Defaults: M6/W2 style (±Y, roll ±90°). Override xyz/rpy at call site when needed.
+	-->
+	<xacro:macro name="DualArmMount" params="
+		parent
+		left_xyz:='0 0.062 0'
+		right_xyz:='0 -0.062 0'
+		left_rpy:=''
+		right_rpy:=''
+	">
+		<xacro:property name="_left_rpy" value="${left_rpy if left_rpy != '' else '-'+str(PI/2)+' 0 0'}"/>
+		<xacro:property name="_right_rpy" value="${right_rpy if right_rpy != '' else str(PI/2)+' 0 0'}"/>
 		<joint name="left_arm_base_joint" type="fixed">
 			<parent link="${parent}"/>
 			<child link="left_base_link"/>
-			<origin rpy="-${PI/2} 0 0" xyz="0.0 ${effective_arm_half_spacing} ${effective_arm_mount_z}"/>
+			<origin xyz="${left_xyz}" rpy="${_left_rpy}"/>
 		</joint>
-
 		<joint name="right_arm_base_joint" type="fixed">
 			<parent link="${parent}"/>
 			<child link="right_base_link"/>
-			<origin rpy="${PI/2} 0 0" xyz="0.0 ${-effective_arm_half_spacing} ${effective_arm_mount_z}"/>
+			<origin xyz="${right_xyz}" rpy="${_right_rpy}"/>
 		</joint>
 	</xacro:macro>
 
-	<xacro:macro name="LeftArmMountJoint" params="parent">
+	<xacro:macro name="LeftArmMount" params="parent left_xyz:='0 0.062 0' left_rpy:=''">
+		<xacro:property name="_left_rpy" value="${left_rpy if left_rpy != '' else '-'+str(PI/2)+' 0 0'}"/>
 		<joint name="left_arm_base_joint" type="fixed">
 			<parent link="${parent}"/>
 			<child link="left_base_link"/>
-			<origin rpy="-${PI/2} 0 0" xyz="0.0 ${effective_arm_half_spacing} ${effective_arm_mount_z}"/>
+			<origin xyz="${left_xyz}" rpy="${_left_rpy}"/>
 		</joint>
 	</xacro:macro>
 

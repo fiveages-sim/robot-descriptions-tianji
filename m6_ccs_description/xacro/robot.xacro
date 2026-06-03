@@ -7,16 +7,10 @@
 	<xacro:arg name="left_type" default=""/>
 	<xacro:arg name="right_type" default=""/>
 	<xacro:arg name="eef_fixed_joints" default="false"/>
-	<!-- Arm mount: values from config/xacro/mount.yaml via launch (see arm_mount.xacro) -->
-	<xacro:arg name="arm_half_spacing" default=""/>
-	<xacro:arg name="arm_mount_z" default=""/>
-
 	<!-- 从 type 参数解析出 arm_config、gripper_type 和 scene -->
 	<xacro:property name="type_arg" value="$(arg type)"/>
 	<xacro:property name="left_type_arg" value="$(arg left_type)"/>
 	<xacro:property name="right_type_arg" value="$(arg right_type)"/>
-	<xacro:property name="arm_half_spacing_arg" value="$(arg arm_half_spacing)"/>
-	<xacro:property name="arm_mount_z_arg" value="$(arg arm_mount_z)"/>
 	<xacro:property name="effective_left_type" value="${left_type_arg if left_type_arg != '' else type_arg}"/>
 	<xacro:property name="effective_right_type" value="${right_type_arg if right_type_arg != '' else type_arg}"/>
 
@@ -86,9 +80,6 @@
 
 	<xacro:include filename="$(find m6_ccs_description)/xacro/arm.xacro"/>
 	<xacro:include filename="$(find m6_ccs_description)/xacro/arm_mount.xacro"/>
-	<xacro:set_arm_mount_properties
-		arm_half_spacing="${arm_half_spacing_arg}"
-		arm_mount_z="${arm_mount_z_arg}"/>
 
 	<!-- 单左臂（不包括 usb-90c 场景） -->
 	<xacro:if value="${selected_arm_config == 'left' and selected_scene != 'usb-90c'}">
@@ -132,8 +123,7 @@
 				<child link="arm_base"/>
 			</joint>
 
-			<!-- Left / Right Arm mounts (desktop preset: wider spacing + raised z) -->
-			<xacro:DualArmMountJoints parent="arm_base"/>
+			<xacro:DualArmMount parent="arm_base" left_xyz="0 0.12 0.701" right_xyz="0 -0.12 0.701"/>
 
 			<xacro:if value="${selected_gripper_type == 'none'}">
 				<link name="right_eef"/>
@@ -166,7 +156,7 @@
 				<child link="arm_base"/>
 			</joint>
 
-			<xacro:DualArmMountJoints parent="arm_base"/>
+			<xacro:DualArmMount parent="arm_base"/>
 		</xacro:unless>
 
 		<!-- 双臂和末端执行器（两种场景共用） -->
@@ -210,7 +200,7 @@
 			</collision>
 		</link>
 
-		<xacro:LeftArmMountJoint parent="base"/>
+		<xacro:LeftArmMount parent="base"/>
 
 		<xacro:M6_CCS name="left"/>
 
