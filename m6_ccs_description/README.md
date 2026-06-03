@@ -90,31 +90,17 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
 
 `xacro/robot.xacro` accepts **`left_type`** and **`right_type`** instead of a single symmetric `type`. Keys match §2.3 (`rg75`, `ag2f90_c`, `linkerhand_o7`, …). Leave a side empty for no end effector on that arm.
 
-**Note:** `manipulator.launch.py` only forwards symmetric `type:=` today. For asymmetric models, use §3 OCS2 launches or `robot_profile` below.
-
-**Launch args** (`robot_common_launch` prefix routing):
-
-| Prefix | Example | Purpose |
-|--------|---------|---------|
-| `xacro_left_type` / `xacro_right_type` | `xacro_left_type:=rg75` | Planning / visualization xacro |
-| `control_left` / `control_right` | `control_left:=rg75` | ros2_control controller YAML per side (`demo.launch.py` only) |
-
-Do **not** pass `type:=` when both `xacro_left_type` and `xacro_right_type` are set.
-
-**`robot.local.yaml`** (persistent machine config):
-
-```yaml
-xacro:
-  left_type: rg75
-  right_type: linkerhand_o7
-control:
-  left: rg75
-  right: linkerhand_o7
-```
+Do **not** pass `type:=` when using per-side types. One launch arg per side updates URDF, planning xacro, and ros2_control compose.
 
 ```bash
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs robot_profile:=/path/to/robot.local.yaml
+ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs \
+  left_type:=rg75 right_type:=linkerhand_o7 collider:=simple
+
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs \
+  left_type:=rg75 right_type:=linkerhand_o7
 ```
+
+Optional: `robot_profile:=/path/to/robot.local.yaml` with `defaults.end_effectors.left` / `.right` (same type keys).
 
 ### 2.5 Arm mount (`DualArmMount` macro)
 
@@ -140,7 +126,7 @@ Planning URDF from xacro (no ros2_control). Example with end effector:
   ros2 launch robot_common_launch manipulator_ocs2.launch.py robot_name:=m6_ccs
   # Asymmetric (§2.4):
   # ros2 launch robot_common_launch manipulator_ocs2.launch.py robot_name:=m6_ccs \
-  #   xacro_left_type:=rg75 xacro_right_type:=linkerhand_o7
+  #   left_type:=rg75 right_type:=linkerhand_o7
   ```
   
 ### 3.2 OCS2 arm controller (`demo.launch.py`)
@@ -161,8 +147,7 @@ ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=usb-90c
 
 # Asymmetric end effectors (§2.4) — omit `type:=`:
 ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs \
-  xacro_left_type:=rg75 xacro_right_type:=linkerhand_o7 \
-  control_left:=rg75 control_right:=linkerhand_o7
+  left_type:=rg75 right_type:=linkerhand_o7
 ```
 
 Other symmetric `type` values: `ag2f90_d`, `ag2f90_c_soft`, `rg75_heavy`, `linkerhand_o6`, `linkerhand_l6`, `linkerhand_o7`, `desktop`, `desktop_90c`.
