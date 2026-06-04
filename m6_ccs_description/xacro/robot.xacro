@@ -2,6 +2,8 @@
 
 <robot name="M6_CCS" xmlns:xacro="http://www.ros.org/wiki/xacro">
 	<xacro:arg name="collider" default="convex"/>
+	<xacro:arg name="skin" default="default"/>
+	<xacro:arg name="variant" default=""/>
 	<xacro:arg name="type" default="dual"/>
 	<xacro:arg name="scene" default=""/>
 	<xacro:arg name="left_type" default=""/>
@@ -83,7 +85,7 @@
 
 	<!-- 单左臂（不包括 usb-90c 场景） -->
 	<xacro:if value="${selected_arm_config == 'left' and selected_scene != 'usb-90c'}">
-		<xacro:M6_CCS/>
+		<xacro:M6_CCS skin="$(arg skin)" variant="$(arg variant)"/>
 		<xacro:if value="${selected_gripper_type == 'rg75'}">
 			<xacro:include filename="$(find jodell_description)/xacro/RG75-300.xacro"/>
 			<xacro:RG75-300 name="" use_flange="true"/>
@@ -96,7 +98,7 @@
 
 	<!-- 单右臂 -->
 	<xacro:if value="${selected_arm_config == 'right'}">
-		<xacro:M6_CCS direction="-1"/>
+		<xacro:M6_CCS direction="-1" skin="$(arg skin)" variant="$(arg variant)"/>
 	</xacro:if>
 
 	<!-- 双臂配置 -->
@@ -160,8 +162,8 @@
 		</xacro:unless>
 
 		<!-- 双臂和末端执行器（两种场景共用） -->
-		<xacro:M6_CCS name="left"/>
-		<xacro:M6_CCS name="right" direction="-1"/>
+		<xacro:M6_CCS name="left" skin="$(arg skin)" variant="$(arg variant)"/>
+		<xacro:M6_CCS name="right" direction="-1" skin="$(arg skin)" variant="$(arg variant)"/>
 
 		<xacro:include filename="$(find m6_ccs_description)/xacro/eef_type_resolver.xacro"/>
 		<xacro:set_side_eef_types side="left" type_key="${effective_left_type}"/>
@@ -202,7 +204,7 @@
 
 		<xacro:LeftArmMount parent="base"/>
 
-		<xacro:M6_CCS name="left"/>
+		<xacro:M6_CCS name="left" skin="$(arg skin)" variant="$(arg variant)"/>
 
 		<xacro:include filename="$(find changingtek_description)/xacro/AG2F90-C.xacro"/>
 		<xacro:AG2F90-C name="" use_flange="true"/>

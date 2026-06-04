@@ -3,22 +3,23 @@
 	<xacro:arg name="collider" default="convex"/>
 	<xacro:property name="PI" value="3.1415926535897931"/>
 	<xacro:property name="collider_type" value="$(arg collider)"/>
-	<xacro:macro name="M6_CCS" params="name:='' direction:=1 style:=default">
+	<xacro:macro name="M6_CCS" params="name:='' direction:=1 skin:='default' variant:=''">
 		<xacro:property name="prefix" value="${name + '_' if name else ''}"/>
-		
-		<!-- Set visual and collision package/path based on style -->
+
+		<!-- Visual skins live under m6_ccs_description/meshes/{skin}/[sinopec]/ -->
 		<xacro:property name="visual_package" value="m6_ccs_description"/>
 		<xacro:property name="visual_path" value=""/>
+		<xacro:if value="${skin == 'fiveages_w2' and variant == 'sinopec'}">
+			<xacro:property name="visual_path" value="fiveages_w2/sinopec/"/>
+		</xacro:if>
+		<xacro:if value="${skin == 'fiveages_w2' and variant != 'sinopec'}">
+			<xacro:property name="visual_path" value="fiveages_w2/"/>
+		</xacro:if>
+		<xacro:if value="${skin == 'agibot_g2'}">
+			<xacro:property name="visual_path" value="agibot_g2/"/>
+		</xacro:if>
 		<xacro:property name="collision_package" value="m6_ccs_description"/>
 		<xacro:property name="collision_path" value=""/>
-		<xacro:if value="${style == 'fiveages_w2'}">
-			<xacro:property name="visual_package" value="fiveages_w2_description"/>
-			<xacro:property name="visual_path" value="arm/"/>
-		</xacro:if>
-		<xacro:if value="${style == 'agibot_g2'}">
-			<xacro:property name="visual_package" value="agibot_g2_description"/>
-			<xacro:property name="visual_path" value="arm/"/>
-		</xacro:if>
 
 		<!-- Base Link -->
 		<link name="${prefix}base_link">
