@@ -60,6 +60,8 @@
 			<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
 			<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o6.xacro"/>
 			<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o7.xacro"/>
+			<xacro:include filename="$(find freedom_description)/xacro/ros2_control/freedom.xacro"/>
+			<xacro:include filename="$(find inspire_description)/xacro/ros2_control/RH56E2.xacro"/>
 
 			<xacro:if value="${left_gripper_type == 'rg75'}">
 				<xacro:rg75_interfaces name="left"/>
@@ -87,6 +89,20 @@
 			</xacro:if>
 			<xacro:if value="${right_hand_type == 'linkerhand_o7'}">
 				<xacro:linkerhand_o7_interfaces name="right_hand"/>
+			</xacro:if>
+
+			<xacro:if value="${left_hand_type == 'freedom_v1'}">
+				<xacro:freedom_interfaces name="left_hand"/>
+			</xacro:if>
+			<xacro:if value="${right_hand_type == 'freedom_v1'}">
+				<xacro:freedom_interfaces name="right_hand"/>
+			</xacro:if>
+
+			<xacro:if value="${left_hand_type == 'inspire_e2'}">
+				<xacro:inspire_rh56e2_interfaces name="left_hand"/>
+			</xacro:if>
+			<xacro:if value="${right_hand_type == 'inspire_e2'}">
+				<xacro:inspire_rh56e2_interfaces name="right_hand"/>
 			</xacro:if>
 		</xacro:if>
 
