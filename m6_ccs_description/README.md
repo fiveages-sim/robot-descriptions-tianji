@@ -115,6 +115,51 @@ Optional: `robot_profile:=/path/to/robot.local.yaml` with `defaults.end_effector
 <xacro:DualArmMount parent="arm_base" left_xyz="0 0.12 0.701" right_xyz="0 -0.12 0.701"/>
 ```
 
+### 2.6 Visual skins (`skin` / `variant`)
+
+`xacro/arm.xacro` 中 `M6_CCS` 通过 **`skin`**（集成方外观）和 **`variant`**（同皮肤下的子款，如中石化）选择 link1–link7 的 visual mesh。**碰撞**始终使用包根目录 `meshes/link*.glb`，不受皮肤影响。整机（躯干/头/底盘 + 臂）的 `platform.variant` 见 `fiveages_w2_description`。
+
+| `skin` | `variant` | Visual mesh 目录 |
+|--------|-----------|------------------|
+| `default`（省略） | — | `meshes/link*.glb` |
+| `fiveages_w2` | — | `meshes/fiveages_w2/` |
+| `fiveages_w2` | `sinopec` | `meshes/fiveages_w2/sinopec/` |
+| `agibot_g2` | — | `meshes/agibot_g2/` |
+
+以下均为 **双臂** `manipulator.launch`（`type` 默认 `dual`，可省略）：
+
+* 默认天机外观（同 §2.1）
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs collider:=simple
+  ```
+* FiveAges W2 臂皮肤
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs collider:=simple skin:=fiveages_w2
+  ```
+* FiveAges W2 + 中石化臂皮肤
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs collider:=simple \
+    skin:=fiveages_w2 variant:=sinopec
+  ```
+* Agibot G2 臂皮肤
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs collider:=simple skin:=agibot_g2
+  ```
+
+在宿主 xacro 中引用 `M6_CCS` 时传相同参数，例如 `skin="fiveages_w2" variant="${platform_variant}"`（见 `fiveages_w2_description/xacro/robot.xacro`）。
+
+检查双臂 URDF 中的 mesh 路径：
+
+```bash
+source ~/ros2_ws/install/setup.bash
+xacro $(ros2 pkg prefix --share m6_ccs_description)/xacro/robot.xacro \
+  collider:=simple skin:=fiveages_w2 variant:=sinopec 2>/dev/null | grep 'fiveages_w2/sinopec' | head -3
+```
+
 ## 3. OCS2 Demo
 
 ### 3.1 Official OCS2 Mobile Manipulator Demo
