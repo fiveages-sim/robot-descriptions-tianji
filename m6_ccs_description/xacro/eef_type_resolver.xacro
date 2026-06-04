@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- Map a type key (rg75, linkerhand_o7, ...) to per-side hand/gripper/pad properties. -->
+    <xacro:macro name="set_side_eef_types" params="side type_key">
+        <xacro:property name="${side}_hand_type" value="" scope="parent"/>
+        <xacro:property name="${side}_gripper_type" value="" scope="parent"/>
+        <xacro:property name="${side}_gripper_pad" value="default" scope="parent"/>
+
+        <xacro:if value="${type_key == 'rg75'}">
+            <xacro:property name="${side}_gripper_type" value="rg75" scope="parent"/>
+        </xacro:if>
+        <xacro:if value="${type_key == 'rg75_heavy'}">
+            <xacro:property name="${side}_gripper_type" value="rg75" scope="parent"/>
+            <xacro:property name="${side}_gripper_pad" value="heavy_carry" scope="parent"/>
+        </xacro:if>
+        <xacro:if value="${type_key == 'ag2f90' or type_key == 'ag2f90_d'}">
+            <xacro:property name="${side}_gripper_type" value="ag2f90_d" scope="parent"/>
+        </xacro:if>
+        <xacro:if value="${type_key == 'ag2f90_c'}">
+            <xacro:property name="${side}_gripper_type" value="ag2f90_c" scope="parent"/>
+        </xacro:if>
+        <xacro:if value="${type_key == 'ag2f90_c_soft'}">
+            <xacro:property name="${side}_gripper_type" value="ag2f90_c" scope="parent"/>
+            <xacro:property name="${side}_gripper_pad" value="soft" scope="parent"/>
+        </xacro:if>
+        <xacro:if value="${type_key == 'linkerhand_o6'}">
+            <xacro:property name="${side}_hand_type" value="linkerhand_o6" scope="parent"/>
+        </xacro:if>
+        <xacro:if value="${type_key == 'linkerhand_l6'}">
+            <xacro:property name="${side}_hand_type" value="linkerhand_l6" scope="parent"/>
+        </xacro:if>
+        <xacro:if value="${type_key == 'linkerhand_o7'}">
+            <xacro:property name="${side}_hand_type" value="linkerhand_o7" scope="parent"/>
+        </xacro:if>
+    </xacro:macro>
+
+</robot>
