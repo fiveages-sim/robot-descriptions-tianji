@@ -169,6 +169,7 @@
 			</xacro:if>
 			<xacro:if value="${right_hand_type == 'linkerhand_o6' or right_hand_type == 'linkerhand_l6'}">
 				<xacro:linkerhand_o6_interfaces name="right_hand"/>
+			</xacro:if>
 			<xacro:if value="${not is_real_hardware or left_drive_type == 'marvin' or left_drive_type == 'tianji_can'}">
 				<xacro:if value="${left_hand_type != ''}">
 					<xacro:side_hand_interfaces side="left" hand_type="${left_hand_type}"/>
@@ -180,6 +181,7 @@
 			</xacro:if>
 			<xacro:if value="${right_hand_type == 'linkerhand_o7'}">
 				<xacro:linkerhand_o7_interfaces name="right_hand"/>
+			</xacro:if>
 			<xacro:if value="${not is_real_hardware or right_drive_type == 'marvin' or right_drive_type == 'tianji_can'}">
 				<xacro:if value="${right_hand_type != ''}">
 					<xacro:side_hand_interfaces side="right" hand_type="${right_hand_type}"/>
