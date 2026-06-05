@@ -117,6 +117,80 @@ Optional: `robot_profile:=/path/to/robot.local.yaml` with `defaults.end_effector
 
 ## 3. OCS2 Demo
 
+`xacro/robot.xacro` accepts **`left_type`** and **`right_type`** instead of a single symmetric `type`. Keys match §2.3 (`rg75`, `ag2f90_c`, `linkerhand_o7`, …). Leave a side empty for no end effector on that arm.
+
+Do **not** pass `type:=` when using per-side types. One launch arg per side updates URDF, planning xacro, and ros2_control compose.
+
+```bash
+ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs \
+  left_type:=rg75 right_type:=linkerhand_o7 collider:=simple
+
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs \
+  left_type:=rg75 right_type:=linkerhand_o7
+```
+
+Optional: `robot_profile:=/path/to/robot.local.yaml` with `defaults.end_effectors.left` / `.right` (same type keys).
+
+### 2.5 Arm mount (`DualArmMount` macro)
+
+`m6_ccs_description/xacro/arm_mount.xacro` 提供 `DualArmMount`：在已有 `arm_base`（或任意 parent）上固定左右臂基座。
+
+- 默认：`left_xyz="0 0.062 0"`、`right_xyz="0 -0.062 0"`（与 W2 整机一致）
+- `type:=desktop` 时在 `robot.xacro` 内写死展台位姿：`0 0.12 0.701` / `0 -0.12 0.701`
+- 需要其它间距时，在调用处改 macro 参数，或 launch 传 xacro mapping：`left_xyz:=0.075 0 0`
+
+```xml
+<xacro:DualArmMount parent="arm_base"/>
+<xacro:DualArmMount parent="arm_base" left_xyz="0 0.12 0.701" right_xyz="0 -0.12 0.701"/>
+```
+
+### 2.6 Visual skins (`skin` / `variant`)
+
+`xacro/arm.xacro` 中 `M6_CCS` 通过 **`skin`**（集成方外观）和 **`variant`**（同皮肤下的子款，如中石化）选择 link1–link7 的 visual mesh。**碰撞**始终使用包根目录 `meshes/link*.glb`，不受皮肤影响。整机（躯干/头/底盘 + 臂）的 `platform.variant` 见 `fiveages_w2_description`。
+
+| `skin` | `variant` | Visual mesh 目录 |
+|--------|-----------|------------------|
+| `default`（省略） | — | `meshes/link*.glb` |
+| `fiveages_w2` | — | `meshes/fiveages_w2/` |
+| `fiveages_w2` | `sinopec` | `meshes/fiveages_w2/sinopec/` |
+| `agibot_g2` | — | `meshes/agibot_g2/` |
+
+以下均为 **双臂** `manipulator.launch`（`type` 默认 `dual`，可省略）：
+
+* 默认天机外观（同 §2.1）
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs collider:=simple
+  ```
+* FiveAges W2 臂皮肤
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs collider:=simple skin:=fiveages_w2
+  ```
+* FiveAges W2 + 中石化臂皮肤
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs collider:=simple \
+    skin:=fiveages_w2 variant:=sinopec
+  ```
+* Agibot G2 臂皮肤
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs collider:=simple skin:=agibot_g2
+  ```
+
+在宿主 xacro 中引用 `M6_CCS` 时传相同参数，例如 `skin="fiveages_w2" variant="${platform_variant}"`（见 `fiveages_w2_description/xacro/robot.xacro`）。
+
+检查双臂 URDF 中的 mesh 路径：
+
+```bash
+source ~/ros2_ws/install/setup.bash
+xacro $(ros2 pkg prefix --share m6_ccs_description)/xacro/robot.xacro \
+  collider:=simple skin:=fiveages_w2 variant:=sinopec 2>/dev/null | grep 'fiveages_w2/sinopec' | head -3
+```
+
+## 3. OCS2 Demo
+
 ### 3.1 Official OCS2 Mobile Manipulator Demo
 
 Planning URDF from xacro (no ros2_control). Example with end effector:

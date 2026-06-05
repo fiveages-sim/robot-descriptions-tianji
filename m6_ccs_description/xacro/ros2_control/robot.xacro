@@ -145,6 +145,11 @@
 			<xacro:m6_interfaces name="left"/>
 			<xacro:m6_interfaces name="right"/>
 
+			<xacro:include filename="$(find jodell_description)/xacro/ros2_control/RG75-300.xacro"/>
+			<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
+			<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o6.xacro"/>
+			<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o7.xacro"/>
+
 			<xacro:if value="${left_gripper_type == 'rg75'}">
 				<xacro:rg75_interfaces name="left"/>
 			</xacro:if>
@@ -159,11 +164,22 @@
 				<xacro:ag2f90c_interfaces name="right"/>
 			</xacro:if>
 
+			<xacro:if value="${left_hand_type == 'linkerhand_o6' or left_hand_type == 'linkerhand_l6'}">
+				<xacro:linkerhand_o6_interfaces name="left_hand"/>
+			</xacro:if>
+			<xacro:if value="${right_hand_type == 'linkerhand_o6' or right_hand_type == 'linkerhand_l6'}">
+				<xacro:linkerhand_o6_interfaces name="right_hand"/>
 			<xacro:if value="${not is_real_hardware or left_drive_type == 'marvin' or left_drive_type == 'tianji_can'}">
 				<xacro:if value="${left_hand_type != ''}">
 					<xacro:side_hand_interfaces side="left" hand_type="${left_hand_type}"/>
 				</xacro:if>
 			</xacro:if>
+
+			<xacro:if value="${left_hand_type == 'linkerhand_o7'}">
+				<xacro:linkerhand_o7_interfaces name="left_hand"/>
+			</xacro:if>
+			<xacro:if value="${right_hand_type == 'linkerhand_o7'}">
+				<xacro:linkerhand_o7_interfaces name="right_hand"/>
 			<xacro:if value="${not is_real_hardware or right_drive_type == 'marvin' or right_drive_type == 'tianji_can'}">
 				<xacro:if value="${right_hand_type != ''}">
 					<xacro:side_hand_interfaces side="right" hand_type="${right_hand_type}"/>
