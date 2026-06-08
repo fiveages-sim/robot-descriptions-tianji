@@ -35,8 +35,12 @@
 			<xacro:linkerhand_o7_interfaces name="${side}_hand"/>
 		</xacro:if>
 		<xacro:if value="${hand_type == 'freedom_v1'}">
-			<xacro:include filename="$(find freedom_description)/xacro/ros2_control/freedom.xacro"/>
+			<xacro:include filename="$(find freedom_description)/xacro/ros2_control/freedomv1.xacro"/>
 			<xacro:freedom_interfaces name="${side}_hand"/>
+		</xacro:if>
+		<xacro:if value="${hand_type == 'freedom_v2'}">
+			<xacro:include filename="$(find freedom_description)/xacro/ros2_control/freedomv2.xacro"/>
+			<xacro:freedomv2_interfaces name="${side}_hand"/>
 		</xacro:if>
 		<xacro:if value="${hand_type == 'inspire_e2'}">
 			<xacro:include filename="$(find inspire_description)/xacro/ros2_control/RH56E2.xacro"/>
@@ -207,6 +211,12 @@
 		</xacro:if>
 		<xacro:if value="${right_drive_type == 'usb' and right_hand_type == 'freedom_v1'}">
 			<xacro:freedom_rs485_side_system side="right" serial_port="/dev/ttyUSB2"/>
+		</xacro:if>
+		<xacro:if value="${left_drive_type == 'usb' and left_hand_type == 'freedom_v2'}">
+			<xacro:freedom_rs485_side_system side="left" serial_port="/dev/ttyUSB0" type="freedomv2"/>
+		</xacro:if>
+		<xacro:if value="${right_drive_type == 'usb' and right_hand_type == 'freedom_v2'}">
+			<xacro:freedom_rs485_side_system side="right" serial_port="/dev/ttyUSB2" type="freedomv2"/>
 		</xacro:if>
 		<xacro:if value="${left_drive_type == 'usb_can' and left_hand_type == 'freedom_v1'}">
 			<xacro:freedom_can_side_system side="left" can_interface="can0" device_id="0"/>
