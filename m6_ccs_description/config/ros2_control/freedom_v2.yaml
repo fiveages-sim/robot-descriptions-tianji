@@ -25,9 +25,7 @@ left_hand_controller:
       - left_hand_thumb_joint2
       - left_hand_thumb_joint3
       - left_hand_index_joint
-      - left_hand_index_dip
       - left_hand_middle_joint
-      - left_hand_middle_dip
       - left_hand_ring_joint
       - left_hand_pinky_joint
 
@@ -37,8 +35,8 @@ left_hand_controller:
       - position
       - velocity
 
-    home_1: [-0.43, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-    home_2: [0.4, 0.0, 0.15, 0.0, 0.90, 0.95, 0.95, 0.95, 0.95]
+    home_1: [-0.43, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    home_2: [0.4, 0.0, 0.15, 0.90, 0.95, 0.95, 0.95]
     home_duration: 3.0
     movej_duration: 3.0
     hold_position_threshold: 0.1
@@ -57,9 +55,7 @@ right_hand_controller:
       - right_hand_thumb_joint2
       - right_hand_thumb_joint3
       - right_hand_index_joint
-      - right_hand_index_dip
       - right_hand_middle_joint
-      - right_hand_middle_dip
       - right_hand_ring_joint
       - right_hand_pinky_joint
 
@@ -69,8 +65,8 @@ right_hand_controller:
       - position
       - velocity
 
-    home_1: [-0.43, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-    home_2: [0.4, 0.0, 0.15, 0.0, 0.90, 0.95, 0.95, 0.95, 0.95]
+    home_1: [-0.43, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    home_2: [0.4, 0.0, 0.15, 0.90, 0.95, 0.95, 0.95]
     home_duration: 3.0
     movej_duration: 3.0
     hold_position_threshold: 0.1
