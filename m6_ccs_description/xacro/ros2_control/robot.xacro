@@ -224,6 +224,12 @@
 		<xacro:if value="${right_drive_type == 'usb_can' and right_hand_type == 'freedom_v1'}">
 			<xacro:freedom_can_side_system side="right" can_interface="can1" device_id="1"/>
 		</xacro:if>
+		<xacro:if value="${left_drive_type == 'usb_can' and left_hand_type == 'inspire_e2'}">
+			<xacro:inspire_canfd_side_system side="left" can_interface="can0"/>
+		</xacro:if>
+		<xacro:if value="${right_drive_type == 'usb_can' and right_hand_type == 'inspire_e2'}">
+			<xacro:inspire_canfd_side_system side="right" can_interface="can1"/>
+		</xacro:if>
 	</xacro:if>
 
 
