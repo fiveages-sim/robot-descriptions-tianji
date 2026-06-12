@@ -127,19 +127,7 @@
 
 			<xacro:DualArmMount parent="arm_base" left_xyz="0 0.12 0.701" right_xyz="0 -0.12 0.701"/>
 
-			<xacro:if value="${selected_gripper_type == 'none'}">
-				<link name="right_eef"/>
-				<joint name="right_eef_joint" type="fixed">
-					<parent link="right_tcp"/>
-					<child link="right_eef"/>
-				</joint>
-				<link name="left_eef"/>
-				<joint name="left_eef_joint" type="fixed">
-					<parent link="left_tcp"/>
-					<child link="left_eef"/>
-				</joint>
 			</xacro:if>
-		</xacro:if>
 
 		<xacro:unless value="${selected_scene == 'desktop'}">
 			<!-- 非 Desktop 场景：base_link 为空，有 arm_base -->
