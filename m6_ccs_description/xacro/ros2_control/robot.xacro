@@ -109,6 +109,10 @@
 					<param name="left_dyn_param">1.2874,-10.145,30,114.65,0,0,0,0,0,0</param>
 					<param name="right_dyn_param">1.2874,-30.145,-10,147.85,0,0,0,0,0,0</param>
 				</xacro:if>
+				<xacro:unless value="${selected_scene == 'desktop'}">
+					<param name="left_dyn_param">0,0,0,0,0,0,0,0,0,0</param>
+					<param name="right_dyn_param">0.9299382555569992,-9.36555486674267,-10.515510521015127,99.40658707033754,0.01874979461327618,0.0,0.0,0.010832861672583472,0.0,0.0035832781118723027</param>
+				</xacro:unless>
 				<xacro:if value="${selected_scene == 'usb-90c'}">
 					<param name="device_ip">192.168.10.190</param>
 					<param name="ctrl_mode">CART_IMPEDANCE</param>

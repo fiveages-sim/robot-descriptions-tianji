@@ -81,10 +81,10 @@
             <xacro:FreedomHandV2 name="${side}_hand" direction="${1 if side == 'left' else -1}" fixed_joints="${eef_fixed_joints}" enable_dip_joints="false"/>
             <joint name="${side}_hand_base_joint" type="fixed">
                 <xacro:if value="${side == 'left'}">
-                    <origin xyz="0 0 0" rpy="0 0 ${PI/2}"/>
+                    <origin xyz="0 0 0" rpy="0 0 ${PI}"/>
                 </xacro:if>
                 <xacro:if value="${side == 'right'}">
-                    <origin xyz="0 0 0" rpy="0 0 ${-PI/2}"/>
+                    <origin xyz="0 0 0" rpy="0 0 ${PI}"/>
                 </xacro:if>
                 <parent link="${side}_tcp"/>
                 <child link="${side}_hand_hand_base"/>
