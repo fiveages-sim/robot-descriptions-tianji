@@ -3,6 +3,9 @@
 	<xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
 	<xacro:arg name="ctrl_mode" default="position"/>
 	<xacro:arg name="type" default="dual"/>
+	<!-- Non-desktop only: from robot.local.yaml via launch (robot_profile) -->
+	<xacro:arg name="left_dyn_param" default=""/>
+	<xacro:arg name="right_dyn_param" default=""/>
 
 	<link name="world"/>
 
@@ -43,6 +46,14 @@
 					<param name="ctrl_mode">JOINT_IMPEDANCE</param>
 					<param name="left_dyn_param">1.2874,-10.145,30,114.65,0,0,0,0,0,0</param>
 					<param name="right_dyn_param">1.2874,-30.145,-10,147.85,0,0,0,0,0,0</param>
+				</xacro:if>
+				<xacro:if value="${selected_scene != 'desktop'}">
+					<xacro:ee_dyn_param side="left"
+						ee_key="${left_hand_type if left_hand_type != '' else left_gripper_type}"
+						arg_val="$(arg left_dyn_param)"/>
+					<xacro:ee_dyn_param side="right"
+						ee_key="${right_hand_type if right_hand_type != '' else right_gripper_type}"
+						arg_val="$(arg right_dyn_param)"/>
 				</xacro:if>
 				<xacro:if value="${selected_scene == 'usb-90c'}">
 					<param name="device_ip">192.168.10.190</param>
