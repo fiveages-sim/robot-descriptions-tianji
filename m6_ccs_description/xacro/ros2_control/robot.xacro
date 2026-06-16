@@ -120,10 +120,6 @@
 						ee_key="${right_hand_type if right_hand_type != '' else right_gripper_type}"
 						arg_val="$(arg right_dyn_param)"/>
 				</xacro:if>
-				<xacro:unless value="${selected_scene == 'desktop'}">
-					<param name="left_dyn_param">0,0,0,0,0,0,0,0,0,0</param>
-					<param name="right_dyn_param">0.9299382555569992,-9.36555486674267,-10.515510521015127,99.40658707033754,0.01874979461327618,0.0,0.0,0.010832861672583472,0.0,0.0035832781118723027</param>
-				</xacro:unless>
 				<xacro:if value="${selected_scene == 'usb-90c'}">
 					<param name="device_ip">192.168.10.190</param>
 					<param name="ctrl_mode">CART_IMPEDANCE</param>
@@ -159,27 +155,10 @@
 				<xacro:ag2f90c_interfaces name="right"/>
 			</xacro:if>
 
-			<xacro:if value="${left_hand_type == 'linkerhand_o6' or left_hand_type == 'linkerhand_l6'}">
-				<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o6.xacro"/>
-				<xacro:linkerhand_o6_interfaces name="left_hand"/>
-			</xacro:if>
-			<xacro:if value="${right_hand_type == 'linkerhand_o6' or right_hand_type == 'linkerhand_l6'}">
-				<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o6.xacro"/>
-				<xacro:linkerhand_o6_interfaces name="right_hand"/>
-			</xacro:if>
 			<xacro:if value="${not is_real_hardware or left_drive_type == 'marvin' or left_drive_type == 'tianji_can'}">
 				<xacro:if value="${left_hand_type != ''}">
 					<xacro:side_hand_interfaces side="left" hand_type="${left_hand_type}"/>
 				</xacro:if>
-			</xacro:if>
-
-			<xacro:if value="${left_hand_type == 'linkerhand_o7'}">
-				<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o7.xacro"/>
-				<xacro:linkerhand_o7_interfaces name="left_hand"/>
-			</xacro:if>
-			<xacro:if value="${right_hand_type == 'linkerhand_o7'}">
-				<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o7.xacro"/>
-				<xacro:linkerhand_o7_interfaces name="right_hand"/>
 			</xacro:if>
 			<xacro:if value="${not is_real_hardware or right_drive_type == 'marvin' or right_drive_type == 'tianji_can'}">
 				<xacro:if value="${right_hand_type != ''}">
