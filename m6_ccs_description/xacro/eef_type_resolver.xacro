@@ -24,6 +24,9 @@
             <xacro:property name="${side}_gripper_type" value="ag2f90_c" scope="parent"/>
             <xacro:property name="${side}_gripper_pad" value="soft" scope="parent"/>
         </xacro:if>
+        <xacro:if value="${type_key == 'ctag2f120s'}">
+            <xacro:property name="${side}_gripper_type" value="ctag2f120s" scope="parent"/>
+        </xacro:if>
         <xacro:if value="${type_key == 'linkerhand_o6'}">
             <xacro:property name="${side}_hand_type" value="linkerhand_o6" scope="parent"/>
         </xacro:if>

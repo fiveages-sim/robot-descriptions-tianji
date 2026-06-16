@@ -5,6 +5,7 @@
     <!-- Eager includes so collider is configured once at file scope. -->
     <xacro:include filename="$(find jodell_description)/xacro/RG75-300.xacro"/>
     <xacro:include filename="$(find changingtek_description)/xacro/AG2F90-C.xacro"/>
+    <xacro:include filename="$(find changingtek_description)/xacro/AG2F120S.xacro"/>
 
     <!-- Per-side default load (dyn_param) for MarvinHardware; 10 values: m, mx, my, mz, ixx, ixy, ixz, iyy, iyz, izz.
          Override via launch left_dyn_param/right_dyn_param (robot.local.yaml).
@@ -22,7 +23,7 @@
                 <xacro:if value="${ee_key == 'rg75'}">
                     <param name="${side}_dyn_param">1.6200799541791235, 1.4285009257202586, -0.5789585762443014, 104.39051192831192, 0.004873874899366342, 0.0, 0.0, 0.001, 0.0, 0.0019355638096347936</param>
                 </xacro:if>
-                <xacro:if value="${ee_key == 'ag2f90_c' or ee_key == 'ag2f90_d' or ee_key == 'ag2f90_c_soft'}">
+                <xacro:if value="${ee_key == 'ag2f90_c' or ee_key == 'ag2f90_d' or ee_key == 'ag2f90_c_soft' or ee_key == 'ctag2f120s'}">
                     <param name="${side}_dyn_param">0.9464750422461978, -8.366166030270293, -9.50810456883501, 71.59365292895114, 0.02313627009490121, 0.0, 0.0, 0.017136701127687514, 0.0, 0.008640226166892327</param>
                 </xacro:if>
                 <xacro:if value="${ee_key == 'linkerhand_o6'}">
@@ -39,7 +40,7 @@
                 <xacro:if value="${ee_key == 'rg75'}">
                     <param name="${side}_dyn_param">1.6200799541791235, 1.4285009257202586, -0.5789585762443014, 104.39051192831192, 0.004873874899366342, 0.0, 0.0, 0.001, 0.0, 0.0019355638096347936</param>
                 </xacro:if>
-                <xacro:if value="${ee_key == 'ag2f90_c' or ee_key == 'ag2f90_d' or ee_key == 'ag2f90_c_soft'}">
+                <xacro:if value="${ee_key == 'ag2f90_c' or ee_key == 'ag2f90_d' or ee_key == 'ag2f90_c_soft' or ee_key == 'ctag2f120s'}">
                     <param name="${side}_dyn_param">0.9464750422461978, -8.366166030270293, -9.50810456883501, 71.59365292895114, 0.02313627009490121, 0.0, 0.0, 0.017136701127687514, 0.0, 0.008640226166892327</param>
                 </xacro:if>
                 <xacro:if value="${ee_key == 'linkerhand_o6'}">
@@ -135,6 +136,14 @@
                         <origin xyz="0 0 0.0045"/>
                     </joint>
                 </xacro:if>
+                <xacro:if value="${gripper_type == 'ctag2f120s'}">
+                    <xacro:AG2F120S name="${side}" kinematic_only="true"/>
+                    <joint name="${side}_gripper_fix" type="fixed">
+                        <parent link="${side}_tcp"/>
+                        <child link="${side}_gripper_base"/>
+                        <origin xyz="0 0 0.0045"/>
+                    </joint>
+                </xacro:if>
                 <xacro:if value="${gripper_type == 'rg75'}">
                     <xacro:RG75-300 name="${side}" use_flange="true" pad="${gripper_pad}" kinematic_only="true"/>
                     <joint name="${side}_gripper_base_joint" type="fixed">
@@ -165,6 +174,15 @@
                 <joint name="${side}_gripper_fix" type="fixed">
                     <parent link="${side}_tcp"/>
                     <child link="${side}_flange"/>
+                    <origin xyz="0 0 0.0045"/>
+                </joint>
+            </xacro:if>
+
+            <xacro:if value="${gripper_type == 'ctag2f120s'}">
+                <xacro:AG2F120S name="${side}"/>
+                <joint name="${side}_gripper_fix" type="fixed">
+                    <parent link="${side}_tcp"/>
+                    <child link="${side}_gripper_base"/>
                     <origin xyz="0 0 0.0045"/>
                 </joint>
             </xacro:if>
