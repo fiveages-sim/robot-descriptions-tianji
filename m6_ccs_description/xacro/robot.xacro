@@ -68,6 +68,9 @@
 	<xacro:if value="${type_arg == 'linkerhand_o7'}">
 		<xacro:property name="selected_hand_type" value="linkerhand_o7"/>
 	</xacro:if>
+	<xacro:if value="${type_arg == 'xhand1'}">
+		<xacro:property name="selected_hand_type" value="xhand1"/>
+	</xacro:if>
 
 	<!-- 适用纯双臂演示场景的配置 -->
 	<xacro:if value="${type_arg == 'desktop'}">
