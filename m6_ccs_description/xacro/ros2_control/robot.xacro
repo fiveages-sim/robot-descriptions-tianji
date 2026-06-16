@@ -10,6 +10,9 @@
 	<xacro:property name="ee_drive_type" value="${'usb' if '$(arg ros2_control_hardware_type)' == 'real_usb' else ('marvin' if '$(arg ros2_control_hardware_type)' == 'real' else '')}"/>
 	<xacro:property name="left_drive_type" value="${'$(arg left_ee_drive_type)' if '$(arg left_ee_drive_type)' != '' else ee_drive_type}"/>
 	<xacro:property name="right_drive_type" value="${'$(arg right_ee_drive_type)' if '$(arg right_ee_drive_type)' != '' else ee_drive_type}"/>
+	<!-- Non-desktop only: from robot.local.yaml via launch (robot_profile) -->
+	<xacro:arg name="left_dyn_param" default=""/>
+	<xacro:arg name="right_dyn_param" default=""/>
 
 	<link name="world"/>
 
@@ -109,6 +112,14 @@
 					<param name="left_dyn_param">1.2874,-10.145,30,114.65,0,0,0,0,0,0</param>
 					<param name="right_dyn_param">1.2874,-30.145,-10,147.85,0,0,0,0,0,0</param>
 				</xacro:if>
+				<xacro:if value="${selected_scene != 'desktop'}">
+					<xacro:ee_dyn_param side="left"
+						ee_key="${left_hand_type if left_hand_type != '' else left_gripper_type}"
+						arg_val="$(arg left_dyn_param)"/>
+					<xacro:ee_dyn_param side="right"
+						ee_key="${right_hand_type if right_hand_type != '' else right_gripper_type}"
+						arg_val="$(arg right_dyn_param)"/>
+				</xacro:if>
 				<xacro:unless value="${selected_scene == 'desktop'}">
 					<param name="left_dyn_param">0,0,0,0,0,0,0,0,0,0</param>
 					<param name="right_dyn_param">0.9299382555569992,-9.36555486674267,-10.515510521015127,99.40658707033754,0.01874979461327618,0.0,0.0,0.010832861672583472,0.0,0.0035832781118723027</param>
@@ -124,6 +135,11 @@
 		<xacro:if value="${selected_arm_config == 'dual'}">
 			<xacro:m6_interfaces name="left"/>
 			<xacro:m6_interfaces name="right"/>
+
+			<xacro:include filename="$(find jodell_description)/xacro/ros2_control/RG75-300.xacro"/>
+			<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
+			<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o6.xacro"/>
+			<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o7.xacro"/>
 
 			<xacro:if value="${left_gripper_type == 'rg75'}">
 				<xacro:include filename="$(find jodell_description)/xacro/ros2_control/RG75-300.xacro"/>
