@@ -51,14 +51,15 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
 
 ### 2.3 Arm configuration for humanoid
 
-* Dual Arm with ChangingTek AG2F90-C or AG2F90-D
+* Dual Arm with ChangingTek AG2F90 Series
   ```bash
   source ~/ros2_ws/install/setup.bash
   ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=ag2f90_c collider:=simple
   ```
+* Dual Arm with ChangingTek AG2F120S Series
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=ag2f90_d collider:=simple
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=ag2f120s collider:=simple
   ```
 * Dual Arm with Jodell RG75
   ```bash

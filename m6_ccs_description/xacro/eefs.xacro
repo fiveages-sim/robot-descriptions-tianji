@@ -23,7 +23,11 @@
                 <xacro:if value="${ee_key == 'rg75'}">
                     <param name="${side}_dyn_param">1.6200799541791235, 1.4285009257202586, -0.5789585762443014, 104.39051192831192, 0.004873874899366342, 0.0, 0.0, 0.001, 0.0, 0.0019355638096347936</param>
                 </xacro:if>
-                <xacro:if value="${ee_key == 'ag2f90_c' or ee_key == 'ag2f90_d' or ee_key == 'ag2f90_c_soft' or ee_key == 'ctag2f120s'}">
+                <xacro:if value="${ee_key == 'ag2f90_c' or ee_key == 'ag2f90_d' or ee_key == 'ag2f90_c_soft'}">
+                    <param name="${side}_dyn_param">0.9464750422461978, -8.366166030270293, -9.50810456883501, 71.59365292895114, 0.02313627009490121, 0.0, 0.0, 0.017136701127687514, 0.0, 0.008640226166892327</param>
+                </xacro:if>
+                <xacro:if value="${ee_key == 'ag2f120s' or ee_key == 'ag2f120s_d'}">
+                    <!-- TODO: replace with measured values; temporarily reuse ag2f90 series -->
                     <param name="${side}_dyn_param">0.9464750422461978, -8.366166030270293, -9.50810456883501, 71.59365292895114, 0.02313627009490121, 0.0, 0.0, 0.017136701127687514, 0.0, 0.008640226166892327</param>
                 </xacro:if>
                 <xacro:if value="${ee_key == 'linkerhand_o6'}">
@@ -40,7 +44,11 @@
                 <xacro:if value="${ee_key == 'rg75'}">
                     <param name="${side}_dyn_param">1.6200799541791235, 1.4285009257202586, -0.5789585762443014, 104.39051192831192, 0.004873874899366342, 0.0, 0.0, 0.001, 0.0, 0.0019355638096347936</param>
                 </xacro:if>
-                <xacro:if value="${ee_key == 'ag2f90_c' or ee_key == 'ag2f90_d' or ee_key == 'ag2f90_c_soft' or ee_key == 'ctag2f120s'}">
+                <xacro:if value="${ee_key == 'ag2f90_c' or ee_key == 'ag2f90_d' or ee_key == 'ag2f90_c_soft'}">
+                    <param name="${side}_dyn_param">0.9464750422461978, -8.366166030270293, -9.50810456883501, 71.59365292895114, 0.02313627009490121, 0.0, 0.0, 0.017136701127687514, 0.0, 0.008640226166892327</param>
+                </xacro:if>
+                <xacro:if value="${ee_key == 'ag2f120s' or ee_key == 'ag2f120s_d'}">
+                    <!-- TODO: replace with measured values; temporarily reuse ag2f90 series -->
                     <param name="${side}_dyn_param">0.9464750422461978, -8.366166030270293, -9.50810456883501, 71.59365292895114, 0.02313627009490121, 0.0, 0.0, 0.017136701127687514, 0.0, 0.008640226166892327</param>
                 </xacro:if>
                 <xacro:if value="${ee_key == 'linkerhand_o6'}">
@@ -136,11 +144,11 @@
                         <origin xyz="0 0 0.0045"/>
                     </joint>
                 </xacro:if>
-                <xacro:if value="${gripper_type == 'ctag2f120s'}">
-                    <xacro:AG2F120S name="${side}" kinematic_only="true"/>
+                <xacro:if value="${gripper_type == 'ag2f120s' or gripper_type == 'ag2f120s_d'}">
+                    <xacro:AG2F120S name="${side}" use_flange="true" kinematic_only="true"/>
                     <joint name="${side}_gripper_fix" type="fixed">
                         <parent link="${side}_tcp"/>
-                        <child link="${side}_gripper_base"/>
+                        <child link="${side}_flange"/>
                         <origin xyz="0 0 0.0045"/>
                     </joint>
                 </xacro:if>
@@ -178,11 +186,11 @@
                 </joint>
             </xacro:if>
 
-            <xacro:if value="${gripper_type == 'ctag2f120s'}">
-                <xacro:AG2F120S name="${side}"/>
+            <xacro:if value="${gripper_type == 'ag2f120s' or gripper_type == 'ag2f120s_d'}">
+                <xacro:AG2F120S name="${side}" use_flange="true"/>
                 <joint name="${side}_gripper_fix" type="fixed">
                     <parent link="${side}_tcp"/>
-                    <child link="${side}_gripper_base"/>
+                    <child link="${side}_flange"/>
                     <origin xyz="0 0 0.0045"/>
                 </joint>
             </xacro:if>

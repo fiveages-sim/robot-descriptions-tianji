@@ -89,10 +89,10 @@
 			<xacro:if value="${right_gripper_type == 'ag2f90_c' or right_gripper_type == 'ag2f90_d'}">
 				<xacro:ag2f90c_interfaces name="right"/>
 			</xacro:if>
-			<xacro:if value="${left_gripper_type == 'ctag2f120s'}">
+			<xacro:if value="${left_gripper_type == 'ag2f120s' or left_gripper_type == 'ag2f120s_d'}">
 				<xacro:ag2f120s_interfaces name="left"/>
 			</xacro:if>
-			<xacro:if value="${right_gripper_type == 'ctag2f120s'}">
+			<xacro:if value="${right_gripper_type == 'ag2f120s' or right_gripper_type == 'ag2f120s_d'}">
 				<xacro:ag2f120s_interfaces name="right"/>
 			</xacro:if>
 
@@ -124,7 +124,7 @@
 					<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
 					<xacro:ag2f90c_interfaces name=""/>
 				</xacro:if>
-				<xacro:if value="${selected_gripper_type == 'ctag2f120s'}">
+				<xacro:if value="${selected_gripper_type == 'ag2f120s' or selected_gripper_type == 'ag2f120s_d'}">
 					<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F120S.xacro"/>
 					<xacro:ag2f120s_interfaces name=""/>
 				</xacro:if>
