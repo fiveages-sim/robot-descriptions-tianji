@@ -31,23 +31,46 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
   ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=right collider:=simple
   ```
 
-### 2.2 Arm Configuration for scene
+### 2.2 Desktop booth (`variant:=desktop`)
 
-* USB HIL task with AG2F90-C Gripper
+m6_ccs-only platform variant for the dual-arm demo stand (booth mesh, arm spacing, OCS2 `desktop.info`). Combine with any end-effector `type` from §2.3.
+
+* Dual arm on desktop (no gripper)
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=usb-90c collider:=simple
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs variant:=desktop collider:=simple
   ```
-* Dual Arm on Desktop
+* Desktop + AG2F90-C (soft pad)
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=desktop collider:=simple
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs variant:=desktop type:=ag2f90_c_soft collider:=simple
   ```
-* Dual Arm on Desktop with AG2F90-C Gripper
+* Desktop + RG75
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=desktop_90c collider:=simple
+  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs variant:=desktop type:=rg75 collider:=simple
   ```
+
+Profile alternative (`robot.local.yaml`):
+
+```yaml
+platform:
+  variant: desktop
+defaults:
+  end_effectors:
+    type: rg75
+hardware:
+  device_ip: 192.168.10.190
+  arm_ctrl_mode: JOINT_IMPEDANCE
+  left_dyn_param: "1.2874,-10.145,30,114.65,0,0,0,0,0,0"
+  right_dyn_param: "1.2874,-30.145,-10,147.85,0,0,0,0,0,0"
+```
+
+Launch overrides (real hardware): `hardware_device_ip:=…`, `hardware_arm_ctrl_mode:=JOINT_IMPEDANCE`, `hardware_left_dyn_param:=…` (or use `robot_profile` as above).
+
+**Migration (breaking):** `type:=desktop` and `type:=desktop_90c` are removed. Use `variant:=desktop` plus a separate end-effector `type` (e.g. `type:=ag2f90_c_soft` instead of `type:=desktop_90c`).
+
+See also [m6_ccs_dual_desktop.md](../docs/m6_ccs_dual_desktop.md).
 
 ### 2.3 Arm configuration for humanoid
 
@@ -108,7 +131,7 @@ Optional: `robot_profile:=/path/to/robot.local.yaml` with `defaults.end_effector
 `m6_ccs_description/xacro/arm_mount.xacro` 提供 `DualArmMount`：在已有 `arm_base`（或任意 parent）上固定左右臂基座。
 
 - 默认：`left_xyz="0 0.062 0"`、`right_xyz="0 -0.062 0"`（与 W2 整机一致）
-- `type:=desktop` 时在 `robot.xacro` 内写死展台位姿：`0 0.12 0.701` / `0 -0.12 0.701`
+- `variant:=desktop` 时在 `robot.xacro` 内写死展台位姿：`0 0.12 0.701` / `0 -0.12 0.701`
 - 需要其它间距时，在调用处改 macro 参数，或 launch 传 xacro mapping：`left_xyz:=0.075 0 0`
 
 ```xml
@@ -116,9 +139,13 @@ Optional: `robot_profile:=/path/to/robot.local.yaml` with `defaults.end_effector
 <xacro:DualArmMount parent="arm_base" left_xyz="0 0.12 0.701" right_xyz="0 -0.12 0.701"/>
 ```
 
-### 2.6 Visual skins (`skin` / `variant`)
+### 2.6 Platform variant and visual skins (`variant` / `skin`)
 
-`xacro/arm.xacro` 中 `M6_CCS` 通过 **`skin`**（集成方外观）和 **`variant`**（同皮肤下的子款，如中石化）选择 link1–link7 的 visual mesh。**碰撞**始终使用包根目录 `meshes/link*.glb`，不受皮肤影响。整机（躯干/头/底盘 + 臂）的 `platform.variant` 见 `fiveages_w2_description`。
+**`variant:=desktop`** (m6_ccs only): booth base, arm mount spacing, and `config/ros2_control/desktop.yaml` overlay. Orthogonal to end-effector `type` — use both, e.g. `variant:=desktop type:=rg75`. Planning URDF uses the same `variant` xacro arg (booth layout). Marvin hardware parameters belong in `robot.local.yaml` `hardware:` (§2.2).
+
+For W2 integrated OEM visuals, **`variant:=sinopec`** on body/head/chassis is documented in `fiveages_w2_description` / `fiveages_w2_common_description` (not `desktop`).
+
+`xacro/arm.xacro` 中 `M6_CCS` 通过 **`skin`**（集成方外观）和 **`variant`**（同皮肤下的子款，如中石化）选择 link1–link7 的 visual mesh。**碰撞**始终使用包根目录 `meshes/link*.glb`，不受皮肤影响。
 
 | `skin` | `variant` | Visual mesh 目录 |
 |--------|-----------|------------------|
@@ -186,17 +213,16 @@ source ~/ros2_ws/install/setup.bash
 ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs
 ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=left    # or type:=right
 
-# End effector or scene — same `type` as §2.3, e.g.:
+# End effector — same `type` as §2.3, optionally with `variant:=desktop` (§2.2), e.g.:
 ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=rg75
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=ag2f90_c
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=usb-90c
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs variant:=desktop type:=ag2f90_c_soft
 
 # Asymmetric end effectors (§2.4) — omit `type:=`:
 ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs \
   left_type:=rg75 right_type:=linkerhand_o7
 ```
 
-Other symmetric `type` values: `ag2f90_d`, `ag2f90_c_soft`, `rg75_heavy`, `linkerhand_o6`, `linkerhand_l6`, `linkerhand_o7`, `desktop`, `desktop_90c`.
+Other symmetric `type` values: `ag2f90_d`, `ag2f90_c_soft`, `rg75_heavy`, `linkerhand_o6`, `linkerhand_l6`, `linkerhand_o7`. Booth layout uses **`variant:=desktop`**, not `type`.
 
 ## 4. Real Robot Deploy
 
