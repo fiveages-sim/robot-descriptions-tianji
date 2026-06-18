@@ -13,6 +13,9 @@
 	<!-- Non-desktop only: from robot.local.yaml via launch (robot_profile) -->
 	<xacro:arg name="left_dyn_param" default=""/>
 	<xacro:arg name="right_dyn_param" default=""/>
+	<!-- Marvin joint limits; override via robot.local.yaml hardware: or hardware_max_joint_*:= launch args -->
+	<xacro:arg name="max_joint_speed" default="50"/>
+	<xacro:arg name="max_joint_acceleration" default="30"/>
 
 	<link name="world"/>
 
@@ -108,8 +111,8 @@
 						<param name="left_ee_type">${selected_gripper_type}</param>
 					</xacro:if>
 				</xacro:unless>
-				<param name="max_joint_speed">50</param>
-				<param name="max_joint_acceleration">30</param>
+				<param name="max_joint_speed">$(arg max_joint_speed)</param>
+				<param name="max_joint_acceleration">$(arg max_joint_acceleration)</param>
 				<xacro:if value="${selected_scene == 'desktop'}">
 					<param name="device_ip">192.168.10.190</param>
 					<param name="ctrl_mode">JOINT_IMPEDANCE</param>
