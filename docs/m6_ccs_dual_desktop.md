@@ -1,6 +1,11 @@
 # Marvin M6-CCS Dual-Arm Desktop
 
+Dual-arm **booth / demo stand** layout for m6_ccs. Use **`variant:=desktop`** (m6_ccs-specific platform variant), not `type:=desktop`.
+
+End effectors are selected independently via `type` / `left_type` / `right_type` (see [m6_ccs_description/README.md](../m6_ccs_description/README.md)).
+
 ## 1. Build
+
 ```bash
 cd ~/ros2_ws
 colcon build --packages-up-to m6_ccs_description --symlink-install
@@ -8,69 +13,71 @@ colcon build --packages-up-to m6_ccs_description --symlink-install
 
 ## 2. Visualize
 
-* Only Dual Arm
+* Dual arm on desktop (no gripper)
 
 ```bash
 source ~/ros2_ws/install/setup.bash
-ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual_desktop collider:=simple
+ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs variant:=desktop collider:=simple
 ```
 
-* Dual Arm with AG2F90C Gripper
+* Desktop + AG2F90-C gripper
 
 ```bash
 source ~/ros2_ws/install/setup.bash
-ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual_desktop_90c collider:=simple
+ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs variant:=desktop type:=ag2f90_c collider:=simple
 ```
 
-* Dual Arm with AG2F90C Gripper and Soft Pad
+* Desktop + AG2F90-C (soft pad)
 
 ```bash
 source ~/ros2_ws/install/setup.bash
-ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=dual_desktop_90c_soft collider:=simple
+ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs variant:=desktop type:=ag2f90_c_soft collider:=simple
 ```
 
 ## 3. OCS2 Arm Controller
+
 ### 3.1 Mock Components
 
-* Only Dual Arm
+* Desktop only
 
 ```bash
 source ~/ros2_ws/install/setup.bash
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_desktop
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs variant:=desktop
 ```
 
-* Dual Arm with AG2F90C Gripper
+* Desktop + AG2F90-C
 
 ```bash
 source ~/ros2_ws/install/setup.bash
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_desktop_90c
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs variant:=desktop type:=ag2f90_c
 ```
 
-* Dual Arm with AG2F90C Gripper and Soft Pad
+* Desktop + AG2F90-C (soft pad)
 
 ```bash
 source ~/ros2_ws/install/setup.bash
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_desktop_90c_soft
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs variant:=desktop type:=ag2f90_c_soft
 ```
 
 ### 3.2 Isaac Sim
-* Only Dual Arm
+
+* Desktop only
 
 ```bash
 source ~/ros2_ws/install/setup.bash
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_desktop hardware:=isaac
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs variant:=desktop hardware:=isaac
 ```
 
-* Dual Arm with AG2F90C Gripper
+* Desktop + AG2F90-C
 
 ```bash
 source ~/ros2_ws/install/setup.bash
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_desktop_90c hardware:=isaac
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs variant:=desktop type:=ag2f90_c hardware:=isaac
 ```
 
-* Dual Arm with AG2F90C Gripper and Soft Pad
+* Desktop + AG2F90-C (soft pad)
 
 ```bash
 source ~/ros2_ws/install/setup.bash
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=dual_desktop_90c_soft hardware:=isaac
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs variant:=desktop type:=ag2f90_c_soft hardware:=isaac
 ```
