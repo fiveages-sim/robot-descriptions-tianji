@@ -3,6 +3,7 @@
 
 	<xacro:include filename="$(find m6_ccs_description)/xacro/ros2_control/interfaces.xacro"/>
 	<xacro:include filename="$(find jodell_description)/xacro/ros2_control/RG75-300.xacro"/>
+	<xacro:include filename="$(find jodell_description)/xacro/ros2_control/ERG32.xacro"/>
 	<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
 	<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F120S.xacro"/>
 	<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o6.xacro"/>
@@ -43,6 +44,9 @@
 		</xacro:if>
 		<xacro:if value="${hand_type == 'xhand1'}">
 			<xacro:xhand1_interfaces name="${side}_hand"/>
+		</xacro:if>
+		<xacro:if value="${hand_type == 'erg32'}">
+			<xacro:erg32_interfaces name="${side}_hand"/>
 		</xacro:if>
 	</xacro:macro>
 

@@ -17,7 +17,7 @@ OCS2 规划：`robot_common_launch manipulator_ocs2.launch.py robot_name:=m6_ccs
 |------|------|
 | 双臂（默认） | `… manipulator.launch.py robot:=m6_ccs collider:=simple` |
 | 单臂 | 加 `type:=left` 或 `type:=right` |
-| 末端（对称） | 加 `type:=<key>`，见 [§2](#2-末端执行器) |
+| 末端（对称） | 加 `type:=<key>`（如 `erg32`、`rg75`），见 [§2](#2-末端执行器) |
 | 末端（左右不同） | `left_type:=… right_type:=…`，**不要**再传 `type:=` |
 | 展台 | `variant:=desktop`（与 `type` 正交，见 [§3](#3-平台与外观)） |
 | 真机 | `demo.launch.py … hardware:=real` 或 `real_usb`；驱动方式见 [§2.1](#21-真机驱动方式) |
@@ -56,6 +56,7 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs \
 | Type key | 产品 | `marvin` | `tianji_can` | `usb` | `usb_can` |
 |----------|------|:--------:|:------------:|:-----:|:---------:|
 | `rg75` | Jodell RG75-300 | ✅ | — | — | — |
+| `erg32` | Jodell ERG32（旋转 + 夹爪，2-DOF） | ✅ | — | — | — |
 | `ag2f90`, `ag2f90_d` | ChangingTek AG2F90-D | ✅ | — | — | — |
 | `ag2f90_c`, `ag2f90_c_soft` | ChangingTek AG2F90-C | ✅ | — | — | — |
 | `ag2f120s`, `ag2f120s_d` | ChangingTek AG2F120S | ✅ | — | — | — |
@@ -138,6 +139,7 @@ source install/setup.bash
 
 # 臂体 RS485 + 夹爪 / 手（Marvin）
 ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=ag2f90_c
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=erg32
 ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=inspire_f2
 
 # 臂体场总线 CAN（仅 freedom_v1 / inspire_f2）
