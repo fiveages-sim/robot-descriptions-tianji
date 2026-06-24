@@ -10,10 +10,6 @@
         <xacro:if value="${type_key == 'rg75'}">
             <xacro:property name="${side}_gripper_type" value="rg75" scope="parent"/>
         </xacro:if>
-        <xacro:if value="${type_key == 'rg75_heavy'}">
-            <xacro:property name="${side}_gripper_type" value="rg75" scope="parent"/>
-            <xacro:property name="${side}_gripper_pad" value="heavy_carry" scope="parent"/>
-        </xacro:if>
         <xacro:if value="${type_key == 'ag2f90' or type_key == 'ag2f90_d'}">
             <xacro:property name="${side}_gripper_type" value="ag2f90_d" scope="parent"/>
         </xacro:if>
@@ -38,6 +34,21 @@
         </xacro:if>
         <xacro:if value="${type_key == 'linkerhand_o7'}">
             <xacro:property name="${side}_hand_type" value="linkerhand_o7" scope="parent"/>
+        </xacro:if>
+        <xacro:if value="${type_key == 'freedom_v1'}">
+            <xacro:property name="${side}_hand_type" value="freedom_v1" scope="parent"/>
+        </xacro:if>
+        <xacro:if value="${type_key == 'freedom_v2'}">
+            <xacro:property name="${side}_hand_type" value="freedom_v2" scope="parent"/>
+        </xacro:if>
+        <xacro:if value="${type_key == 'inspire_e2'}">
+            <xacro:property name="${side}_hand_type" value="inspire_e2" scope="parent"/>
+        </xacro:if>
+        <xacro:if value="${type_key == 'inspire_f2'}">
+            <xacro:property name="${side}_hand_type" value="inspire_f2" scope="parent"/>
+        </xacro:if>
+        <xacro:if value="${type_key == 'xhand1'}">
+            <xacro:property name="${side}_hand_type" value="xhand1" scope="parent"/>
         </xacro:if>
     </xacro:macro>
 

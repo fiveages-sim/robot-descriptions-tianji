@@ -19,7 +19,6 @@
 	<!-- 默认值 -->
 	<xacro:property name="selected_arm_config" value="dual"/>
 	<xacro:property name="selected_gripper_type" value="none"/>
-	<xacro:property name="selected_hand_type" value="none"/>
 	<xacro:property name="selected_gripper_pad" value="default"/>
 
 	<!-- 从 type 解析 arm_config 和 gripper_type -->
@@ -54,19 +53,6 @@
 	</xacro:if>
 	<xacro:if value="${type_arg == 'rg75'}">
 		<xacro:property name="selected_gripper_type" value="rg75"/>
-	</xacro:if>
-	<xacro:if value="${type_arg == 'rg75_heavy'}">
-		<xacro:property name="selected_gripper_type" value="rg75"/>
-		<xacro:property name="selected_gripper_pad" value="heavy_carry"/>
-	</xacro:if>
-	<xacro:if value="${type_arg == 'linkerhand_o6'}">
-		<xacro:property name="selected_hand_type" value="linkerhand_o6"/>
-	</xacro:if>
-	<xacro:if value="${type_arg == 'linkerhand_l6'}">
-		<xacro:property name="selected_hand_type" value="linkerhand_l6"/>
-	</xacro:if>
-	<xacro:if value="${type_arg == 'linkerhand_o7'}">
-		<xacro:property name="selected_hand_type" value="linkerhand_o7"/>
 	</xacro:if>
 
 	<xacro:include filename="$(find m6_ccs_description)/xacro/arm.xacro"/>

@@ -208,14 +208,14 @@ endEffector
   dualArmMode      true
   leftArm
     {
-      muPosition      10.0
+      muPosition      50.0
       muOrientation    5.0
     }
 
     ; 右臂特定配置
   rightArm
     {
-      muPosition      10.0
+      muPosition      50.0
       muOrientation    5.0
     }
 }
@@ -258,10 +258,10 @@ selfCollision
   }
 
   ; minimum distance allowed between the pairs
-  minimumDistance  0.025
+  minimumDistance  0.01
 
   ; relaxed log barrier mu
-  mu      1e-3
+  mu      1e-2
 
   ; relaxed log barrier delta
   delta   1e-2

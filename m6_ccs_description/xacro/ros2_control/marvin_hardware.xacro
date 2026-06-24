@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<xacro:include filename="$(find m6_ccs_description)/xacro/eefs.xacro"/>
+
+	<!-- arm_type: dual | left | right -->
+	<xacro:macro name="marvin_hardware_block" params="
+		arm_type
+		arm_ctrl_mode
+		max_joint_speed
+		max_joint_acceleration
+		device_ip
+		left_dyn_param
+		right_dyn_param
+		selected_gripper_type:=none">
+		<plugin>marvin_ros2_control/MarvinHardware</plugin>
+		<param name="arm_type">${arm_type}</param>
+		<xacro:if value="${arm_type == 'dual'}">
+			<xacro:property name="left_ee_type" value="${left_hand_type if left_hand_type != '' else left_gripper_type}"/>
+			<xacro:property name="right_ee_type" value="${right_hand_type if right_hand_type != '' else right_gripper_type}"/>
+			<xacro:if value="${(left_drive_type == 'marvin' or left_drive_type == 'tianji_can') and left_ee_type != '' and left_ee_type != 'xhand1' and left_ee_type != 'inspire_e2'}">
+				<param name="left_ee_type">${left_ee_type}</param>
+				<xacro:if value="${left_drive_type == 'tianji_can'}">
+					<param name="left_ee_channel">1</param>
+				</xacro:if>
+			</xacro:if>
+			<xacro:if value="${(right_drive_type == 'marvin' or right_drive_type == 'tianji_can') and right_ee_type != '' and right_ee_type != 'xhand1' and right_ee_type != 'inspire_e2'}">
+				<param name="right_ee_type">${right_ee_type}</param>
+				<xacro:if value="${right_drive_type == 'tianji_can'}">
+					<param name="right_ee_channel">1</param>
+				</xacro:if>
+			</xacro:if>
+			<xacro:ee_dyn_param side="left"
+				ee_key="${left_hand_type if left_hand_type != '' else left_gripper_type}"
+				arg_val="${left_dyn_param}"/>
+			<xacro:ee_dyn_param side="right"
+				ee_key="${right_hand_type if right_hand_type != '' else right_gripper_type}"
+				arg_val="${right_dyn_param}"/>
+		</xacro:if>
+		<xacro:unless value="${arm_type == 'dual'}">
+			<xacro:if value="${selected_gripper_type != 'none'}">
+				<param name="left_ee_type">${selected_gripper_type}</param>
+			</xacro:if>
+			<xacro:ee_dyn_param side="left" ee_key="${selected_gripper_type}" arg_val="${left_dyn_param}"/>
+			<xacro:ee_dyn_param side="right" ee_key="" arg_val="${right_dyn_param}"/>
+		</xacro:unless>
+		<param name="max_joint_speed">${max_joint_speed}</param>
+		<param name="max_joint_acceleration">${max_joint_acceleration}</param>
+		<param name="ctrl_mode">${arm_ctrl_mode}</param>
+		<xacro:if value="${device_ip != ''}">
+			<param name="device_ip">${device_ip}</param>
+		</xacro:if>
+	</xacro:macro>
+
+</robot>

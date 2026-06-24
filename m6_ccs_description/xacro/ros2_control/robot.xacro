@@ -4,11 +4,19 @@
 	<xacro:arg name="arm_ctrl_mode" default="position"/>
 	<xacro:arg name="device_ip" default=""/>
 	<xacro:arg name="type" default="dual"/>
+	<xacro:arg name="left_ee_drive_type" default=""/>
+	<xacro:arg name="right_ee_drive_type" default=""/>
+
+	<xacro:property name="is_real_hardware" value="${'$(arg ros2_control_hardware_type)' == 'real' or '$(arg ros2_control_hardware_type)' == 'real_usb'}"/>
+	<xacro:property name="ee_drive_type" value="${'usb' if '$(arg ros2_control_hardware_type)' == 'real_usb' else ('marvin' if '$(arg ros2_control_hardware_type)' == 'real' else '')}"/>
+	<xacro:property name="left_drive_type" value="${'$(arg left_ee_drive_type)' if '$(arg left_ee_drive_type)' != '' else ee_drive_type}"/>
+	<xacro:property name="right_drive_type" value="${'$(arg right_ee_drive_type)' if '$(arg right_ee_drive_type)' != '' else ee_drive_type}"/>
 	<xacro:arg name="left_dyn_param" default=""/>
 	<xacro:arg name="right_dyn_param" default=""/>
-	<!-- Marvin joint limits; override via robot.local.yaml hardware: or hardware_max_joint_*:= launch args -->
 	<xacro:arg name="max_joint_speed" default="50"/>
 	<xacro:arg name="max_joint_acceleration" default="30"/>
+	<xacro:arg name="usb_left_port" default="/dev/ttyUSB0"/>
+	<xacro:arg name="usb_right_port" default="/dev/ttyUSB2"/>
 
 	<link name="world"/>
 
@@ -18,116 +26,51 @@
 		<origin/>
 	</joint>
 
-	<!-- Include robot.xacro（解析 type / selected_arm_config） -->
 	<xacro:include filename="$(find m6_ccs_description)/xacro/robot.xacro"/>
-	<xacro:include filename="$(find m6_ccs_description)/xacro/eefs.xacro"/>
-	<xacro:include filename="$(find m6_ccs_description)/xacro/ros2_control/interfaces.xacro"/>
+	<xacro:include filename="$(find robot_common_launch)/xacro/ros2_control/simulation_hardware.xacro"/>
+	<xacro:include filename="$(find m6_ccs_description)/xacro/ros2_control/marvin_hardware.xacro"/>
+	<xacro:include filename="$(find m6_ccs_description)/xacro/ros2_control/end_effector_interfaces.xacro"/>
+	<xacro:include filename="$(find m6_ccs_description)/xacro/ros2_control/external_ee_systems.xacro"/>
+
+	<xacro:property name="ee_block_mode" value="${'real' if is_real_hardware else 'sim'}"/>
 
 	<ros2_control name="M6_CCS_System" type="system">
 		<hardware>
-			<xacro:if value="${'$(arg ros2_control_hardware_type)' == 'gz'}">
-				<plugin>gz_ros2_control/GazeboSimSystem</plugin>
-			</xacro:if>
-			<xacro:if value="${'$(arg ros2_control_hardware_type)' == 'mock_components'}">
-				<plugin>mock_components/GenericSystem</plugin>
-			</xacro:if>
-			<xacro:if value="${'$(arg ros2_control_hardware_type)' == 'isaac'}">
-				<plugin>topic_based_ros2_control/TopicBasedSystem</plugin>
-				<param name="joint_commands_topic">/isaac/joint_command</param>
-				<param name="joint_states_topic">/isaac/joint_states</param>
-				<param name="sum_wrapped_joint_states">false</param>
-				<param name="initialize_commands_from_state">true</param>
-			</xacro:if>
-			<xacro:if value="${'$(arg ros2_control_hardware_type)' == 'real'}">
-				<plugin>marvin_ros2_control/MarvinHardware</plugin>
-				<param name="arm_type">${selected_arm_config}</param>
-				<param name="left_ee_type">${left_hand_type if left_hand_type != '' else left_gripper_type}</param>
-				<param name="right_ee_type">${right_hand_type if right_hand_type != '' else right_gripper_type}</param>
-				<param name="max_joint_speed">$(arg max_joint_speed)</param>
-				<param name="max_joint_acceleration">$(arg max_joint_acceleration)</param>
-				<param name="ctrl_mode">$(arg arm_ctrl_mode)</param>
-				<xacro:if value="${'$(arg device_ip)' != ''}">
-					<param name="device_ip">$(arg device_ip)</param>
-				</xacro:if>
-				<xacro:ee_dyn_param side="left"
-					ee_key="${left_hand_type if left_hand_type != '' else left_gripper_type}"
-					arg_val="$(arg left_dyn_param)"/>
-				<xacro:ee_dyn_param side="right"
-					ee_key="${right_hand_type if right_hand_type != '' else right_gripper_type}"
-					arg_val="$(arg right_dyn_param)"/>
+			<xacro:unless value="${is_real_hardware}">
+				<xacro:simulation_hardware_plugin hardware_type="$(arg ros2_control_hardware_type)"/>
+			</xacro:unless>
+			<xacro:if value="${is_real_hardware}">
+				<xacro:marvin_hardware_block
+					arm_type="${selected_arm_config}"
+					arm_ctrl_mode="$(arg arm_ctrl_mode)"
+					max_joint_speed="$(arg max_joint_speed)"
+					max_joint_acceleration="$(arg max_joint_acceleration)"
+					device_ip="$(arg device_ip)"
+					left_dyn_param="$(arg left_dyn_param)"
+					right_dyn_param="$(arg right_dyn_param)"
+					selected_gripper_type="${selected_gripper_type}"/>
 			</xacro:if>
 		</hardware>
 
-		<!-- 双臂配置：按侧末端（left_type/right_type 或对称 type） -->
 		<xacro:if value="${selected_arm_config == 'dual'}">
-			<xacro:m6_interfaces name="left"/>
-			<xacro:m6_interfaces name="right"/>
-
-			<xacro:include filename="$(find jodell_description)/xacro/ros2_control/RG75-300.xacro"/>
-			<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
-			<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F120S.xacro"/>
-			<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o6.xacro"/>
-			<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o7.xacro"/>
-
-			<xacro:if value="${left_gripper_type == 'rg75'}">
-				<xacro:rg75_interfaces name="left"/>
-			</xacro:if>
-			<xacro:if value="${right_gripper_type == 'rg75'}">
-				<xacro:rg75_interfaces name="right"/>
-			</xacro:if>
-
-			<xacro:if value="${left_gripper_type == 'ag2f90_c' or left_gripper_type == 'ag2f90_d'}">
-				<xacro:ag2f90c_interfaces name="left"/>
-			</xacro:if>
-			<xacro:if value="${right_gripper_type == 'ag2f90_c' or right_gripper_type == 'ag2f90_d'}">
-				<xacro:ag2f90c_interfaces name="right"/>
-			</xacro:if>
-			<xacro:if value="${left_gripper_type == 'ag2f120s' or left_gripper_type == 'ag2f120s_d'}">
-				<xacro:ag2f120s_interfaces name="left"/>
-			</xacro:if>
-			<xacro:if value="${right_gripper_type == 'ag2f120s' or right_gripper_type == 'ag2f120s_d'}">
-				<xacro:ag2f120s_interfaces name="right"/>
-			</xacro:if>
-
-			<xacro:if value="${left_hand_type == 'linkerhand_o6' or left_hand_type == 'linkerhand_l6'}">
-				<xacro:linkerhand_o6_interfaces name="left_hand"/>
-			</xacro:if>
-			<xacro:if value="${right_hand_type == 'linkerhand_o6' or right_hand_type == 'linkerhand_l6'}">
-				<xacro:linkerhand_o6_interfaces name="right_hand"/>
-			</xacro:if>
-
-			<xacro:if value="${left_hand_type == 'linkerhand_o7'}">
-				<xacro:linkerhand_o7_interfaces name="left_hand"/>
-			</xacro:if>
-			<xacro:if value="${right_hand_type == 'linkerhand_o7'}">
-				<xacro:linkerhand_o7_interfaces name="right_hand"/>
-			</xacro:if>
+			<xacro:dual_arm_ee_block mode="${ee_block_mode}"/>
 		</xacro:if>
 
-		<!-- 单臂配置 -->
 		<xacro:unless value="${selected_arm_config == 'dual'}">
 			<xacro:if value="${selected_arm_config == 'left'}">
-				<xacro:m6_interfaces name=""/>
-				<xacro:if value="${selected_gripper_type == 'ag2f90_c' or selected_gripper_type == 'ag2f90_d'}">
-					<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
-					<xacro:ag2f90c_interfaces name=""/>
-				</xacro:if>
-				<xacro:if value="${selected_gripper_type == 'ag2f120s' or selected_gripper_type == 'ag2f120s_d'}">
-					<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F120S.xacro"/>
-					<xacro:ag2f120s_interfaces name=""/>
-				</xacro:if>
-				<xacro:if value="${selected_gripper_type == 'rg75'}">
-					<xacro:include filename="$(find jodell_description)/xacro/ros2_control/RG75-300.xacro"/>
-					<xacro:rg75_interfaces name=""/>
-				</xacro:if>
+				<xacro:single_arm_ee_block mode="${ee_block_mode}" gripper_type="${selected_gripper_type}"/>
 			</xacro:if>
 			<xacro:if value="${selected_arm_config == 'right'}">
 				<xacro:m6_interfaces name=""/>
 			</xacro:if>
 		</xacro:unless>
-
 	</ros2_control>
 
+	<xacro:if value="${is_real_hardware and selected_arm_config == 'dual'}">
+		<xacro:external_ee_systems
+			usb_left_port="$(arg usb_left_port)"
+			usb_right_port="$(arg usb_right_port)"/>
+	</xacro:if>
 
 	<xacro:arg name="gazebo" default="false"/>
 	<xacro:if value="$(arg gazebo)">
