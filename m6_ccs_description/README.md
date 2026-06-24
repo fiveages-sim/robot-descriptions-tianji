@@ -95,9 +95,13 @@ defaults:
 hardware:
   device_ip: 192.168.10.190
   arm_ctrl_mode: JOINT_IMPEDANCE
+  max_joint_speed: 50
+  max_joint_acceleration: 30
+  usb_left_port: /dev/ttyUSB0
+  usb_right_port: /dev/ttyUSB2
 ```
 
-Launch 可覆盖：`hardware_device_ip:=…`、`hardware_arm_ctrl_mode:=…`、`hardware_left_dyn_param:=…`。
+Launch 可覆盖：`hardware_device_ip:=…`、`hardware_max_joint_speed:=…`、`hardware_max_joint_acceleration:=…`、`hardware_usb_left_port:=…`、`hardware_arm_ctrl_mode:=…`、`hardware_left_dyn_param:=…`。
 
 **迁移：** 已移除 `type:=desktop` / `type:=desktop_90c` → 改用 `variant:=desktop` + 独立 `type`（如 `ag2f90_c_soft`）。详见 [m6_ccs_dual_desktop.md](../docs/m6_ccs_dual_desktop.md)。
 
@@ -147,3 +151,20 @@ ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real_usb 
 ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real_usb type:=inspire_f2 \
   left_ee_drive_type:=usb_can right_ee_drive_type:=usb_can
 ```
+
+## 5. ros2_control 共享宏
+
+`xacro/ros2_control/robot.xacro` 为薄封装；可复用模块供 `fiveages_w2_description` 等 include：
+
+| 文件 | 宏 | 说明 |
+|------|-----|------|
+| `interfaces.xacro` | `m6_interfaces` | 单臂 7-DOF 关节接口 |
+| `end_effector_interfaces.xacro` | `side_hand_interfaces`、`side_gripper_joint`、`dual_arm_ee_block` | 末端接口；真机夹爪 collapsed 单关节，仿真 full 链 |
+| `marvin_hardware.xacro` | `marvin_hardware_block` | Marvin 插件参数（含 `ee_dyn_param`） |
+| `external_ee_systems.xacro` | `external_ee_systems`、`side_usb_hand_system` | 外接 usb / usb_can；串口默认左 `/dev/ttyUSB0`、右 `/dev/ttyUSB2`（`usb_left_port` / `usb_right_port`，各类型手共用） |
+
+仿真硬件插件见 [`robot_common_launch`](../../common/robot_common_launch/xacro/ros2_control/simulation_hardware.xacro)（`simulation_hardware_plugin`：mock / gz / isaac）。
+
+外接 USB 串口：`usb_left_port` / `usb_right_port`（默认左 `/dev/ttyUSB0`、右 `/dev/ttyUSB2`）。在 `robot.local.yaml` 的 `hardware:` 中配置，或 launch 使用 `hardware_usb_left_port:=…`。
+
+URDF 层复用：`eef_type_resolver.xacro`、`eefs.xacro`（`ee_dyn_param`）。launch 入参（`device_ip`、`left_ee_drive_type` 等）仍在各机器人顶层 `robot.xacro` 声明，经宏 params 传入共享块。

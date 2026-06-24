@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<xacro:include filename="$(find m6_ccs_description)/xacro/ros2_control/interfaces.xacro"/>
+	<xacro:include filename="$(find jodell_description)/xacro/ros2_control/RG75-300.xacro"/>
+	<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
+	<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F120S.xacro"/>
+	<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o6.xacro"/>
+	<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o7.xacro"/>
+	<xacro:include filename="$(find freedom_description)/xacro/ros2_control/freedomv1.xacro"/>
+	<xacro:include filename="$(find freedom_description)/xacro/ros2_control/freedomv2.xacro"/>
+	<xacro:include filename="$(find inspire_description)/xacro/ros2_control/RH56E2.xacro"/>
+	<xacro:include filename="$(find inspire_description)/xacro/ros2_control/RH56F2.xacro"/>
+	<xacro:include filename="$(find xhand1_description)/xacro/ros2_control/side_systems.xacro"/>
+
+	<xacro:macro name="side_gripper_joint" params="side">
+		<joint name="${side}_gripper_joint">
+			<command_interface name="position"/>
+			<state_interface name="position">
+				<param name="initial_value">0</param>
+			</state_interface>
+		</joint>
+	</xacro:macro>
+
+	<xacro:macro name="side_hand_interfaces" params="side hand_type">
+		<xacro:if value="${hand_type == 'linkerhand_o6' or hand_type == 'linkerhand_l6'}">
+			<xacro:linkerhand_o6_interfaces name="${side}_hand"/>
+		</xacro:if>
+		<xacro:if value="${hand_type == 'linkerhand_o7'}">
+			<xacro:linkerhand_o7_interfaces name="${side}_hand"/>
+		</xacro:if>
+		<xacro:if value="${hand_type == 'freedom_v1'}">
+			<xacro:freedom_interfaces name="${side}_hand"/>
+		</xacro:if>
+		<xacro:if value="${hand_type == 'freedom_v2'}">
+			<xacro:freedomv2_interfaces name="${side}_hand"/>
+		</xacro:if>
+		<xacro:if value="${hand_type == 'inspire_e2'}">
+			<xacro:inspire_rh56e2_interfaces name="${side}_hand"/>
+		</xacro:if>
+		<xacro:if value="${hand_type == 'inspire_f2'}">
+			<xacro:inspire_rh56f2_interfaces name="${side}_hand"/>
+		</xacro:if>
+		<xacro:if value="${hand_type == 'xhand1'}">
+			<xacro:xhand1_interfaces name="${side}_hand"/>
+		</xacro:if>
+	</xacro:macro>
+
+	<xacro:macro name="side_gripper_interfaces_sim" params="side gripper_type">
+		<xacro:if value="${gripper_type == 'rg75'}">
+			<xacro:rg75_interfaces name="${side}"/>
+		</xacro:if>
+		<xacro:if value="${gripper_type == 'ag2f90_c' or gripper_type == 'ag2f90_d'}">
+			<xacro:ag2f90c_interfaces name="${side}"/>
+		</xacro:if>
+		<xacro:if value="${gripper_type == 'ag2f120s' or gripper_type == 'ag2f120s_d'}">
+			<xacro:ag2f120s_interfaces name="${side}"/>
+		</xacro:if>
+	</xacro:macro>
+
+	<!-- mode: sim | real -->
+	<xacro:macro name="dual_arm_ee_block" params="mode">
+		<xacro:m6_interfaces name="left"/>
+		<xacro:m6_interfaces name="right"/>
+
+		<xacro:if value="${mode == 'sim'}">
+			<xacro:if value="${left_gripper_type != ''}">
+				<xacro:side_gripper_interfaces_sim side="left" gripper_type="${left_gripper_type}"/>
+			</xacro:if>
+			<xacro:if value="${right_gripper_type != ''}">
+				<xacro:side_gripper_interfaces_sim side="right" gripper_type="${right_gripper_type}"/>
+			</xacro:if>
+			<xacro:if value="${left_hand_type != ''}">
+				<xacro:side_hand_interfaces side="left" hand_type="${left_hand_type}"/>
+			</xacro:if>
+			<xacro:if value="${right_hand_type != ''}">
+				<xacro:side_hand_interfaces side="right" hand_type="${right_hand_type}"/>
+			</xacro:if>
+		</xacro:if>
+
+		<xacro:if value="${mode == 'real'}">
+			<xacro:if value="${left_gripper_type != ''}">
+				<xacro:side_gripper_joint side="left"/>
+			</xacro:if>
+			<xacro:if value="${right_gripper_type != ''}">
+				<xacro:side_gripper_joint side="right"/>
+			</xacro:if>
+			<xacro:if value="${(left_drive_type == 'marvin' or left_drive_type == 'tianji_can') and left_hand_type != '' and left_hand_type != 'xhand1' and left_hand_type != 'inspire_e2'}">
+				<xacro:side_hand_interfaces side="left" hand_type="${left_hand_type}"/>
+			</xacro:if>
+			<xacro:if value="${(right_drive_type == 'marvin' or right_drive_type == 'tianji_can') and right_hand_type != '' and right_hand_type != 'xhand1' and right_hand_type != 'inspire_e2'}">
+				<xacro:side_hand_interfaces side="right" hand_type="${right_hand_type}"/>
+			</xacro:if>
+		</xacro:if>
+	</xacro:macro>
+
+	<!-- Single left arm with optional gripper (m6_ccs type:=left) -->
+	<xacro:macro name="single_arm_ee_block" params="mode gripper_type:=none">
+		<xacro:m6_interfaces name=""/>
+		<xacro:if value="${mode == 'sim'}">
+			<xacro:if value="${gripper_type != 'none'}">
+				<xacro:side_gripper_interfaces_sim side="" gripper_type="${gripper_type}"/>
+			</xacro:if>
+		</xacro:if>
+		<xacro:if value="${mode == 'real'}">
+			<xacro:if value="${gripper_type != 'none'}">
+				<xacro:side_gripper_joint side=""/>
+			</xacro:if>
+		</xacro:if>
+	</xacro:macro>
+
+</robot>

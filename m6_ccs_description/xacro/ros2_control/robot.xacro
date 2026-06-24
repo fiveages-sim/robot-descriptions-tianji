@@ -11,12 +11,12 @@
 	<xacro:property name="ee_drive_type" value="${'usb' if '$(arg ros2_control_hardware_type)' == 'real_usb' else ('marvin' if '$(arg ros2_control_hardware_type)' == 'real' else '')}"/>
 	<xacro:property name="left_drive_type" value="${'$(arg left_ee_drive_type)' if '$(arg left_ee_drive_type)' != '' else ee_drive_type}"/>
 	<xacro:property name="right_drive_type" value="${'$(arg right_ee_drive_type)' if '$(arg right_ee_drive_type)' != '' else ee_drive_type}"/>
-	<!-- Non-desktop only: from robot.local.yaml via launch (robot_profile) -->
 	<xacro:arg name="left_dyn_param" default=""/>
 	<xacro:arg name="right_dyn_param" default=""/>
-	<!-- Marvin joint limits; override via robot.local.yaml hardware: or hardware_max_joint_*:= launch args -->
 	<xacro:arg name="max_joint_speed" default="50"/>
 	<xacro:arg name="max_joint_acceleration" default="30"/>
+	<xacro:arg name="usb_left_port" default="/dev/ttyUSB0"/>
+	<xacro:arg name="usb_right_port" default="/dev/ttyUSB2"/>
 
 	<link name="world"/>
 
@@ -26,240 +26,51 @@
 		<origin/>
 	</joint>
 
-	<!-- Include robot.xacro（解析 type / selected_arm_config） -->
 	<xacro:include filename="$(find m6_ccs_description)/xacro/robot.xacro"/>
-	<xacro:include filename="$(find m6_ccs_description)/xacro/eefs.xacro"/>
-	<xacro:include filename="$(find m6_ccs_description)/xacro/ros2_control/interfaces.xacro"/>
-	<xacro:include filename="$(find freedom_description)/xacro/ros2_control/side_systems.xacro"/>
-	<xacro:include filename="$(find inspire_description)/xacro/ros2_control/side_systems.xacro"/>
-	<xacro:include filename="$(find xhand1_description)/xacro/ros2_control/side_systems.xacro"/>
+	<xacro:include filename="$(find robot_common_launch)/xacro/ros2_control/simulation_hardware.xacro"/>
+	<xacro:include filename="$(find m6_ccs_description)/xacro/ros2_control/marvin_hardware.xacro"/>
+	<xacro:include filename="$(find m6_ccs_description)/xacro/ros2_control/end_effector_interfaces.xacro"/>
+	<xacro:include filename="$(find m6_ccs_description)/xacro/ros2_control/external_ee_systems.xacro"/>
 
-	<xacro:macro name="side_hand_interfaces" params="side hand_type">
-		<xacro:if value="${hand_type == 'linkerhand_o6' or hand_type == 'linkerhand_l6'}">
-			<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o6.xacro"/>
-			<xacro:linkerhand_o6_interfaces name="${side}_hand"/>
-		</xacro:if>
-		<xacro:if value="${hand_type == 'linkerhand_o7'}">
-			<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o7.xacro"/>
-			<xacro:linkerhand_o7_interfaces name="${side}_hand"/>
-		</xacro:if>
-		<xacro:if value="${hand_type == 'freedom_v1'}">
-			<xacro:include filename="$(find freedom_description)/xacro/ros2_control/freedomv1.xacro"/>
-			<xacro:freedom_interfaces name="${side}_hand"/>
-		</xacro:if>
-		<xacro:if value="${hand_type == 'freedom_v2'}">
-			<xacro:include filename="$(find freedom_description)/xacro/ros2_control/freedomv2.xacro"/>
-			<xacro:freedomv2_interfaces name="${side}_hand"/>
-		</xacro:if>
-		<xacro:if value="${hand_type == 'inspire_e2'}">
-			<xacro:include filename="$(find inspire_description)/xacro/ros2_control/RH56E2.xacro"/>
-			<xacro:inspire_rh56e2_interfaces name="${side}_hand"/>
-		</xacro:if>
-		<xacro:if value="${hand_type == 'inspire_f2'}">
-			<xacro:include filename="$(find inspire_description)/xacro/ros2_control/RH56F2.xacro"/>
-			<xacro:inspire_rh56f2_interfaces name="${side}_hand"/>
-		</xacro:if>
-		<xacro:if value="${hand_type == 'xhand1'}">
-			<xacro:xhand1_interfaces name="${side}_hand"/>
-		</xacro:if>
-	</xacro:macro>
-
-	<xacro:macro name="side_usb_hand_system" params="side hand_type serial_port">
-		<xacro:property name="usb_hand_system_name" value="${str('linkerhand_7' if hand_type == 'linkerhand_o7' else 'linkerhand_6')}"/>
-		<ros2_control name="${usb_hand_system_name}_${side}_system" type="system">
-			<hardware>
-				<plugin>modbus_ros2_control/DexterousHandHardware</plugin>
-				<param name="serial_port">${serial_port}</param>
-				<param name="hand_type">${hand_type}</param>
-				<param name="hand_side">${side}</param>
-				<param name="max_speed_ratio">1.0</param>
-			</hardware>
-			<xacro:side_hand_interfaces side="${side}" hand_type="${hand_type}"/>
-		</ros2_control>
-	</xacro:macro>
+	<xacro:property name="ee_block_mode" value="${'real' if is_real_hardware else 'sim'}"/>
 
 	<ros2_control name="M6_CCS_System" type="system">
 		<hardware>
-			<xacro:if value="${'$(arg ros2_control_hardware_type)' == 'gz'}">
-				<plugin>gz_ros2_control/GazeboSimSystem</plugin>
-			</xacro:if>
-			<xacro:if value="${'$(arg ros2_control_hardware_type)' == 'mock_components'}">
-				<plugin>mock_components/GenericSystem</plugin>
-			</xacro:if>
-			<xacro:if value="${'$(arg ros2_control_hardware_type)' == 'isaac'}">
-				<plugin>topic_based_ros2_control/TopicBasedSystem</plugin>
-				<param name="joint_commands_topic">/isaac/joint_command</param>
-				<param name="joint_states_topic">/isaac/joint_states</param>
-				<param name="sum_wrapped_joint_states">false</param>
-				<param name="initialize_commands_from_state">true</param>
-			</xacro:if>
+			<xacro:unless value="${is_real_hardware}">
+				<xacro:simulation_hardware_plugin hardware_type="$(arg ros2_control_hardware_type)"/>
+			</xacro:unless>
 			<xacro:if value="${is_real_hardware}">
-				<plugin>marvin_ros2_control/MarvinHardware</plugin>
-				<param name="arm_type">${selected_arm_config}</param>
-				<xacro:if value="${selected_arm_config == 'dual'}">
-					<xacro:property name="left_ee_type" value="${left_hand_type if left_hand_type != '' else left_gripper_type}"/>
-					<xacro:property name="right_ee_type" value="${right_hand_type if right_hand_type != '' else right_gripper_type}"/>
-					<xacro:if value="${(left_drive_type == 'marvin' or left_drive_type == 'tianji_can') and left_ee_type != '' and left_ee_type != 'xhand1' and left_ee_type != 'inspire_e2'}">
-						<param name="left_ee_type">${left_ee_type}</param>
-						<xacro:if value="${left_drive_type == 'tianji_can'}">
-							<param name="left_ee_channel">1</param>
-						</xacro:if>
-					</xacro:if>
-					<xacro:if value="${(right_drive_type == 'marvin' or right_drive_type == 'tianji_can') and right_ee_type != '' and right_ee_type != 'xhand1' and right_ee_type != 'inspire_e2'}">
-						<param name="right_ee_type">${right_ee_type}</param>
-						<xacro:if value="${right_drive_type == 'tianji_can'}">
-							<param name="right_ee_channel">1</param>
-						</xacro:if>
-					</xacro:if>
-				</xacro:if>
-				<xacro:unless value="${selected_arm_config == 'dual'}">
-					<xacro:if value="${selected_gripper_type != 'none'}">
-						<param name="left_ee_type">${selected_gripper_type}</param>
-					</xacro:if>
-				</xacro:unless>
-				<param name="max_joint_speed">$(arg max_joint_speed)</param>
-				<param name="max_joint_acceleration">$(arg max_joint_acceleration)</param>
-				<param name="ctrl_mode">$(arg arm_ctrl_mode)</param>
-				<xacro:if value="${'$(arg device_ip)' != ''}">
-					<param name="device_ip">$(arg device_ip)</param>
-				</xacro:if>
-				<xacro:ee_dyn_param side="left"
-					ee_key="${left_hand_type if left_hand_type != '' else left_gripper_type}"
-					arg_val="$(arg left_dyn_param)"/>
-				<xacro:ee_dyn_param side="right"
-					ee_key="${right_hand_type if right_hand_type != '' else right_gripper_type}"
-					arg_val="$(arg right_dyn_param)"/>
+				<xacro:marvin_hardware_block
+					arm_type="${selected_arm_config}"
+					arm_ctrl_mode="$(arg arm_ctrl_mode)"
+					max_joint_speed="$(arg max_joint_speed)"
+					max_joint_acceleration="$(arg max_joint_acceleration)"
+					device_ip="$(arg device_ip)"
+					left_dyn_param="$(arg left_dyn_param)"
+					right_dyn_param="$(arg right_dyn_param)"
+					selected_gripper_type="${selected_gripper_type}"/>
 			</xacro:if>
 		</hardware>
 
-		<!-- 双臂配置：按侧末端（left_type/right_type 或对称 type） -->
 		<xacro:if value="${selected_arm_config == 'dual'}">
-			<xacro:m6_interfaces name="left"/>
-			<xacro:m6_interfaces name="right"/>
-
-			<xacro:include filename="$(find jodell_description)/xacro/ros2_control/RG75-300.xacro"/>
-			<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
-			<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F120S.xacro"/>
-			<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o6.xacro"/>
-			<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o7.xacro"/>
-
-			<xacro:if value="${left_gripper_type == 'rg75'}">
-				<xacro:include filename="$(find jodell_description)/xacro/ros2_control/RG75-300.xacro"/>
-				<xacro:rg75_interfaces name="left"/>
-			</xacro:if>
-			<xacro:if value="${right_gripper_type == 'rg75'}">
-				<xacro:include filename="$(find jodell_description)/xacro/ros2_control/RG75-300.xacro"/>
-				<xacro:rg75_interfaces name="right"/>
-			</xacro:if>
-
-			<xacro:if value="${left_gripper_type == 'ag2f90_c' or left_gripper_type == 'ag2f90_d'}">
-				<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
-				<xacro:ag2f90c_interfaces name="left"/>
-			</xacro:if>
-			<xacro:if value="${right_gripper_type == 'ag2f90_c' or right_gripper_type == 'ag2f90_d'}">
-				<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
-				<xacro:ag2f90c_interfaces name="right"/>
-			</xacro:if>
-			<xacro:if value="${left_gripper_type == 'ag2f120s' or left_gripper_type == 'ag2f120s_d'}">
-				<xacro:ag2f120s_interfaces name="left"/>
-			</xacro:if>
-			<xacro:if value="${right_gripper_type == 'ag2f120s' or right_gripper_type == 'ag2f120s_d'}">
-				<xacro:ag2f120s_interfaces name="right"/>
-			</xacro:if>
-
-			<xacro:if value="${(not is_real_hardware) or ((left_drive_type == 'marvin' or left_drive_type == 'tianji_can') and left_hand_type != 'xhand1' and left_hand_type != 'inspire_e2')}">
-				<xacro:if value="${left_hand_type != ''}">
-					<xacro:side_hand_interfaces side="left" hand_type="${left_hand_type}"/>
-				</xacro:if>
-			</xacro:if>
-			<xacro:if value="${(not is_real_hardware) or ((right_drive_type == 'marvin' or right_drive_type == 'tianji_can') and right_hand_type != 'xhand1' and right_hand_type != 'inspire_e2')}">
-				<xacro:if value="${right_hand_type != ''}">
-					<xacro:side_hand_interfaces side="right" hand_type="${right_hand_type}"/>
-				</xacro:if>
-			</xacro:if>
+			<xacro:dual_arm_ee_block mode="${ee_block_mode}"/>
 		</xacro:if>
 
-		<!-- 单臂配置 -->
 		<xacro:unless value="${selected_arm_config == 'dual'}">
 			<xacro:if value="${selected_arm_config == 'left'}">
-				<xacro:m6_interfaces name=""/>
-				<xacro:if value="${selected_gripper_type == 'ag2f90_c' or selected_gripper_type == 'ag2f90_d'}">
-					<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
-					<xacro:ag2f90c_interfaces name=""/>
-				</xacro:if>
-				<xacro:if value="${selected_gripper_type == 'ag2f120s' or selected_gripper_type == 'ag2f120s_d'}">
-					<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F120S.xacro"/>
-					<xacro:ag2f120s_interfaces name=""/>
-				</xacro:if>
-				<xacro:if value="${selected_gripper_type == 'rg75'}">
-					<xacro:include filename="$(find jodell_description)/xacro/ros2_control/RG75-300.xacro"/>
-					<xacro:rg75_interfaces name=""/>
-				</xacro:if>
+				<xacro:single_arm_ee_block mode="${ee_block_mode}" gripper_type="${selected_gripper_type}"/>
 			</xacro:if>
 			<xacro:if value="${selected_arm_config == 'right'}">
 				<xacro:m6_interfaces name=""/>
 			</xacro:if>
 		</xacro:unless>
-
 	</ros2_control>
 
 	<xacro:if value="${is_real_hardware and selected_arm_config == 'dual'}">
-		<xacro:if value="${left_drive_type == 'usb' and (left_hand_type == 'linkerhand_o6' or left_hand_type == 'linkerhand_l6' or left_hand_type == 'linkerhand_o7')}">
-			<xacro:side_usb_hand_system side="left" hand_type="${left_hand_type}" serial_port="/dev/ttyUSB0"/>
-		</xacro:if>
-		<xacro:if value="${right_drive_type == 'usb' and (right_hand_type == 'linkerhand_o6' or right_hand_type == 'linkerhand_l6' or right_hand_type == 'linkerhand_o7')}">
-			<xacro:side_usb_hand_system side="right" hand_type="${right_hand_type}" serial_port="/dev/ttyUSB2"/>
-		</xacro:if>
-		<xacro:if value="${left_drive_type == 'usb' and left_hand_type == 'inspire_e2'}">
-			<xacro:inspire_rs485_side_system side="left" serial_port="/dev/ttyUSB0"/>
-		</xacro:if>
-		<xacro:if value="${right_drive_type == 'usb' and right_hand_type == 'inspire_e2'}">
-			<xacro:inspire_rs485_side_system side="right" serial_port="/dev/ttyUSB2"/>
-		</xacro:if>
-		<xacro:if value="${left_drive_type == 'usb' and left_hand_type == 'inspire_f2'}">
-			<xacro:inspire_rs485_side_system side="left" serial_port="/dev/ttyUSB0" hand_type="inspire_f2"/>
-		</xacro:if>
-		<xacro:if value="${right_drive_type == 'usb' and right_hand_type == 'inspire_f2'}">
-			<xacro:inspire_rs485_side_system side="right" serial_port="/dev/ttyUSB2" hand_type="inspire_f2"/>
-		</xacro:if>
-		<xacro:if value="${left_drive_type == 'usb' and left_hand_type == 'freedom_v1'}">
-			<xacro:freedom_rs485_side_system side="left" serial_port="/dev/ttyUSB0"/>
-		</xacro:if>
-		<xacro:if value="${right_drive_type == 'usb' and right_hand_type == 'freedom_v1'}">
-			<xacro:freedom_rs485_side_system side="right" serial_port="/dev/ttyUSB2"/>
-		</xacro:if>
-		<xacro:if value="${left_drive_type == 'usb' and left_hand_type == 'freedom_v2'}">
-			<xacro:freedom_rs485_side_system side="left" serial_port="/dev/ttyUSB0" type="freedomv2"/>
-		</xacro:if>
-		<xacro:if value="${right_drive_type == 'usb' and right_hand_type == 'freedom_v2'}">
-			<xacro:freedom_rs485_side_system side="right" serial_port="/dev/ttyUSB2" type="freedomv2"/>
-		</xacro:if>
-		<xacro:if value="${left_drive_type == 'usb' and left_hand_type == 'xhand1'}">
-			<xacro:xhand1_rs485_side_system side="left" serial_port="/dev/ttyUSB1"/>
-		</xacro:if>
-		<xacro:if value="${right_drive_type == 'usb' and right_hand_type == 'xhand1'}">
-			<xacro:xhand1_rs485_side_system side="right" serial_port="/dev/ttyUSB0"/>
-		</xacro:if>
-		<xacro:if value="${left_drive_type == 'usb_can' and left_hand_type == 'freedom_v1'}">
-			<xacro:freedom_can_side_system side="left" can_interface="can0" device_id="0"/>
-		</xacro:if>
-		<xacro:if value="${right_drive_type == 'usb_can' and right_hand_type == 'freedom_v1'}">
-			<xacro:freedom_can_side_system side="right" can_interface="can1" device_id="1"/>
-		</xacro:if>
-		<xacro:if value="${left_drive_type == 'usb_can' and left_hand_type == 'inspire_e2'}">
-			<xacro:inspire_canfd_side_system side="left" can_interface="can0"/>
-		</xacro:if>
-		<xacro:if value="${right_drive_type == 'usb_can' and right_hand_type == 'inspire_e2'}">
-			<xacro:inspire_canfd_side_system side="right" can_interface="can1"/>
-		</xacro:if>
-		<xacro:if value="${left_drive_type == 'usb_can' and left_hand_type == 'inspire_f2'}">
-			<xacro:inspire_canfd_side_system side="left" can_interface="can0" hand_type="inspire_f2"/>
-		</xacro:if>
-		<xacro:if value="${right_drive_type == 'usb_can' and right_hand_type == 'inspire_f2'}">
-			<xacro:inspire_canfd_side_system side="right" can_interface="can1" hand_type="inspire_f2"/>
-		</xacro:if>
+		<xacro:external_ee_systems
+			usb_left_port="$(arg usb_left_port)"
+			usb_right_port="$(arg usb_right_port)"/>
 	</xacro:if>
-
 
 	<xacro:arg name="gazebo" default="false"/>
 	<xacro:if value="$(arg gazebo)">
