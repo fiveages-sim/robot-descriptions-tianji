@@ -1,57 +1,90 @@
 # Tianji Marvin M6-S CCS Description
 
-This package contains the description files for Marvin M6 CCS Manipulator.
-
-Robot models are defined under **`xacro/`** only (no static `urdf/`). OCS2 and `ocs2_arm_controller` generate planning URDF from `xacro/robot.xacro` (cached under `/tmp/ocs2_ros2/m6_ccs/planning_urdf/`). `xacro/eefs.xacro` is also used by `fiveages_w2_description` for split-body control.
-
-## 1. Build
+Marvin M6 CCS 双臂机械臂 URDF / ros2_control 描述包。模型仅在 **`xacro/`**（无静态 `urdf/`）。OCS2 规划 URDF 由 `xacro/robot.xacro` 生成（缓存于 `/tmp/ocs2_ros2/m6_ccs/planning_urdf/`）。`xacro/eefs.xacro` 亦被 `fiveages_w2_description` 复用。
 
 ```bash
-cd ~/ros2_ws
-colcon build --packages-up-to m6_ccs_description --symlink-install
+cd ~/ros2_ws && colcon build --packages-up-to m6_ccs_description --symlink-install
+source install/setup.bash
 ```
 
-## 2. Visualize the robot
+## 1. 可视化与 Launch
 
-### 2.1 Basic Arm Configuration
-* Dual Arm
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs collider:=simple
-  ```
-* Left Arm
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=left collider:=simple
-  ```
-  ![Marvin M6 CCS](../.images/m6_ccs.png)
-* Right Arm
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=right collider:=simple
-  ```
+通用入口：`robot_common_launch manipulator.launch.py robot:=m6_ccs`  
+控制 / 真机：`ocs2_arm_controller demo.launch.py robot:=m6_ccs`  
+OCS2 规划：`robot_common_launch manipulator_ocs2.launch.py robot_name:=m6_ccs`
 
-### 2.2 Desktop booth (`variant:=desktop`)
+| 场景 | 示例 |
+|------|------|
+| 双臂（默认） | `… manipulator.launch.py robot:=m6_ccs collider:=simple` |
+| 单臂 | 加 `type:=left` 或 `type:=right` |
+| 末端（对称） | 加 `type:=<key>`，见 [§2](#2-末端执行器) |
+| 末端（左右不同） | `left_type:=… right_type:=…`，**不要**再传 `type:=` |
+| 展台 | `variant:=desktop`（与 `type` 正交，见 [§3](#3-平台与外观)） |
+| 真机 | `demo.launch.py … hardware:=real` 或 `real_usb`；驱动方式见 [§2.1](#21-真机驱动方式) |
+| Mock 控制 | `demo.launch.py …`（默认 `hardware:=mock_components`） |
 
-m6_ccs-only platform variant for the dual-arm demo stand (booth mesh, arm spacing, OCS2 `desktop.info`). Combine with any end-effector `type` from §2.3.
+![Marvin M6 CCS](../.images/m6_ccs.png)
 
-* Dual arm on desktop (no gripper)
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs variant:=desktop collider:=simple
-  ```
-* Desktop + AG2F90-C (soft pad)
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs variant:=desktop type:=ag2f90_c_soft collider:=simple
-  ```
-* Desktop + RG75
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs variant:=desktop type:=rg75 collider:=simple
-  ```
+**不对称末端示例**
 
-Profile alternative (`robot.local.yaml`):
+```bash
+ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs \
+  left_type:=rg75 right_type:=linkerhand_o7 collider:=simple
+```
+
+也可在 `robot_profile` / `robot.local.yaml` 的 `defaults.end_effectors.left` / `.right` 中配置（键名同 §2）。
+
+## 2. 末端执行器
+
+类型映射：`xacro/eef_type_resolver.xacro`；真机接线：`xacro/ros2_control/robot.xacro`。
+
+### 2.1 真机驱动方式
+
+每侧独立配置：`left_ee_drive_type` / `right_ee_drive_type`（launch 或 `robot.local.yaml`）。
+
+| 驱动键 | 典型 launch | 物理链路 | 插件 / 说明 |
+|--------|-------------|----------|-------------|
+| `marvin` | `hardware:=real`（默认） | 臂体 **RS485**（Marvin COM1） | [`marvin_ros2_control`](https://github.com/fiveages-sim/marvin-ros2-control#1-支持的末端执行器) |
+| `tianji_can` | `left_ee_drive_type:=tianji_can` 等 | 臂体 **场总线 CAN**（`ee_channel=1`） | 同上；**仅部分灵巧手**，见下表 |
+| `usb` | `hardware:=real_usb`（默认） | 外接 **USB 串口** | [`modbus_ros2_control`](https://github.com/fiveages-sim/modbus-ros2-control#1-支持的末端执行器) |
+| `usb_can` | `left_ee_drive_type:=usb_can` 等 | 外接 **SocketCAN**（`can0` / `can1`） | [`can_ros2_control`](https://github.com/fiveages-sim/can-ros2-control#1-支持的末端执行器) |
+
+夹爪**仅** `marvin`（RS485）。**无** 外接 USB/CAN 夹爪路径。
+
+### 2.2 类型与支持矩阵
+
+| Type key | 产品 | `marvin` | `tianji_can` | `usb` | `usb_can` |
+|----------|------|:--------:|:------------:|:-----:|:---------:|
+| `rg75` | Jodell RG75-300 | ✅ | — | — | — |
+| `ag2f90`, `ag2f90_d` | ChangingTek AG2F90-D | ✅ | — | — | — |
+| `ag2f90_c`, `ag2f90_c_soft` | ChangingTek AG2F90-C | ✅ | — | — | — |
+| `ag2f120s`, `ag2f120s_d` | ChangingTek AG2F120S | ✅ | — | — | — |
+| `linkerhand_o6` / `l6` / `o7` | LinkerHand | ✅ | — | ✅ | — |
+| `freedom_v1` | Freedom V1 | ✅ | ✅ | ✅ | ✅ |
+| `freedom_v2` | Freedom V2 | ✅ | — | ✅ | — |
+| `inspire_e2` | Inspire RH56E2 | — | — | ✅ | ✅ |
+| `inspire_f2` | Inspire RH56F2 | ✅ | ✅ | ✅ | ✅ |
+| `xhand1` | XHand1 | — | — | ✅ | — |
+
+要点：
+
+- **`tianji_can` ≠ 全部 CAN 化** — 仅 **Freedom V1**、**Inspire F2** 走臂体场总线 CAN/CAN FD；其余末端仍用 RS485（`marvin`）或外接总线。
+- **`freedom_v2`** — Marvin 仅 RS485；`tianji_can` 与 `usb_can` **均不支持**（V2 外接请用 `usb` + Modbus）。
+- **`inspire_e2`** — 仿真 / 外接 `usb`·`usb_can`；**不走 Marvin**。现场 Inspire 手请用 `inspire_f2`。
+- **`usb_can`** — 仅 **Freedom V1**、**Inspire E2/F2**；LinkerHand 无外接 CAN 接线（`can_ros2_control/O6CanHardware` 未在 m6_ccs 中启用）。
+
+## 3. 平台与外观
+
+### 3.1 `variant:=desktop`（m6_ccs 展台）
+
+展台网格、臂间距、OCS2 `desktop.info`。与末端 `type` 组合，例如：
+
+```bash
+ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs \
+  variant:=desktop type:=rg75 collider:=simple
+```
+
+`robot.local.yaml` 片段：
 
 ```yaml
 platform:
@@ -62,198 +95,55 @@ defaults:
 hardware:
   device_ip: 192.168.10.190
   arm_ctrl_mode: JOINT_IMPEDANCE
-  left_dyn_param: "1.2874,-10.145,30,114.65,0,0,0,0,0,0"
-  right_dyn_param: "1.2874,-30.145,-10,147.85,0,0,0,0,0,0"
 ```
 
-Launch overrides (real hardware): `hardware_device_ip:=…`, `hardware_arm_ctrl_mode:=JOINT_IMPEDANCE`, `hardware_left_dyn_param:=…` (or use `robot_profile` as above).
+Launch 可覆盖：`hardware_device_ip:=…`、`hardware_arm_ctrl_mode:=…`、`hardware_left_dyn_param:=…`。
 
-**Migration (breaking):** `type:=desktop` and `type:=desktop_90c` are removed. Use `variant:=desktop` plus a separate end-effector `type` (e.g. `type:=ag2f90_c_soft` instead of `type:=desktop_90c`).
+**迁移：** 已移除 `type:=desktop` / `type:=desktop_90c` → 改用 `variant:=desktop` + 独立 `type`（如 `ag2f90_c_soft`）。详见 [m6_ccs_dual_desktop.md](../docs/m6_ccs_dual_desktop.md)。
 
-See also [m6_ccs_dual_desktop.md](../docs/m6_ccs_dual_desktop.md).
+### 3.2 `skin` / `variant`（臂外观）
 
-### 2.3 Arm configuration for humanoid
+`xacro/arm.xacro` 中 `M6_CCS` 的 **visual** 由 `skin` / `variant` 选择；**碰撞** 始终用 `meshes/link*.glb`。
 
-* Dual Arm with ChangingTek AG2F90 Series
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=ag2f90_c collider:=simple
-  ```
-* Dual Arm with ChangingTek AG2F120S Series
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=ag2f120s collider:=simple
-  ```
-* Dual Arm with Jodell RG75
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=rg75 collider:=simple
-  ```
-* Dual Arm with Jodell RG75 Heavy Pad
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=rg75_heavy collider:=simple
-  ```
-* Dual Arm with LinkerHand O6
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=linkerhand_o6 collider:=simple
-  ```
-* Dual Arm with LinkerHand L6
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=linkerhand_l6 collider:=simple
-  ```
-* Dual Arm with LinkerHand O7
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs type:=linkerhand_o7 collider:=simple
-  ```
-
-### 2.4 Asymmetric end effectors (left ≠ right)
-
-`xacro/robot.xacro` accepts **`left_type`** and **`right_type`** instead of a single symmetric `type`. Keys match §2.3 (`rg75`, `ag2f90_c`, `linkerhand_o7`, …). Leave a side empty for no end effector on that arm.
-
-Do **not** pass `type:=` when using per-side types. One launch arg per side updates URDF, planning xacro, and ros2_control compose.
+| `skin` | `variant` | Visual |
+|--------|-----------|--------|
+| 默认 | — | `meshes/link*.glb` |
+| `fiveages_w2` | — | `meshes/fiveages_w2/` |
+| `fiveages_w2` | `sinopec` | `meshes/fiveages_w2/sinopec/` |
+| `agibot_g2` | — | `meshes/agibot_g2/` |
 
 ```bash
 ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs \
-  left_type:=rg75 right_type:=linkerhand_o7 collider:=simple
-
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs \
-  left_type:=rg75 right_type:=linkerhand_o7
+  collider:=simple skin:=fiveages_w2 variant:=sinopec
 ```
 
-Optional: `robot_profile:=/path/to/robot.local.yaml` with `defaults.end_effectors.left` / `.right` (same type keys).
+### 3.3 `DualArmMount`（臂安装位姿）
 
-### 2.5 Arm mount (`DualArmMount` macro)
-
-`m6_ccs_description/xacro/arm_mount.xacro` 提供 `DualArmMount`：在已有 `arm_base`（或任意 parent）上固定左右臂基座。
-
-- 默认：`left_xyz="0 0.062 0"`、`right_xyz="0 -0.062 0"`（与 W2 整机一致）
-- `variant:=desktop` 时在 `robot.xacro` 内写死展台位姿：`0 0.12 0.701` / `0 -0.12 0.701`
-- 需要其它间距时，在调用处改 macro 参数，或 launch 传 xacro mapping：`left_xyz:=0.075 0 0`
+`xacro/arm_mount.xacro`：默认间距 `0 ±0.062 m`；`variant:=desktop` 时为 `0 ±0.12 m, z=0.701`。
 
 ```xml
 <xacro:DualArmMount parent="arm_base"/>
 <xacro:DualArmMount parent="arm_base" left_xyz="0 0.12 0.701" right_xyz="0 -0.12 0.701"/>
 ```
 
-### 2.6 Platform variant and visual skins (`variant` / `skin`)
-
-**`variant:=desktop`** (m6_ccs only): booth base, arm mount spacing, and `config/ros2_control/desktop.yaml` overlay. Orthogonal to end-effector `type` — use both, e.g. `variant:=desktop type:=rg75`. Planning URDF uses the same `variant` xacro arg (booth layout). Marvin hardware parameters belong in `robot.local.yaml` `hardware:` (§2.2).
-
-For W2 integrated OEM visuals, **`variant:=sinopec`** on body/head/chassis is documented in `fiveages_w2_description` / `fiveages_w2_common_description` (not `desktop`).
-
-`xacro/arm.xacro` 中 `M6_CCS` 通过 **`skin`**（集成方外观）和 **`variant`**（同皮肤下的子款，如中石化）选择 link1–link7 的 visual mesh。**碰撞**始终使用包根目录 `meshes/link*.glb`，不受皮肤影响。
-
-| `skin` | `variant` | Visual mesh 目录 |
-|--------|-----------|------------------|
-| `default`（省略） | — | `meshes/link*.glb` |
-| `fiveages_w2` | — | `meshes/fiveages_w2/` |
-| `fiveages_w2` | `sinopec` | `meshes/fiveages_w2/sinopec/` |
-| `agibot_g2` | — | `meshes/agibot_g2/` |
-
-以下均为 **双臂** `manipulator.launch`（`type` 默认 `dual`，可省略）：
-
-* 默认天机外观（同 §2.1）
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs collider:=simple
-  ```
-* FiveAges W2 臂皮肤
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs collider:=simple skin:=fiveages_w2
-  ```
-* FiveAges W2 + 中石化臂皮肤
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs collider:=simple \
-    skin:=fiveages_w2 variant:=sinopec
-  ```
-* Agibot G2 臂皮肤
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs collider:=simple skin:=agibot_g2
-  ```
-
-在宿主 xacro 中引用 `M6_CCS` 时传相同参数，例如 `skin="fiveages_w2" variant="${platform_variant}"`（见 `fiveages_w2_description/xacro/robot.xacro`）。
-
-检查双臂 URDF 中的 mesh 路径：
+## 4. 真机部署
 
 ```bash
-source ~/ros2_ws/install/setup.bash
-xacro $(ros2 pkg prefix --share m6_ccs_description)/xacro/robot.xacro \
-  collider:=simple skin:=fiveages_w2 variant:=sinopec 2>/dev/null | grep 'fiveages_w2/sinopec' | head -3
+colcon build --packages-up-to marvin_ros2_control modbus_ros2_control can_ros2_control --symlink-install
+source install/setup.bash
+
+# 臂体 RS485 + 夹爪 / 手（Marvin）
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=ag2f90_c
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=inspire_f2
+
+# 臂体场总线 CAN（仅 freedom_v1 / inspire_f2）
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=inspire_f2 \
+  left_ee_drive_type:=tianji_can right_ee_drive_type:=tianji_can
+
+# 外接 USB 串口（Modbus）
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real_usb type:=linkerhand_o7
+
+# 外接 SocketCAN（仅 freedom_v1 / inspire_e2 / inspire_f2）
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real_usb type:=inspire_f2 \
+  left_ee_drive_type:=usb_can right_ee_drive_type:=usb_can
 ```
-
-## 3. OCS2 Demo
-
-### 3.1 Official OCS2 Mobile Manipulator Demo
-
-Planning URDF from xacro (no ros2_control). Example with end effector:
-
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator_ocs2.launch.py robot_name:=m6_ccs
-  # Asymmetric (§2.4):
-  # ros2 launch robot_common_launch manipulator_ocs2.launch.py robot_name:=m6_ccs \
-  #   left_type:=rg75 right_type:=linkerhand_o7
-  ```
-  
-### 3.2 OCS2 arm controller (`demo.launch.py`)
-
-Mock simulation by default (`hardware:=mock_components`). Planning URDF from xacro (same as §3.1).
-
-```bash
-source ~/ros2_ws/install/setup.bash
-
-# Dual / single arm
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=left    # or type:=right
-
-# End effector — same `type` as §2.3, optionally with `variant:=desktop` (§2.2), e.g.:
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs type:=rg75
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs variant:=desktop type:=ag2f90_c_soft
-
-# Asymmetric end effectors (§2.4) — omit `type:=`:
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs \
-  left_type:=rg75 right_type:=linkerhand_o7
-```
-
-Other symmetric `type` values: `ag2f90_d`, `ag2f90_c_soft`, `rg75_heavy`, `linkerhand_o6`, `linkerhand_l6`, `linkerhand_o7`. Booth layout uses **`variant:=desktop`**, not `type`.
-
-## 4. Real Robot Deploy
-
-### 4.1 Build Hardware Interfaces
-
-```bash
-cd ~/ros2_ws
-colcon build --packages-up-to marvin_ros2_control --symlink-install
-```
-
-### 4.2 Launch Control
-
-#### 4.2.1 Launch without Gripper
-* Dual Arm
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real
-  ```
-* Single Arm
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=left
-  ```
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=right
-  ```
-
-#### 4.2.2 With ChangingTek AG2F90-C Gripper
-* Dual Arm
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=ag2f90_c
-  ```

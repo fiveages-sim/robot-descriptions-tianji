@@ -54,10 +54,6 @@
 	<xacro:if value="${type_arg == 'rg75'}">
 		<xacro:property name="selected_gripper_type" value="rg75"/>
 	</xacro:if>
-	<xacro:if value="${type_arg == 'rg75_heavy'}">
-		<xacro:property name="selected_gripper_type" value="rg75"/>
-		<xacro:property name="selected_gripper_pad" value="heavy_carry"/>
-	</xacro:if>
 
 	<xacro:include filename="$(find m6_ccs_description)/xacro/arm.xacro"/>
 	<xacro:include filename="$(find m6_ccs_description)/xacro/arm_mount.xacro"/>

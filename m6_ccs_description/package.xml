@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
     <name>m6_ccs_description</name>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <description>
         <p>URDF Description package for Marvin M6-CCS</p>
         <p>This package contains configuration data, 3D models and launch files
