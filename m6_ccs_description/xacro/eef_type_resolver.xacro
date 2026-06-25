@@ -10,6 +10,9 @@
         <xacro:if value="${type_key == 'rg75'}">
             <xacro:property name="${side}_gripper_type" value="rg75" scope="parent"/>
         </xacro:if>
+        <xacro:if value="${type_key == 'erg32'}">
+            <xacro:property name="${side}_hand_type" value="erg32" scope="parent"/>
+        </xacro:if>
         <xacro:if value="${type_key == 'ag2f90' or type_key == 'ag2f90_d'}">
             <xacro:property name="${side}_gripper_type" value="ag2f90_d" scope="parent"/>
         </xacro:if>
