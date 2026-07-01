@@ -13,6 +13,7 @@
 	<xacro:include filename="$(find inspire_description)/xacro/ros2_control/RH56E2.xacro"/>
 	<xacro:include filename="$(find inspire_description)/xacro/ros2_control/RH56F2.xacro"/>
 	<xacro:include filename="$(find xhand1_description)/xacro/ros2_control/side_systems.xacro"/>
+	<xacro:include filename="$(find theohand_description)/xacro/ros2_control/std16a.xacro"/>
 
 	<xacro:macro name="side_gripper_joint" params="side">
 		<joint name="${side}_gripper_joint">
@@ -47,6 +48,9 @@
 		</xacro:if>
 		<xacro:if value="${hand_type == 'erg32'}">
 			<xacro:erg32_interfaces name="${side}_hand"/>
+		</xacro:if>
+		<xacro:if value="${hand_type == 'theohand_std16a'}">
+			<xacro:theohand_std16a_interfaces name="${side}_hand"/>
 		</xacro:if>
 	</xacro:macro>
 

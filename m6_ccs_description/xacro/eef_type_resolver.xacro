@@ -53,6 +53,9 @@
         <xacro:if value="${type_key == 'xhand1'}">
             <xacro:property name="${side}_hand_type" value="xhand1" scope="parent"/>
         </xacro:if>
+        <xacro:if value="${type_key == 'theohand_std16a' or type_key == 'theohand' or type_key == 'std16a'}">
+            <xacro:property name="${side}_hand_type" value="theohand_std16a" scope="parent"/>
+        </xacro:if>
     </xacro:macro>
 
 </robot>

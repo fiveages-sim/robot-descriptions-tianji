@@ -19,14 +19,36 @@
 		</ros2_control>
 	</xacro:macro>
 
+	<xacro:macro name="theohand_usb_side_system" params="side serial_port baudrate:=115200 slave_id:=1">
+		<ros2_control name="theohand_${side}_system" type="system">
+			<hardware>
+				<plugin>modbus_ros2_control/TheoHandModbusHardware</plugin>
+				<param name="serial_port">${serial_port}</param>
+				<param name="slave_id">${slave_id}</param>
+				<param name="baudrate">${baudrate}</param>
+				<param name="read_feedback">true</param>
+				<param name="background_period_ms">200</param>
+				<param name="feedback_quiet_after_write_ms">500</param>
+			</hardware>
+			<xacro:side_hand_interfaces side="${side}" hand_type="theohand_std16a"/>
+		</ros2_control>
+	</xacro:macro>
+
 	<xacro:macro name="external_ee_systems" params="
 		usb_left_port:=/dev/ttyUSB0
-		usb_right_port:=/dev/ttyUSB2">
+		usb_right_port:=/dev/ttyUSB2
+		usb_baudrate:=115200">
 		<xacro:if value="${left_drive_type == 'usb' and (left_hand_type == 'linkerhand_o6' or left_hand_type == 'linkerhand_l6' or left_hand_type == 'linkerhand_o7')}">
 			<xacro:side_usb_hand_system side="left" hand_type="${left_hand_type}" serial_port="${usb_left_port}"/>
 		</xacro:if>
 		<xacro:if value="${right_drive_type == 'usb' and (right_hand_type == 'linkerhand_o6' or right_hand_type == 'linkerhand_l6' or right_hand_type == 'linkerhand_o7')}">
 			<xacro:side_usb_hand_system side="right" hand_type="${right_hand_type}" serial_port="${usb_right_port}"/>
+		</xacro:if>
+		<xacro:if value="${left_drive_type == 'usb' and left_hand_type == 'theohand_std16a'}">
+			<xacro:theohand_usb_side_system side="left" serial_port="${usb_left_port}" baudrate="${usb_baudrate}"/>
+		</xacro:if>
+		<xacro:if value="${right_drive_type == 'usb' and right_hand_type == 'theohand_std16a'}">
+			<xacro:theohand_usb_side_system side="right" serial_port="${usb_right_port}" baudrate="${usb_baudrate}"/>
 		</xacro:if>
 		<xacro:if value="${left_drive_type == 'usb' and left_hand_type == 'inspire_e2'}">
 			<xacro:inspire_rs485_side_system side="left" serial_port="${usb_left_port}"/>
