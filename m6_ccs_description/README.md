@@ -60,6 +60,7 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs \
 | `ag2f90`, `ag2f90_d` | ChangingTek AG2F90-D | ✅ | — | — | — |
 | `ag2f90_c`, `ag2f90_c_soft` | ChangingTek AG2F90-C | ✅ | — | — | — |
 | `ag2f120s`, `ag2f120s_d` | ChangingTek AG2F120S | ✅ | — | — | — |
+| `epgi180` | Eincinx EPGI180 | ✅ | — | — | — |
 | `linkerhand_o6` / `l6` / `o7` | LinkerHand | ✅ | — | ✅ | — |
 | `freedom_v1` | Freedom V1 | ✅ | ✅ | ✅ | ✅ |
 | `freedom_v2` | Freedom V2 | ✅ | — | ✅ | — |

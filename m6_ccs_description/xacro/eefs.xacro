@@ -7,6 +7,7 @@
     <xacro:include filename="$(find jodell_description)/xacro/ERG32.xacro"/>
     <xacro:include filename="$(find changingtek_description)/xacro/AG2F90-C.xacro"/>
     <xacro:include filename="$(find changingtek_description)/xacro/AG2F120S.xacro"/>
+    <xacro:include filename="$(find eincinx_description)/xacro/EPGI180-v2.xacro"/>
     <xacro:include filename="$(find freedom_description)/xacro/freedomv1.xacro"/>
     <xacro:include filename="$(find freedom_description)/xacro/freedomv2.xacro"/>
     <xacro:include filename="$(find inspire_description)/xacro/hands/RH56E2.xacro"/>
@@ -40,6 +41,10 @@
                     <!-- TODO: replace with measured values; temporarily reuse ag2f90 series -->
                     <param name="${side}_dyn_param">1.3944348661120496, -7.913087934362548, 10.50004773179898, 72.44110460800299, 0.014948849408945898, 0.0, 0.0, 0.005470384569170036, 0.0, 0.002567996881581655</param>
                 </xacro:if>
+                <xacro:if value="${ee_key == 'epgi180'}">
+                    <!-- TODO: replace with measured EPGI180 values; temporarily reuse ag2f90 series -->
+                    <param name="${side}_dyn_param">0.9464750422461978, -8.366166030270293, -9.50810456883501, 71.59365292895114, 0.02313627009490121, 0.0, 0.0, 0.017136701127687514, 0.0, 0.008640226166892327</param>
+                </xacro:if>
                 <xacro:if value="${ee_key == 'linkerhand_o6'}">
                     <param name="${side}_dyn_param">0.6,0,0,70.0,0,0,0,0,0,0</param>
                 </xacro:if>
@@ -64,6 +69,10 @@
                 <xacro:if value="${ee_key == 'ag2f120s' or ee_key == 'ag2f120s_d'}">
                     <!-- TODO: replace with measured values; temporarily reuse ag2f90 series -->
                     <param name="${side}_dyn_param">1.4038028109970075, 3.8873998644204817, -10.865529763155825, 73.06884012186562, 0.001, 0.0, 0.0, 0.001, 0.0, 0.0057238484709952525</param>
+                </xacro:if>
+                <xacro:if value="${ee_key == 'epgi180'}">
+                    <!-- TODO: replace with measured EPGI180 values; temporarily reuse ag2f90 series -->
+                    <param name="${side}_dyn_param">0.9464750422461978, -8.366166030270293, -9.50810456883501, 71.59365292895114, 0.02313627009490121, 0.0, 0.0, 0.017136701127687514, 0.0, 0.008640226166892327</param>
                 </xacro:if>
                 <xacro:if value="${ee_key == 'linkerhand_o6'}">
                     <param name="${side}_dyn_param">1.6200799541791235, 1.4285009257202586, -0.5789585762443014, 104.39051192831192, 0.004873874899366342, 0.0, 0.0, 0.001, 0.0, 0.0019355638096347936</param>
@@ -272,6 +281,14 @@
                         <child link="${side}_flange"/>
                     </joint>
                 </xacro:if>
+                <xacro:if value="${gripper_type == 'epgi180'}">
+                    <xacro:EPGI180-v2 name="${side}" use_flange="true" pad="${gripper_pad}" kinematic_only="true"/>
+                    <joint name="${side}_gripper_fix" type="fixed">
+                        <parent link="${side}_tcp"/>
+                        <child link="${side}_flange"/>
+                        <origin xyz="0 0 0.0045"/>
+                    </joint>
+                </xacro:if>
                 <xacro:if value="${gripper_type == '' and hand_type == ''}">
                     <xacro:Ocs2SideEefFrame side="${side}" parent_link="${side}_tcp"/>
                 </xacro:if>
@@ -310,6 +327,15 @@
                 <joint name="${side}_gripper_base_joint" type="fixed">
                     <parent link="${side}_tcp"/>
                     <child link="${side}_flange"/>
+                </joint>
+            </xacro:if>
+
+            <xacro:if value="${gripper_type == 'epgi180'}">
+                <xacro:EPGI180-v2 name="${side}" use_flange="true" pad="${gripper_pad}"/>
+                <joint name="${side}_gripper_fix" type="fixed">
+                    <parent link="${side}_tcp"/>
+                    <child link="${side}_flange"/>
+                    <origin xyz="0 0 0.0045"/>
                 </joint>
             </xacro:if>
 

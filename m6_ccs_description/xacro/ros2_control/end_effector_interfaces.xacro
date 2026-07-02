@@ -6,6 +6,7 @@
 	<xacro:include filename="$(find jodell_description)/xacro/ros2_control/ERG32.xacro"/>
 	<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
 	<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F120S.xacro"/>
+	<xacro:include filename="$(find eincinx_description)/xacro/ros2_control/EPGI180-v2.xacro"/>
 	<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o6.xacro"/>
 	<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o7.xacro"/>
 	<xacro:include filename="$(find freedom_description)/xacro/ros2_control/freedomv1.xacro"/>
@@ -59,6 +60,9 @@
 		</xacro:if>
 		<xacro:if value="${gripper_type == 'ag2f120s' or gripper_type == 'ag2f120s_d'}">
 			<xacro:ag2f120s_interfaces name="${side}"/>
+		</xacro:if>
+		<xacro:if value="${gripper_type == 'epgi180'}">
+			<xacro:epgi180_v2_interfaces name="${side}"/>
 		</xacro:if>
 	</xacro:macro>
 
