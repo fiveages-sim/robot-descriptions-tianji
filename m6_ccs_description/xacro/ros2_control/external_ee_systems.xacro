@@ -2,6 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
 	<xacro:include filename="$(find m6_ccs_description)/xacro/ros2_control/end_effector_interfaces.xacro"/>
+	<xacro:include filename="$(find m6_ccs_description)/xacro/ros2_control/ft_sensor_systems.xacro"/>
 	<xacro:include filename="$(find freedom_description)/xacro/ros2_control/side_systems.xacro"/>
 	<xacro:include filename="$(find inspire_description)/xacro/ros2_control/side_systems.xacro"/>
 
@@ -21,7 +22,9 @@
 
 	<xacro:macro name="external_ee_systems" params="
 		usb_left_port:=/dev/ttyUSB0
-		usb_right_port:=/dev/ttyUSB2">
+		usb_right_port:=/dev/ttyUSB2
+		usb_left_ft_port:=/dev/ttyUSB1
+		usb_right_ft_port:=/dev/ttyUSB3">
 		<xacro:if value="${left_drive_type == 'usb' and (left_hand_type == 'linkerhand_o6' or left_hand_type == 'linkerhand_l6' or left_hand_type == 'linkerhand_o7')}">
 			<xacro:side_usb_hand_system side="left" hand_type="${left_hand_type}" serial_port="${usb_left_port}"/>
 		</xacro:if>
@@ -76,6 +79,10 @@
 		<xacro:if value="${right_drive_type == 'usb_can' and right_hand_type == 'inspire_f2'}">
 			<xacro:inspire_canfd_side_system side="right" can_interface="can1" hand_type="inspire_f2"/>
 		</xacro:if>
+
+		<xacro:ft_sensor_systems
+			usb_left_ft_port="${usb_left_ft_port}"
+			usb_right_ft_port="${usb_right_ft_port}"/>
 	</xacro:macro>
 
 </robot>

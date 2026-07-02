@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<xacro:macro name="side_kwr75_ft_sensor" params="side serial_port">
+		<xacro:if value="${side == 'left'}">
+			<xacro:property name="wrench_topic" value="/left_arm_external_wrench"/>
+		</xacro:if>
+		<xacro:unless value="${side == 'left'}">
+			<xacro:property name="wrench_topic" value="/right_arm_external_wrench"/>
+		</xacro:unless>
+
+		<ros2_control name="kwr75_${side}_ft_system" type="sensor">
+			<hardware>
+				<plugin>modbus_ros2_control/Kwr75ForceTorqueSensor</plugin>
+				<param name="serial_port">${serial_port}</param>
+				<param name="wrench_topic">${wrench_topic}</param>
+			</hardware>
+			<sensor name="kwr75_${side}_ft">
+				<state_interface name="force.x"/>
+				<state_interface name="force.y"/>
+				<state_interface name="force.z"/>
+				<state_interface name="torque.x"/>
+				<state_interface name="torque.y"/>
+				<state_interface name="torque.z"/>
+			</sensor>
+		</ros2_control>
+	</xacro:macro>
+
+	<xacro:macro name="ft_sensor_systems" params="
+		usb_left_ft_port:=/dev/ttyUSB1
+		usb_right_ft_port:=/dev/ttyUSB3">
+		<xacro:if value="${selected_arm_config == 'dual' or selected_arm_config == 'left'}">
+			<xacro:side_kwr75_ft_sensor side="left" serial_port="${usb_left_ft_port}"/>
+		</xacro:if>
+		<xacro:if value="${selected_arm_config == 'dual' or selected_arm_config == 'right'}">
+			<xacro:side_kwr75_ft_sensor side="right" serial_port="${usb_right_ft_port}"/>
+		</xacro:if>
+	</xacro:macro>
+
+</robot>
