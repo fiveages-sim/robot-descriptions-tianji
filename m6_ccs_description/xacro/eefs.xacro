@@ -213,7 +213,7 @@
         <xacro:if value="${hand_type == 'theohand_std16a'}">
             <xacro:TheoHandStd16A name="${side}_hand" direction="${1 if side == 'left' else -1}" fixed_joints="${eef_fixed_joints}"/>
             <joint name="${side}_hand_base_joint" type="fixed">
-                <origin xyz="0 0 0" rpy="0 0 ${PI}"/>
+                <origin xyz="0 0 0"/>
                 <parent link="${side}_tcp"/>
                 <child link="${side}_hand_hand_base"/>
             </joint>
@@ -237,7 +237,7 @@
         <xacro:if value="${hand_type == 'theohand_std16a'}">
             <link name="${side}_eef"/>
             <joint name="${side}_eef_joint" type="fixed">
-                <parent link="${side}_hand_hand_base"/>
+                <parent link="${side}_hand_eef"/>
                 <child link="${side}_eef"/>
             </joint>
         </xacro:if>

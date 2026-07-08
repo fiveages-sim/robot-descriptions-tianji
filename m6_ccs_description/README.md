@@ -66,6 +66,7 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs \
 | `inspire_e2` | Inspire RH56E2 | — | — | ✅ | ✅ |
 | `inspire_f2` | Inspire RH56F2 | ✅ | ✅ | ✅ | ✅ |
 | `xhand1` | XHand1 | — | — | ✅ | — |
+| `theohand_std16a` | TheoHand STD16A | ✅ | — | ✅ | — |
 
 要点：
 
