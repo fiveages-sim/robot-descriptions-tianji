@@ -17,8 +17,6 @@
 	<xacro:arg name="max_joint_acceleration" default="30"/>
 	<xacro:arg name="usb_left_port" default="/dev/ttyUSB0"/>
 	<xacro:arg name="usb_right_port" default="/dev/ttyUSB2"/>
-	<xacro:arg name="usb_left_ft_port" default="/dev/ttyUSB1"/>
-	<xacro:arg name="usb_right_ft_port" default="/dev/ttyUSB3"/>
 
 	<link name="world"/>
 
@@ -71,13 +69,12 @@
 	<xacro:if value="${is_real_hardware and selected_arm_config == 'dual'}">
 		<xacro:external_ee_systems
 			usb_left_port="$(arg usb_left_port)"
-			usb_right_port="$(arg usb_right_port)"
-			usb_left_ft_port="$(arg usb_left_ft_port)"
-			usb_right_ft_port="$(arg usb_right_ft_port)"/>
+			usb_right_port="$(arg usb_right_port)"/>
 	</xacro:if>
 
 	<xacro:if value="${is_real_hardware and selected_arm_config != 'dual'}">
 		<xacro:ft_sensor_systems
+			kwr75_ft_mode="$(arg kwr75_ft_mode)"
 			usb_left_ft_port="$(arg usb_left_ft_port)"
 			usb_right_ft_port="$(arg usb_right_ft_port)"/>
 	</xacro:if>

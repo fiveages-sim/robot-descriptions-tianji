@@ -22,9 +22,7 @@
 
 	<xacro:macro name="external_ee_systems" params="
 		usb_left_port:=/dev/ttyUSB0
-		usb_right_port:=/dev/ttyUSB2
-		usb_left_ft_port:=/dev/ttyUSB1
-		usb_right_ft_port:=/dev/ttyUSB3">
+		usb_right_port:=/dev/ttyUSB2">
 		<xacro:if value="${left_drive_type == 'usb' and (left_hand_type == 'linkerhand_o6' or left_hand_type == 'linkerhand_l6' or left_hand_type == 'linkerhand_o7')}">
 			<xacro:side_usb_hand_system side="left" hand_type="${left_hand_type}" serial_port="${usb_left_port}"/>
 		</xacro:if>
@@ -81,8 +79,9 @@
 		</xacro:if>
 
 		<xacro:ft_sensor_systems
-			usb_left_ft_port="${usb_left_ft_port}"
-			usb_right_ft_port="${usb_right_ft_port}"/>
+			kwr75_ft_mode="$(arg kwr75_ft_mode)"
+			usb_left_ft_port="$(arg usb_left_ft_port)"
+			usb_right_ft_port="$(arg usb_right_ft_port)"/>
 	</xacro:macro>
 
 </robot>
