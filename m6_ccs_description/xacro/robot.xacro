@@ -7,7 +7,7 @@
 	<xacro:arg name="type" default="dual"/>
 	<xacro:arg name="left_type" default=""/>
 	<xacro:arg name="right_type" default=""/>
-	<xacro:arg name="eef_fixed_joints" default="false"/>
+	<!-- eef_fixed_joints: declared in arm.xacro (included below); used by EndEffectors -->
 	<!-- 从 type 参数解析 arm_config / 对称末端 -->
 	<xacro:property name="type_arg" value="$(arg type)"/>
 	<xacro:property name="variant_arg" value="$(arg variant)"/>

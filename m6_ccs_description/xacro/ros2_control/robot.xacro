@@ -13,8 +13,8 @@
 	<xacro:property name="right_drive_type" value="${'$(arg right_ee_drive_type)' if '$(arg right_ee_drive_type)' != '' else ee_drive_type}"/>
 	<xacro:arg name="left_dyn_param" default=""/>
 	<xacro:arg name="right_dyn_param" default=""/>
-	<xacro:arg name="max_joint_speed" default="50"/>
-	<xacro:arg name="max_joint_acceleration" default="30"/>
+	<xacro:arg name="max_joint_speed" default="100"/>
+	<xacro:arg name="max_joint_acceleration" default="100"/>
 	<xacro:arg name="usb_left_port" default="/dev/ttyUSB0"/>
 	<xacro:arg name="usb_right_port" default="/dev/ttyUSB2"/>
 
