@@ -20,9 +20,15 @@
 		</ros2_control>
 	</xacro:macro>
 
+	<!-- left_ft / right_ft / usb_*_ft_port: declared in marvin_hardware.xacro; defaults read $(arg ...) here. -->
 	<xacro:macro name="external_ee_systems" params="
 		usb_left_port:=/dev/ttyUSB0
-		usb_right_port:=/dev/ttyUSB2">
+		usb_right_port:=/dev/ttyUSB2
+		left_ft:=$(arg left_ft)
+		right_ft:=$(arg right_ft)
+		usb_left_ft_port:=$(arg usb_left_ft_port)
+		usb_right_ft_port:=$(arg usb_right_ft_port)
+		arm_config:=dual">
 		<xacro:if value="${left_drive_type == 'usb' and (left_hand_type == 'linkerhand_o6' or left_hand_type == 'linkerhand_l6' or left_hand_type == 'linkerhand_o7')}">
 			<xacro:side_usb_hand_system side="left" hand_type="${left_hand_type}" serial_port="${usb_left_port}"/>
 		</xacro:if>
@@ -79,9 +85,11 @@
 		</xacro:if>
 
 		<xacro:ft_sensor_systems
-			kwr75_ft_mode="$(arg kwr75_ft_mode)"
-			usb_left_ft_port="$(arg usb_left_ft_port)"
-			usb_right_ft_port="$(arg usb_right_ft_port)"/>
+			left_ft="${left_ft}"
+			right_ft="${right_ft}"
+			usb_left_ft_port="${usb_left_ft_port}"
+			usb_right_ft_port="${usb_right_ft_port}"
+			arm_config="${arm_config}"/>
 	</xacro:macro>
 
 </robot>

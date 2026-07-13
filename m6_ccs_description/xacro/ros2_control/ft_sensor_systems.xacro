@@ -30,16 +30,16 @@
 	</xacro:macro>
 
 	<xacro:macro name="ft_sensor_systems" params="
-		kwr75_ft_mode:=none
-		usb_left_ft_port:=/dev/ttyUSB1
-		usb_right_ft_port:=/dev/ttyUSB3">
-		<xacro:if value="${kwr75_ft_mode == 'usb'}">
-			<xacro:if value="${selected_arm_config == 'dual' or selected_arm_config == 'left'}">
-				<xacro:side_kwr75_ft_sensor side="left" serial_port="${usb_left_ft_port}"/>
-			</xacro:if>
-			<xacro:if value="${selected_arm_config == 'dual' or selected_arm_config == 'right'}">
-				<xacro:side_kwr75_ft_sensor side="right" serial_port="${usb_right_ft_port}"/>
-			</xacro:if>
+		left_ft:=$(arg left_ft)
+		right_ft:=$(arg right_ft)
+		usb_left_ft_port:=$(arg usb_left_ft_port)
+		usb_right_ft_port:=$(arg usb_right_ft_port)
+		arm_config:=dual">
+		<xacro:if value="${(arm_config == 'dual' or arm_config == 'left') and left_ft == 'kwr75_usb'}">
+			<xacro:side_kwr75_ft_sensor side="left" serial_port="${usb_left_ft_port}"/>
+		</xacro:if>
+		<xacro:if value="${(arm_config == 'dual' or arm_config == 'right') and right_ft == 'kwr75_usb'}">
+			<xacro:side_kwr75_ft_sensor side="right" serial_port="${usb_right_ft_port}"/>
 		</xacro:if>
 	</xacro:macro>
 
