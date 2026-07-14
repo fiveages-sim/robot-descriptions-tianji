@@ -2,6 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
 	<xacro:include filename="$(find m6_ccs_description)/xacro/ros2_control/end_effector_interfaces.xacro"/>
+	<xacro:include filename="$(find m6_ccs_description)/xacro/ros2_control/ft_sensor_systems.xacro"/>
 	<xacro:include filename="$(find freedom_description)/xacro/ros2_control/side_systems.xacro"/>
 	<xacro:include filename="$(find inspire_description)/xacro/ros2_control/side_systems.xacro"/>
 
@@ -33,10 +34,16 @@
 		</ros2_control>
 	</xacro:macro>
 
+	<!-- left_ft / right_ft / usb_*_ft_port: declared in marvin_hardware.xacro; defaults read $(arg ...) here. -->
 	<xacro:macro name="external_ee_systems" params="
 		usb_left_port:=/dev/ttyUSB0
 		usb_right_port:=/dev/ttyUSB2
-		usb_baudrate:=115200">
+		usb_baudrate:=115200
+		left_ft:=$(arg left_ft)
+		right_ft:=$(arg right_ft)
+		usb_left_ft_port:=$(arg usb_left_ft_port)
+		usb_right_ft_port:=$(arg usb_right_ft_port)
+		arm_config:=dual">
 		<xacro:if value="${left_drive_type == 'usb' and (left_hand_type == 'linkerhand_o6' or left_hand_type == 'linkerhand_l6' or left_hand_type == 'linkerhand_o7')}">
 			<xacro:side_usb_hand_system side="left" hand_type="${left_hand_type}" serial_port="${usb_left_port}"/>
 		</xacro:if>
@@ -97,6 +104,13 @@
 		<xacro:if value="${right_drive_type == 'usb_can' and right_hand_type == 'inspire_f2'}">
 			<xacro:inspire_canfd_side_system side="right" can_interface="can1" hand_type="inspire_f2"/>
 		</xacro:if>
+
+		<xacro:ft_sensor_systems
+			left_ft="${left_ft}"
+			right_ft="${right_ft}"
+			usb_left_ft_port="${usb_left_ft_port}"
+			usb_right_ft_port="${usb_right_ft_port}"
+			arm_config="${arm_config}"/>
 	</xacro:macro>
 
 </robot>

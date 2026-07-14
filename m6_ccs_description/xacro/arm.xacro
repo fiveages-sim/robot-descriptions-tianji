@@ -1,10 +1,14 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 	<xacro:arg name="collider" default="convex"/>
+	<!-- Shared with eefs.xacro / parent robot.xacro; planning URDF injects true via robot_common_launch -->
+	<xacro:arg name="eef_fixed_joints" default="false"/>
 	<xacro:property name="PI" value="3.1415926535897931"/>
 	<xacro:property name="collider_type" value="$(arg collider)"/>
 	<xacro:macro name="M6_CCS" params="name:='' direction:=1 skin:='default' variant:=''">
 		<xacro:property name="prefix" value="${name + '_' if name else ''}"/>
+		<!-- OCS2 planning URDF (eef_fixed_joints): tighten joint4 upper; viz / ros2_control keep hardware limits -->
+		<xacro:property name="joint4_upper" value="${0 if '$(arg eef_fixed_joints)' == 'true' else PI*58/180}"/>
 
 		<!-- Visual skins live under m6_ccs_description/meshes/{skin}/[sinopec]/ -->
 		<xacro:property name="visual_package" value="m6_ccs_description"/>
@@ -215,7 +219,7 @@
 			<parent link="${prefix}link3"/>
 			<child link="${prefix}link4"/>
 			<axis xyz="0 0 1"/>
-			<limit lower="-${PI*143/180}" upper="${PI*58/180}" effort="66" velocity="${PI}"/>
+			<limit lower="-${PI*143/180}" upper="${joint4_upper}" effort="66" velocity="${PI}"/>
 		</joint>
 
 		<!-- Link 5 - Mirrored COM and partial inertia -->

@@ -3,6 +3,14 @@
 
 	<xacro:include filename="$(find m6_ccs_description)/xacro/eefs.xacro"/>
 
+	<!-- KWR75 per arm: none | kwr75_485 | kwr75_usb（defaults.end_effectors.left_ft / right_ft） -->
+	<xacro:arg name="left_ft" default="none"/>
+	<xacro:arg name="right_ft" default="none"/>
+	<xacro:arg name="left_ft_channel" default="3"/>
+	<xacro:arg name="right_ft_channel" default="3"/>
+	<xacro:arg name="usb_left_ft_port" default="/dev/ttyUSB1"/>
+	<xacro:arg name="usb_right_ft_port" default="/dev/ttyUSB3"/>
+
 	<!-- arm_type: dual | left | right -->
 	<xacro:macro name="marvin_hardware_block" params="
 		arm_type
@@ -15,6 +23,22 @@
 		selected_gripper_type:=none">
 		<plugin>marvin_ros2_control/MarvinHardware</plugin>
 		<param name="arm_type">${arm_type}</param>
+		<xacro:if value="${'$(arg left_ft)' == 'kwr75_485' or '$(arg right_ft)' == 'kwr75_485'}">
+			<param name="kwr75_ft_enabled">true</param>
+			<xacro:if value="${'$(arg left_ft)' == 'kwr75_485'}">
+				<param name="left_ft_enabled">true</param>
+			</xacro:if>
+			<xacro:if value="${'$(arg right_ft)' == 'kwr75_485'}">
+				<param name="right_ft_enabled">true</param>
+			</xacro:if>
+			<param name="left_ft_channel">$(arg left_ft_channel)</param>
+			<param name="right_ft_channel">$(arg right_ft_channel)</param>
+			<param name="ft_command_code">72</param>
+			<param name="ft_poll_interval_ms">0</param>
+			<param name="left_ft_frame_id">left_eef</param>
+			<param name="right_ft_frame_id">right_eef</param>
+			<param name="use_async_tool_comm">true</param>
+		</xacro:if>
 		<xacro:if value="${arm_type == 'dual'}">
 			<xacro:property name="left_ee_type" value="${left_hand_type if left_hand_type != '' else left_gripper_type}"/>
 			<xacro:property name="right_ee_type" value="${right_hand_type if right_hand_type != '' else right_gripper_type}"/>

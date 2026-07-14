@@ -13,10 +13,11 @@
 	<xacro:property name="right_drive_type" value="${'$(arg right_ee_drive_type)' if '$(arg right_ee_drive_type)' != '' else ee_drive_type}"/>
 	<xacro:arg name="left_dyn_param" default=""/>
 	<xacro:arg name="right_dyn_param" default=""/>
-	<xacro:arg name="max_joint_speed" default="50"/>
-	<xacro:arg name="max_joint_acceleration" default="30"/>
+	<xacro:arg name="max_joint_speed" default="100"/>
+	<xacro:arg name="max_joint_acceleration" default="100"/>
 	<xacro:arg name="usb_left_port" default="/dev/ttyUSB0"/>
 	<xacro:arg name="usb_right_port" default="/dev/ttyUSB2"/>
+	<!-- left_ft / right_ft / usb_*_ft_port: see marvin_hardware.xacro -->
 
 	<link name="world"/>
 
@@ -69,7 +70,13 @@
 	<xacro:if value="${is_real_hardware and selected_arm_config == 'dual'}">
 		<xacro:external_ee_systems
 			usb_left_port="$(arg usb_left_port)"
-			usb_right_port="$(arg usb_right_port)"/>
+			usb_right_port="$(arg usb_right_port)"
+			arm_config="${selected_arm_config}"/>
+	</xacro:if>
+
+	<xacro:if value="${is_real_hardware and selected_arm_config != 'dual'}">
+		<xacro:ft_sensor_systems
+			arm_config="${selected_arm_config}"/>
 	</xacro:if>
 
 	<xacro:arg name="gazebo" default="false"/>
