@@ -67,6 +67,7 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs \
 | `inspire_e2` | Inspire RH56E2 | — | — | ✅ | ✅ |
 | `inspire_f2` | Inspire RH56F2 | ✅ | ✅ | ✅ | ✅ |
 | `xhand1` | XHand1 | — | — | ✅ | — |
+| `theohand_std16a` | TheoHand STD16A | ✅ | — | ✅ | — |
 
 要点：
 
@@ -142,6 +143,7 @@ source install/setup.bash
 ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=ag2f90_c
 ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=erg32
 ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=inspire_f2
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=theohand_std16a
 
 # 臂体场总线 CAN（仅 freedom_v1 / inspire_f2）
 ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=inspire_f2 \
@@ -149,6 +151,7 @@ ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type
 
 # 外接 USB 串口（Modbus）
 ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real_usb type:=linkerhand_o7
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real_usb type:=theohand_std16a
 
 # 外接 SocketCAN（仅 freedom_v1 / inspire_e2 / inspire_f2）
 ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real_usb type:=inspire_f2 \

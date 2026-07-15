@@ -20,6 +20,7 @@
     <exec_depend>freedom_description</exec_depend>
     <exec_depend>inspire_description</exec_depend>
     <exec_depend>xhand1_description</exec_depend>
+    <exec_depend>theohand_description</exec_depend>
     <exec_depend>eincinx_description</exec_depend>
 
     <export>
