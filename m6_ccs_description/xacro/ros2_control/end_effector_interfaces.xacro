@@ -15,6 +15,7 @@
 	<xacro:include filename="$(find inspire_description)/xacro/ros2_control/RH56F2.xacro"/>
 	<xacro:include filename="$(find xhand1_description)/xacro/ros2_control/side_systems.xacro"/>
 	<xacro:include filename="$(find theohand_description)/xacro/ros2_control/std16a.xacro"/>
+	<xacro:include filename="$(find marvin_gripper_description)/xacro/ros2_control/marvin_gripper.xacro"/>
 
 	<xacro:macro name="side_gripper_joint" params="side">
 		<joint name="${side}_gripper_joint">
@@ -67,6 +68,9 @@
 		</xacro:if>
 		<xacro:if value="${gripper_type == 'epgi180'}">
 			<xacro:epgi180_v2_interfaces name="${side}"/>
+		</xacro:if>
+		<xacro:if value="${gripper_type == 'marvin_gripper' or gripper_type == 'marvin_gripper45'}">
+			<xacro:marvin_gripper_interfaces name="${side}"/>
 		</xacro:if>
 	</xacro:macro>
 

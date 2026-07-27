@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="Marvin_Pro">
+  <xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
+  <xacro:arg name="type" default="marvin_gripper"/>
+  <xacro:arg name="left_type" default=""/>
+  <xacro:arg name="right_type" default=""/>
+  <xacro:arg name="gazebo" default="false"/>
+
+  <link name="world"/>
+  <joint name="world_fixed" type="fixed">
+    <parent link="world"/>
+    <child link="base_link"/>
+  </joint>
+
+  <xacro:include filename="$(find marvin_pro_description)/xacro/robot.xacro"/>
+  <xacro:include filename="$(find robot_common_launch)/xacro/ros2_control/simulation_hardware.xacro"/>
+  <xacro:include filename="$(find m6_ccs_description)/xacro/ros2_control/end_effector_interfaces.xacro"/>
+
+  <xacro:property name="is_real_hardware" value="${'$(arg ros2_control_hardware_type)' == 'real' or '$(arg ros2_control_hardware_type)' == 'real_usb'}"/>
+  <xacro:property name="ee_block_mode" value="${'real' if is_real_hardware else 'sim'}"/>
+
+  <ros2_control name="Marvin_Pro_System" type="system">
+    <hardware>
+      <xacro:unless value="${is_real_hardware}">
+        <xacro:simulation_hardware_plugin hardware_type="$(arg ros2_control_hardware_type)"/>
+      </xacro:unless>
+      <xacro:if value="${is_real_hardware}">
+        <plugin>marvin_ros2_control/MarvinHardware</plugin>
+        <param name="arm_type">dual</param>
+      </xacro:if>
+    </hardware>
+
+    <xacro:dual_arm_ee_block mode="${ee_block_mode}"/>
+  </ros2_control>
+
+  <xacro:if value="$(arg gazebo)">
+    <gazebo>
+      <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+        <parameters>$(find marvin_pro_description)/config/ros2_control/ros2_controllers.yaml</parameters>
+      </plugin>
+    </gazebo>
+  </xacro:if>
+</robot>
