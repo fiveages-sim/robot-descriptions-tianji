@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>marvin_pro_description</name>
+    <version>0.1.0</version>
+    <description>
+        URDF description for Tianji Marvin Pro (fixed tall base + dual M6-CCS arms).
+        Reuses m6_ccs arm kinematics and marvin_gripper_description end-effectors.
+    </description>
+    <author>TODO</author>
+    <maintainer email="TODO@email.com"/>
+    <license>BSD</license>
+
+    <exec_depend>robot_common_launch</exec_depend>
+    <exec_depend>m6_ccs_description</exec_depend>
+    <exec_depend>sensor_models</exec_depend>
+
+    <export>
+        <build_type>ament_cmake</build_type>
+    </export>
+</package>

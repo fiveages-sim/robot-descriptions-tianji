@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<robot name="Marvin_Pro" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:arg name="collider" default="convex"/>
+  <xacro:arg name="skin" default="default"/>
+  <xacro:arg name="eef_fixed_joints" default="false"/>
+  <xacro:arg name="isaac" default="false"/>
+
+  <!-- type / left_type / right_type: end-effector keys only (same as m6_ccs dual / fiveages_w2) -->
+  <xacro:arg name="type" default="marvin_gripper"/>
+  <xacro:arg name="left_type" default=""/>
+  <xacro:arg name="right_type" default=""/>
+  <xacro:property name="type_arg" value="$(arg type)"/>
+  <xacro:property name="left_type_arg" value="$(arg left_type)"/>
+  <xacro:property name="right_type_arg" value="$(arg right_type)"/>
+  <xacro:property name="effective_left_type" value="${left_type_arg if left_type_arg != '' else type_arg}"/>
+  <xacro:property name="effective_right_type" value="${right_type_arg if right_type_arg != '' else type_arg}"/>
+  <xacro:property name="selected_arm_config" value="dual"/>
+
+  <xacro:include filename="$(find m6_ccs_description)/xacro/arm.xacro"/>
+  <xacro:include filename="$(find m6_ccs_description)/xacro/arm_mount.xacro"/>
+  <xacro:include filename="$(find m6_ccs_description)/xacro/eef_type_resolver.xacro"/>
+  <xacro:include filename="$(find m6_ccs_description)/xacro/eefs.xacro"/>
+  <xacro:include filename="$(find marvin_pro_description)/xacro/components/base.xacro"/>
+
+  <xacro:set_side_eef_types side="left" type_key="${effective_left_type}"/>
+  <xacro:set_side_eef_types side="right" type_key="${effective_right_type}"/>
+
+  <xacro:marvin_pro_base isaac="$(arg isaac)"/>
+  <xacro:DualArmMount
+    parent="arm_base"
+    left_xyz="0 0.026 1.121"
+    right_xyz="0 -0.026 1.121"/>
+  <xacro:M6_CCS name="left" skin="$(arg skin)"/>
+  <xacro:M6_CCS name="right" direction="-1" skin="$(arg skin)"/>
+  <xacro:EndEffectors
+    eef_fixed_joints="$(arg eef_fixed_joints)"
+    left_hand_type="${left_hand_type}"
+    left_gripper_type="${left_gripper_type}"
+    left_gripper_pad="${left_gripper_pad}"
+    right_hand_type="${right_hand_type}"
+    right_gripper_type="${right_gripper_type}"
+    right_gripper_pad="${right_gripper_pad}"/>
+</robot>

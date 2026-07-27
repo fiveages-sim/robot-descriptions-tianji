@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:arg name="collider" default="convex"/>
+  <xacro:property name="collider_type" value="$(arg collider)"/>
+  <xacro:property name="PI" value="3.1415926535897931"/>
+
+  <!-- Marvin Pro tall fixed base (ZJ_Robot_link) + OCS2 arm_base frame.
+       isaac:=true hides sensor_models camera meshes (Isaac asset import). -->
+  <xacro:macro name="marvin_pro_base" params="isaac:=false">
+    <link name="base_link">
+      <visual>
+        <geometry>
+          <mesh filename="file://$(find marvin_pro_description)/meshes/base/base.glb"/>
+        </geometry>
+      </visual>
+      <visual>
+        <geometry>
+          <mesh filename="file://$(find marvin_pro_description)/meshes/base/wheel.glb"/>
+        </geometry>
+      </visual>
+      <visual>
+        <origin rpy="0 0 ${PI/2}"/>
+        <geometry>
+          <mesh filename="file://$(find marvin_pro_description)/meshes/base/wheel.glb"/>
+        </geometry>
+      </visual>
+      <visual>
+        <origin rpy="0 0 ${PI}"/>
+        <geometry>
+          <mesh filename="file://$(find marvin_pro_description)/meshes/base/wheel.glb"/>
+        </geometry>
+      </visual>
+      <visual>
+        <origin rpy="0 0 ${-PI/2}"/>
+        <geometry>
+          <mesh filename="file://$(find marvin_pro_description)/meshes/base/wheel.glb"/>
+        </geometry>
+      </visual>
+      <xacro:if value="${collider_type == 'convex'}">
+        <collision>
+          <geometry>
+            <mesh filename="file://$(find marvin_pro_description)/meshes/base/base.glb"/>
+          </geometry>
+        </collision>
+      </xacro:if>
+      <xacro:if value="${collider_type == 'simple'}">
+        <collision>
+          <origin xyz="0 0 0.48"/>
+          <geometry>
+            <cylinder radius="0.07" length="0.96"/>
+          </geometry>
+        </collision>
+      </xacro:if>
+      <inertial>
+        <origin xyz="0.0081994 -0.0000051 0.47835" rpy="0.0000623 0.0062721 0.0034744"/>
+        <mass value="18.846"/>
+        <inertia ixx="0.463463" ixy="0" ixz="0" iyy="0.46325" iyz="0" izz="0.377657"/>
+      </inertial>
+    </link>
+
+    <!-- Alias frame used by OCS2 / DualArmMount (same pose as base_link). -->
+    <link name="arm_base"/>
+    <joint name="arm_base_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="arm_base"/>
+    </joint>
+
+    <link name="tracking_base_link">
+      <inertial>
+        <origin xyz="0 0 0"/>
+        <mass value="0"/>
+        <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+    </link>
+    <joint name="tracking_base_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="tracking_base_link"/>
+      <origin xyz="0 0 -0.1"/>
+    </joint>
+
+    <joint name="head_left_camera_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="head_left_camera"/>
+      <origin xyz="0.072627 0.023989 1.2406" rpy="${-PI*135/180} 0 ${-PI/2}"/>
+    </joint>
+
+    <link name="head_left_camera">
+      <xacro:unless value="${isaac}">
+        <visual>
+          <geometry>
+            <mesh filename="file://$(find sensor_models)/meshes/sensing/SHW5G.glb"/>
+          </geometry>
+        </visual>
+      </xacro:unless>
+    </link>
+
+    <joint name="head_right_camera_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="head_right_camera"/>
+      <origin xyz="0.072627 -0.035978 1.2406" rpy="${-PI*135/180} 0 ${-PI/2}"/>
+    </joint>
+
+    <link name="head_right_camera">
+      <xacro:unless value="${isaac}">
+        <visual>
+          <geometry>
+            <mesh filename="file://$(find sensor_models)/meshes/sensing/SHW5G.glb"/>
+          </geometry>
+        </visual>
+      </xacro:unless>
+    </link>
+
+    <joint name="head_realsense_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="head_realsense"/>
+      <origin xyz="0.093443 -0.005925 1.2606" rpy="${-PI*135/180} 0 ${-PI/2}"/>
+    </joint>
+
+    <link name="head_realsense">
+      <xacro:unless value="${isaac}">
+        <visual>
+          <geometry>
+            <mesh filename="file://$(find sensor_models)/meshes/realsense/d435.glb"/>
+          </geometry>
+        </visual>
+      </xacro:unless>
+    </link>
+  </xacro:macro>
+</robot>

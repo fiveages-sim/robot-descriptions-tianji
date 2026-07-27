@@ -14,6 +14,8 @@
     <xacro:include filename="$(find inspire_description)/xacro/hands/RH56F2.xacro"/>
     <xacro:include filename="$(find xhand1_description)/xacro/xhand1.xacro"/>
     <xacro:include filename="$(find theohand_description)/xacro/std16a.xacro"/>
+    <xacro:include filename="$(find marvin_gripper_description)/xacro/marvin_gripper.xacro"/>
+    <xacro:include filename="$(find marvin_gripper_description)/xacro/marvin_gripper45.xacro"/>
 
     <!-- Per-side default load (dyn_param) for MarvinHardware; 10 values: m, mx, my, mz, ixx, ixy, ixz, iyy, iyz, izz.
          Override via launch left_dyn_param/right_dyn_param (robot.local.yaml).
@@ -46,6 +48,10 @@
                     <!-- TODO: replace with measured EPGI180 values; temporarily reuse ag2f90 series -->
                     <param name="${side}_dyn_param">0.9464750422461978, -8.366166030270293, -9.50810456883501, 71.59365292895114, 0.02313627009490121, 0.0, 0.0, 0.017136701127687514, 0.0, 0.008640226166892327</param>
                 </xacro:if>
+                <xacro:if value="${ee_key == 'marvin_gripper' or ee_key == 'marvin_gripper45'}">
+                    <!-- TODO: replace with measured Marvin gripper values -->
+                    <param name="${side}_dyn_param">0.5,0,0,50.0,0.001,0,0,0.001,0,0.001</param>
+                </xacro:if>
                 <xacro:if value="${ee_key == 'linkerhand_o6'}">
                     <param name="${side}_dyn_param">0.6,0,0,70.0,0,0,0,0,0,0</param>
                 </xacro:if>
@@ -77,6 +83,10 @@
                 <xacro:if value="${ee_key == 'epgi180'}">
                     <!-- TODO: replace with measured EPGI180 values; temporarily reuse ag2f90 series -->
                     <param name="${side}_dyn_param">0.9464750422461978, -8.366166030270293, -9.50810456883501, 71.59365292895114, 0.02313627009490121, 0.0, 0.0, 0.017136701127687514, 0.0, 0.008640226166892327</param>
+                </xacro:if>
+                <xacro:if value="${ee_key == 'marvin_gripper' or ee_key == 'marvin_gripper45'}">
+                    <!-- TODO: replace with measured Marvin gripper values -->
+                    <param name="${side}_dyn_param">0.5,0,0,50.0,0.001,0,0,0.001,0,0.001</param>
                 </xacro:if>
                 <xacro:if value="${ee_key == 'linkerhand_o6'}">
                     <param name="${side}_dyn_param">1.6200799541791235, 1.4285009257202586, -0.5789585762443014, 104.39051192831192, 0.004873874899366342, 0.0, 0.0, 0.001, 0.0, 0.0019355638096347936</param>
@@ -317,6 +327,20 @@
                         <origin xyz="0 0 0.0045"/>
                     </joint>
                 </xacro:if>
+                <xacro:if value="${gripper_type == 'marvin_gripper'}">
+                    <xacro:marvin_gripper name="${side}" kinematic_only="true"/>
+                    <joint name="${side}_gripper_base_joint" type="fixed">
+                        <parent link="${side}_tcp"/>
+                        <child link="${side}_flange"/>
+                    </joint>
+                </xacro:if>
+                <xacro:if value="${gripper_type == 'marvin_gripper45'}">
+                    <xacro:marvin_gripper45 name="${side}" kinematic_only="true"/>
+                    <joint name="${side}_gripper_base_joint" type="fixed">
+                        <parent link="${side}_tcp"/>
+                        <child link="${side}_flange"/>
+                    </joint>
+                </xacro:if>
                 <xacro:if value="${gripper_type == '' and hand_type == ''}">
                     <xacro:Ocs2SideEefFrame side="${side}" parent_link="${side}_tcp"/>
                 </xacro:if>
@@ -364,6 +388,22 @@
                     <parent link="${side}_tcp"/>
                     <child link="${side}_flange"/>
                     <origin xyz="0 0 0.0045"/>
+                </joint>
+            </xacro:if>
+
+            <xacro:if value="${gripper_type == 'marvin_gripper'}">
+                <xacro:marvin_gripper name="${side}"/>
+                <joint name="${side}_gripper_base_joint" type="fixed">
+                    <parent link="${side}_tcp"/>
+                    <child link="${side}_flange"/>
+                </joint>
+            </xacro:if>
+
+            <xacro:if value="${gripper_type == 'marvin_gripper45'}">
+                <xacro:marvin_gripper45 name="${side}"/>
+                <joint name="${side}_gripper_base_joint" type="fixed">
+                    <parent link="${side}_tcp"/>
+                    <child link="${side}_flange"/>
                 </joint>
             </xacro:if>
 
