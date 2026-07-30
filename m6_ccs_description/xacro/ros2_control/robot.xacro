@@ -65,18 +65,14 @@
 				<xacro:m6_interfaces name=""/>
 			</xacro:if>
 		</xacro:unless>
+
+		<xacro:marvin_ft_sensor_interfaces/>
 	</ros2_control>
 
 	<xacro:if value="${is_real_hardware and selected_arm_config == 'dual'}">
 		<xacro:external_ee_systems
 			usb_left_port="$(arg usb_left_port)"
-			usb_right_port="$(arg usb_right_port)"
-			arm_config="${selected_arm_config}"/>
-	</xacro:if>
-
-	<xacro:if value="${is_real_hardware and selected_arm_config != 'dual'}">
-		<xacro:ft_sensor_systems
-			arm_config="${selected_arm_config}"/>
+			usb_right_port="$(arg usb_right_port)"/>
 	</xacro:if>
 
 	<xacro:arg name="gazebo" default="false"/>

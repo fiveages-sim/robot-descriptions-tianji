@@ -42,8 +42,7 @@
 		left_ft:=$(arg left_ft)
 		right_ft:=$(arg right_ft)
 		usb_left_ft_port:=$(arg usb_left_ft_port)
-		usb_right_ft_port:=$(arg usb_right_ft_port)
-		arm_config:=dual">
+		usb_right_ft_port:=$(arg usb_right_ft_port)">
 		<xacro:if value="${left_drive_type == 'usb' and (left_hand_type == 'linkerhand_o6' or left_hand_type == 'linkerhand_l6' or left_hand_type == 'linkerhand_o7')}">
 			<xacro:side_usb_hand_system side="left" hand_type="${left_hand_type}" serial_port="${usb_left_port}"/>
 		</xacro:if>
@@ -109,8 +108,7 @@
 			left_ft="${left_ft}"
 			right_ft="${right_ft}"
 			usb_left_ft_port="${usb_left_ft_port}"
-			usb_right_ft_port="${usb_right_ft_port}"
-			arm_config="${arm_config}"/>
+			usb_right_ft_port="${usb_right_ft_port}"/>
 	</xacro:macro>
 
 </robot>
