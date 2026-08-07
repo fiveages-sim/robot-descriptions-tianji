@@ -5,7 +5,7 @@
 	<xacro:arg name="eef_fixed_joints" default="false"/>
 	<xacro:property name="PI" value="3.1415926535897931"/>
 	<xacro:property name="collider_type" value="$(arg collider)"/>
-	<xacro:macro name="M6_CCS" params="name:='' direction:=1 skin:='default' variant:=''">
+	<xacro:macro name="M6_CCS" params="name:='' direction:=1 skin:='default' variant:='' tcp_offset_xyz:='0 0 0' tcp_offset_rpy:='0 0 0'">
 		<xacro:property name="prefix" value="${name + '_' if name else ''}"/>
 		<!-- OCS2 planning URDF (eef_fixed_joints): tighten joint4 upper; viz / ros2_control keep hardware limits -->
 		<xacro:property name="joint4_upper" value="${0 if '$(arg eef_fixed_joints)' == 'true' else PI*58/180}"/>
@@ -352,6 +352,15 @@
 			<origin rpy="${PI/2} -${PI/2} 0" xyz="0 -0.095 0"/>
 			<parent link="${prefix}link7"/>
 			<child link="${prefix}tcp"/>
+		</joint>
+
+		<!-- Virtual tool frame for planning/control. It is a sibling of the physical
+		     end-effector subtree, so changing the offset never moves hand/gripper geometry. -->
+		<link name="${prefix}tcp_offset"/>
+		<joint name="${prefix}tcp_offset_joint" type="fixed">
+			<origin xyz="${tcp_offset_xyz}" rpy="${tcp_offset_rpy}"/>
+			<parent link="${prefix}tcp"/>
+			<child link="${prefix}tcp_offset"/>
 		</joint>
 
 	</xacro:macro>
