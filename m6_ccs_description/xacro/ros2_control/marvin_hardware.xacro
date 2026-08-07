@@ -3,7 +3,7 @@
 
 	<xacro:include filename="$(find m6_ccs_description)/xacro/eefs.xacro"/>
 
-	<!-- KWR75 per arm: none | kwr75_485 | kwr75_usb（defaults.end_effectors.left_ft / right_ft） -->
+	<!-- KWR75 per arm: none | kwr75_485 | kwr75_usb（defaults.ft / launch ft:= left_ft:=） -->
 	<xacro:arg name="left_ft" default="none"/>
 	<xacro:arg name="right_ft" default="none"/>
 	<xacro:arg name="left_ft_channel" default="3"/>

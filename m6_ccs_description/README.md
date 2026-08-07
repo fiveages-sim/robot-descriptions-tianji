@@ -96,7 +96,12 @@ platform:
   variant: desktop
 defaults:
   end_effectors:
-    type: rg75
+    type: rg75                 # 或 left/right 分写
+  ft:
+    type: kwr75_485            # 或 left/right；随 profile 生效（不受 use_profile_eef）
+  tcp_offset:
+    xyz: "0 0 0"               # metres
+    rpy: "0 0 ${PI/2}"         # radians；支持 ${PI/2} / pi/2 / radians(90)
 hardware:
   device_ip: 192.168.10.190
   arm_ctrl_mode: JOINT_IMPEDANCE
@@ -104,11 +109,13 @@ hardware:
   max_joint_acceleration: 30
   usb_left_port: /dev/ttyUSB0
   usb_right_port: /dev/ttyUSB2
+  # left_dyn_param / right_dyn_param: 可选负载覆盖（空列表跳过）
 ```
 
-Launch 可覆盖：`hardware_device_ip:=…`、`hardware_max_joint_speed:=…`、`hardware_max_joint_acceleration:=…`、`hardware_usb_left_port:=…`、`hardware_arm_ctrl_mode:=…`、`hardware_left_dyn_param:=…`。
+Launch 可覆盖（CLI > profile）：`ft:=…`、`left_ft:=…`、`tcp_offset_rpy:="0 0 ${PI/2}"`、`left_tcp_offset_xyz:=…`，以及 `hardware_device_ip:=…`、`hardware_arm_ctrl_mode:=…`、`hardware_left_dyn_param:=…` 等。
 
 **迁移：** 已移除 `type:=desktop` / `type:=desktop_90c` → 改用 `variant:=desktop` + 独立 `type`（如 `ag2f90_c_soft`）。详见 [m6_ccs_dual_desktop.md](../docs/m6_ccs_dual_desktop.md)。
+FT 从 `defaults.end_effectors.left_ft` 迁到 `defaults.ft`；tcp_offset 从 `platform` 迁到 `defaults.tcp_offset`。
 
 ### 3.2 `skin` / `variant`（臂外观）
 
