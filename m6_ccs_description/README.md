@@ -76,7 +76,7 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs \
 - **`tianji_can` ≠ 全部 CAN 化** — 仅 **Freedom V1**、**Inspire F2** 走臂体场总线 CAN/CAN FD；其余末端仍用 RS485（`marvin`）或外接总线。
 - **`freedom_v2`** — Marvin 仅 RS485；`tianji_can` 与 `usb_can` **均不支持**（V2 外接请用 `usb` + Modbus）。
 - **`inspire_e2`** — 仿真 / 外接 `usb`·`usb_can`；**不走 Marvin**。现场 Inspire 手请用 `inspire_f2`。
-- **`usb_can`** — 仅 **Freedom V1**、**Inspire E2/F2**；LinkerHand 无外接 CAN 接线（`can_ros2_control/O6CanHardware` 未在 m6_ccs 中启用）。
+- **`usb_can`** — 支持 **LinkerHand O6**、**Freedom V1**、**Inspire E2/F2**；O6 使用 `can_ros2_control/O6CanHardware`。
 
 ## 3. 平台与外观
 

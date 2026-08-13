@@ -34,6 +34,20 @@
 		</ros2_control>
 	</xacro:macro>
 
+	<xacro:macro name="o6_usb_can_side_system" params="side can_interface">
+		<ros2_control name="linkerhand_o6_${side}_can_system" type="system">
+			<hardware>
+				<plugin>can_ros2_control/O6CanHardware</plugin>
+				<param name="can_interface">${can_interface}</param>
+				<param name="hand_side">${side}</param>
+				<param name="hand_type">linkerhand_o6</param>
+				<param name="${side}_tool_torque">1.0</param>
+				<param name="${side}_tool_velocity">1.0</param>
+			</hardware>
+			<xacro:side_hand_interfaces side="${side}" hand_type="linkerhand_o6"/>
+		</ros2_control>
+	</xacro:macro>
+
 	<!-- left_ft / right_ft / usb_*_ft_port: declared in marvin_hardware.xacro; defaults read $(arg ...) here. -->
 	<xacro:macro name="external_ee_systems" params="
 		usb_left_port:=/dev/ttyUSB0
@@ -43,6 +57,12 @@
 		right_ft:=$(arg right_ft)
 		usb_left_ft_port:=$(arg usb_left_ft_port)
 		usb_right_ft_port:=$(arg usb_right_ft_port)">
+		<xacro:if value="${left_drive_type == 'usb_can' and left_hand_type == 'linkerhand_o6'}">
+			<xacro:o6_usb_can_side_system side="left" can_interface="can0"/>
+		</xacro:if>
+		<xacro:if value="${right_drive_type == 'usb_can' and right_hand_type == 'linkerhand_o6'}">
+			<xacro:o6_usb_can_side_system side="right" can_interface="can1"/>
+		</xacro:if>
 		<xacro:if value="${left_drive_type == 'usb' and (left_hand_type == 'linkerhand_o6' or left_hand_type == 'linkerhand_l6' or left_hand_type == 'linkerhand_o7')}">
 			<xacro:side_usb_hand_system side="left" hand_type="${left_hand_type}" serial_port="${usb_left_port}"/>
 		</xacro:if>
