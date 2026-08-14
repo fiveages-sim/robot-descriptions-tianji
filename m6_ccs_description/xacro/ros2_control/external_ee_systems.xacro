@@ -35,7 +35,7 @@
 	</xacro:macro>
 
 	<xacro:macro name="linkerhand_usb_can_side_system" params="side hand_type can_interface read_tactile:=false">
-		<ros2_control name="${hand_type}_${side}_can_system" type="system">
+		<ros2_control name="${hand_type}_${side}_can_system" type="system" rw_rate="50">
 			<hardware>
 				<xacro:if value="${hand_type == 'linkerhand_o6'}">
 					<plugin>can_ros2_control/O6CanHardware</plugin>
