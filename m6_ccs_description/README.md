@@ -63,7 +63,7 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs \
 | `epgi180` | Eincinx EPGI180 | ✅ | — | — | — |
 | `marvin_gripper` | Marvin straight flange gripper | ✅ | — | — | — |
 | `marvin_gripper45` | Marvin 45° flange gripper | ✅ | — | — | — |
-| `linkerhand_o6` / `l6` / `o7` | LinkerHand | ✅ | — | ✅ | — |
+| `linkerhand_o6` / `l6` / `o7` | LinkerHand | ✅ | — | ✅ | ✅ |
 | `freedom_v1` | Freedom V1 | ✅ | ✅ | ✅ | ✅ |
 | `freedom_v2` | Freedom V2 | ✅ | — | ✅ | — |
 | `inspire_e2` | Inspire RH56E2 | — | — | ✅ | ✅ |
@@ -76,7 +76,7 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs \
 - **`tianji_can` ≠ 全部 CAN 化** — 仅 **Freedom V1**、**Inspire F2** 走臂体场总线 CAN/CAN FD；其余末端仍用 RS485（`marvin`）或外接总线。
 - **`freedom_v2`** — Marvin 仅 RS485；`tianji_can` 与 `usb_can` **均不支持**（V2 外接请用 `usb` + Modbus）。
 - **`inspire_e2`** — 仿真 / 外接 `usb`·`usb_can`；**不走 Marvin**。现场 Inspire 手请用 `inspire_f2`。
-- **`usb_can`** — 仅 **Freedom V1**、**Inspire E2/F2**；LinkerHand 无外接 CAN 接线（`can_ros2_control/O6CanHardware` 未在 m6_ccs 中启用）。
+- **`usb_can`** — 支持 **LinkerHand O6/L6/O7**、**Freedom V1**、**Inspire E2/F2**；LinkerHand 根据型号分别使用 `O6CanHardware`、`L6CanHardware`、`O7CanHardware`。
 
 ## 3. 平台与外观
 
@@ -162,8 +162,8 @@ ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type
 ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real_usb type:=linkerhand_o7
 ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real_usb type:=theohand_std16a
 
-# 外接 SocketCAN（仅 freedom_v1 / inspire_e2 / inspire_f2）
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real_usb type:=inspire_f2 \
+# 外接 SocketCAN（LinkerHand O6/L6/O7、freedom_v1、inspire_e2/f2）
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real_usb type:=linkerhand_l6 \
   left_ee_drive_type:=usb_can right_ee_drive_type:=usb_can
 ```
 
@@ -176,7 +176,7 @@ ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real_usb 
 | `interfaces.xacro` | `m6_interfaces` | 单臂 7-DOF 关节接口 |
 | `end_effector_interfaces.xacro` | `side_hand_interfaces`、`side_gripper_joint`、`dual_arm_ee_block` | 末端接口；真机夹爪 collapsed 单关节，仿真 full 链 |
 | `marvin_hardware.xacro` | `marvin_hardware_block` | Marvin 插件参数（含 `ee_dyn_param`） |
-| `external_ee_systems.xacro` | `external_ee_systems`、`side_usb_hand_system` | 外接 usb / usb_can；串口默认左 `/dev/ttyUSB0`、右 `/dev/ttyUSB2`（`usb_left_port` / `usb_right_port`，各类型手共用） |
+| `external_ee_systems.xacro` | `external_ee_systems`、`side_usb_hand_system`、`linkerhand_usb_can_side_system` | 外接 usb / usb_can；串口和 CAN 接口均支持左右独立配置 |
 
 仿真硬件插件见 [`robot_common_launch`](../../common/robot_common_launch/xacro/ros2_control/simulation_hardware.xacro)（`simulation_hardware_plugin`：mock / gz / isaac）。
 

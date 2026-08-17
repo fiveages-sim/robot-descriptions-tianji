@@ -17,6 +17,10 @@
 	<xacro:arg name="max_joint_acceleration" default="100"/>
 	<xacro:arg name="usb_left_port" default="/dev/ttyUSB0"/>
 	<xacro:arg name="usb_right_port" default="/dev/ttyUSB2"/>
+	<xacro:arg name="left_ee_can_interface" default="can0"/>
+	<xacro:arg name="right_ee_can_interface" default="can1"/>
+	<xacro:arg name="left_read_tactile" default="false"/>
+	<xacro:arg name="right_read_tactile" default="false"/>
 	<!-- left_ft / right_ft / usb_*_ft_port: see marvin_hardware.xacro -->
 
 	<link name="world"/>
@@ -72,7 +76,11 @@
 	<xacro:if value="${is_real_hardware and selected_arm_config == 'dual'}">
 		<xacro:external_ee_systems
 			usb_left_port="$(arg usb_left_port)"
-			usb_right_port="$(arg usb_right_port)"/>
+			usb_right_port="$(arg usb_right_port)"
+			left_ee_can_interface="$(arg left_ee_can_interface)"
+			right_ee_can_interface="$(arg right_ee_can_interface)"
+			left_read_tactile="$(arg left_read_tactile)"
+			right_read_tactile="$(arg right_read_tactile)"/>
 	</xacro:if>
 
 	<xacro:arg name="gazebo" default="false"/>
