@@ -35,8 +35,9 @@
 			<param name="right_ft_channel">$(arg right_ft_channel)</param>
 			<param name="ft_command_code">72</param>
 			<param name="ft_poll_interval_ms">0</param>
-			<param name="left_ft_frame_id">left_eef</param>
-			<param name="right_ft_frame_id">right_eef</param>
+			<!-- KWR75 origin is the wrist/TCP, not the tool-tip *_eef frame. -->
+			<param name="left_ft_frame_id">left_tcp</param>
+			<param name="right_ft_frame_id">right_tcp</param>
 			<param name="use_async_tool_comm">true</param>
 		</xacro:if>
 		<xacro:if value="${arm_type == 'dual'}">

@@ -59,9 +59,9 @@ ocs2_arm_controller:
 left_ft_broadcaster:
   ros__parameters:
     sensor_name: left_ft_sensor
-    frame_id: left_eef
+    frame_id: left_tcp
 
 right_ft_broadcaster:
   ros__parameters:
     sensor_name: right_ft_sensor
-    frame_id: right_eef
+    frame_id: right_tcp
