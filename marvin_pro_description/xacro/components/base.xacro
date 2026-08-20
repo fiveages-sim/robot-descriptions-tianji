@@ -85,7 +85,7 @@
     <link name="head_left_camera">
       <visual>
         <geometry>
-          <mesh filename="file://$(find sensor_models)/meshes/gsml_camera/Sensing-SHW5G.glb"/>
+          <mesh filename="file://$(find sensor_models)/meshes/sensing/SHW5G.glb"/>
         </geometry>
       </visual>
     </link>
@@ -99,7 +99,7 @@
     <link name="head_right_camera">
       <visual>
         <geometry>
-          <mesh filename="file://$(find sensor_models)/meshes/gsml_camera/Sensing-SHW5G.glb"/>
+          <mesh filename="file://$(find sensor_models)/meshes/sensing/SHW5G.glb"/>
         </geometry>
       </visual>
     </link>
