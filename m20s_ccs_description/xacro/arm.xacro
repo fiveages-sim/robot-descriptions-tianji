@@ -1,0 +1,273 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+	<xacro:arg name="collider" default="convex"/>
+	<xacro:arg name="eef_fixed_joints" default="false"/>
+	<xacro:property name="PI" value="3.1415926535897931"/>
+	<xacro:property name="collider_type" value="$(arg collider)"/>
+
+	<xacro:macro name="m20s_mesh_collision" params="mesh">
+		<xacro:if value="${collider_type == 'convex'}">
+			<collision>
+				<geometry>
+					<mesh filename="file://$(find m20s_ccs_description)/meshes/${mesh}"/>
+				</geometry>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+
+	<xacro:macro name="m20s_simple_cylinder" params="xyz:='0 0 0' rpy:='0 0 0' length radius">
+		<xacro:if value="${collider_type == 'simple'}">
+			<collision>
+				<origin xyz="${xyz}" rpy="${rpy}"/>
+				<geometry>
+					<cylinder length="${length}" radius="${radius}"/>
+				</geometry>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+
+	<xacro:macro name="M20S_CCS" params="name:='' side:='' tcp_offset_xyz:='0 0 0' tcp_offset_rpy:='0 0 0'">
+		<xacro:property name="prefix" value="${name + '_' if name else ''}"/>
+		<xacro:property name="mesh_side" value="${side if side else (name if name else 'left')}"/>
+		<xacro:property name="joint4_upper" value="${0 if '$(arg eef_fixed_joints)' == 'true' else 1.0472}"/>
+
+		<link name="${prefix}base_link">
+			<inertial>
+				<origin xyz="-9.9E-05 -0.000277 0.065583"/>
+				<mass value="5.5745"/>
+				<inertia
+						ixx="0.013114" ixy="-7E-06" ixz="-1.5E-05"
+						iyy="0.0132" iyz="4.8E-05" izz="0.014677"/>
+			</inertial>
+			<visual>
+				<geometry>
+					<mesh filename="file://$(find m20s_ccs_description)/meshes/base.glb"/>
+				</geometry>
+			</visual>
+			<xacro:m20s_mesh_collision mesh="base.glb"/>
+			<xacro:m20s_simple_cylinder xyz="0 0 0.0382" length="0.1045" radius="0.096"/>
+		</link>
+
+		<link name="${prefix}link1">
+			<inertial>
+				<origin xyz="-0.000142 -0.000279 -0.038052"/>
+				<mass value="8.281"/>
+				<inertia
+						ixx="0.057135" ixy="-3.6E-05" ixz="0.00026"
+						iyy="0.061826" iyz="-7E-05" izz="0.020826"/>
+			</inertial>
+			<visual>
+				<geometry>
+					<mesh filename="file://$(find m20s_ccs_description)/meshes/link1.glb"/>
+				</geometry>
+			</visual>
+			<xacro:m20s_mesh_collision mesh="link1.glb"/>
+			<xacro:m20s_simple_cylinder xyz="0 0 -0.0683" length="0.3085" radius="0.086"/>
+		</link>
+
+		<joint name="${prefix}joint1" type="revolute">
+			<origin xyz="0 0 0.305" rpy="0 0 0"/>
+			<parent link="${prefix}base_link"/>
+			<child link="${prefix}link1"/>
+			<axis xyz="0 0 1"/>
+			<limit lower="-2.9671" upper="2.9671" effort="490" velocity="2.0944"/>
+		</joint>
+
+		<link name="${prefix}link2">
+			<inertial>
+				<origin xyz="0.000103 0.10762 0.007572"/>
+				<mass value="5.9647"/>
+				<inertia
+						ixx="0.067552" ixy="4.7E-05" ixz="-1.1E-05"
+						iyy="0.020898" iyz="-0.004977" izz="0.063214"/>
+			</inertial>
+			<visual>
+				<geometry>
+					<mesh filename="file://$(find m20s_ccs_description)/meshes/link2.glb"/>
+				</geometry>
+			</visual>
+			<xacro:m20s_mesh_collision mesh="link2.glb"/>
+			<xacro:m20s_simple_cylinder xyz="0 0.0614 0" rpy="${PI/2} 0 0" length="0.2983" radius="0.093"/>
+		</link>
+
+		<joint name="${prefix}joint2" type="revolute">
+			<origin xyz="0 0 0" rpy="1.5708 0 0"/>
+			<parent link="${prefix}link1"/>
+			<child link="${prefix}link2"/>
+			<axis xyz="0 0 1"/>
+			<limit lower="-2.0944" upper="2.0944" effort="490" velocity="2.0944"/>
+		</joint>
+
+		<link name="${prefix}link3">
+			<inertial>
+				<origin xyz="0.0145 0.002547 -0.066586"/>
+				<mass value="5.6406"/>
+				<inertia
+						ixx="0.067433" ixy="0.000133" ixz="0.005681"
+						iyy="0.070039" iyz="0.001028" izz="0.011751"/>
+			</inertial>
+			<visual>
+				<geometry>
+					<mesh filename="file://$(find m20s_ccs_description)/meshes/link3.glb"/>
+				</geometry>
+			</visual>
+			<xacro:m20s_mesh_collision mesh="link3.glb"/>
+			<xacro:m20s_simple_cylinder xyz="0 0 -0.1098" length="0.3695" radius="0.082"/>
+		</link>
+
+		<joint name="${prefix}joint3" type="revolute">
+			<origin xyz="0 0.5 0" rpy="-1.5708 0 0"/>
+			<parent link="${prefix}link2"/>
+			<child link="${prefix}link3"/>
+			<axis xyz="0 0 1"/>
+			<limit lower="-2.9671" upper="2.9671" effort="230" velocity="3.1416"/>
+		</joint>
+
+		<link name="${prefix}link4">
+			<inertial>
+				<origin xyz="0.011043 -0.064625 0.007523"/>
+				<mass value="3.3145"/>
+				<inertia
+						ixx="0.02583" ixy="-0.002483" ixz="-0.000288"
+						iyy="0.009936" iyz="0.001657" izz="0.023779"/>
+			</inertial>
+			<visual>
+				<geometry>
+					<mesh filename="file://$(find m20s_ccs_description)/meshes/link4.glb"/>
+				</geometry>
+			</visual>
+			<xacro:m20s_mesh_collision mesh="link4.glb"/>
+			<xacro:m20s_simple_cylinder xyz="0 -0.0307 0" rpy="${PI/2} 0 0" length="0.2137" radius="0.082"/>
+		</link>
+
+		<joint name="${prefix}joint4" type="revolute">
+			<origin xyz="0.023 0 0" rpy="-1.5708 0 3.1416"/>
+			<parent link="${prefix}link3"/>
+			<child link="${prefix}link4"/>
+			<axis xyz="0 0 1"/>
+			<limit lower="-2.5307" upper="${joint4_upper}" effort="230" velocity="3.1416"/>
+		</joint>
+
+		<link name="${prefix}link5">
+			<xacro:unless value="${mesh_side == 'right'}">
+				<inertial>
+					<origin xyz="-0.000212 -0.006424 -0.13848"/>
+					<mass value="2.9252"/>
+					<inertia
+							ixx="0.017563" ixy="-4E-06" ixz="5.5E-05"
+							iyy="0.015695" iyz="-0.001572" izz="0.005691"/>
+				</inertial>
+			</xacro:unless>
+			<xacro:if value="${mesh_side == 'right'}">
+				<inertial>
+					<origin xyz="-0.000171 0.006376 -0.138499"/>
+					<mass value="2.925222"/>
+					<inertia
+							ixx="0.017569" ixy="4E-06" ixz="5.3E-05"
+							iyy="0.0157" iyz="0.001584" izz="0.005694"/>
+				</inertial>
+			</xacro:if>
+			<visual>
+				<geometry>
+					<mesh filename="file://$(find m20s_ccs_description)/meshes/link5.glb"/>
+				</geometry>
+			</visual>
+			<xacro:m20s_mesh_collision mesh="link5.glb"/>
+			<xacro:m20s_simple_cylinder xyz="0 0 -0.1293" length="0.3365" radius="0.075"/>
+		</link>
+
+		<joint name="${prefix}joint5" type="revolute">
+			<origin xyz="0.023 -0.43 0" rpy="-1.5708 0 3.1416"/>
+			<parent link="${prefix}link4"/>
+			<child link="${prefix}link5"/>
+			<axis xyz="0 0 1"/>
+			<limit lower="-2.9671" upper="2.9671" effort="80" velocity="3.1416"/>
+		</joint>
+
+		<link name="${prefix}link6">
+			<xacro:unless value="${mesh_side == 'right'}">
+				<inertial>
+					<origin xyz="-0.027149 -0.000533 -0.011163"/>
+					<mass value="2.3349"/>
+					<inertia
+							ixx="0.003879" ixy="-2.8E-05" ixz="0.001777"
+							iyy="0.009199" iyz="-1.3E-05" izz="0.009039"/>
+				</inertial>
+			</xacro:unless>
+			<xacro:if value="${mesh_side == 'right'}">
+				<inertial>
+					<origin xyz="-0.027312 -0.000526 0.011163"/>
+					<mass value="2.334885"/>
+					<inertia
+							ixx="0.003879" ixy="-3.9E-05" ixz="-0.001768"
+							iyy="0.009178" iyz="1.4E-05" izz="0.009019"/>
+				</inertial>
+			</xacro:if>
+			<visual>
+				<geometry>
+					<mesh filename="file://$(find m20s_ccs_description)/meshes/link6.glb"/>
+				</geometry>
+			</visual>
+			<xacro:m20s_mesh_collision mesh="link6.glb"/>
+			<xacro:m20s_simple_cylinder xyz="0 0 -0.0052" length="0.1213" radius="0.0475"/>
+		</link>
+
+		<joint name="${prefix}joint6" type="revolute">
+			<origin xyz="0 0 0" rpy="1.5708 -1.5708 0"/>
+			<parent link="${prefix}link5"/>
+			<child link="${prefix}link6"/>
+			<axis xyz="0 0 1"/>
+			<limit lower="-1.0472" upper="1.0472" effort="80" velocity="3.1416"/>
+		</joint>
+
+		<link name="${prefix}link7">
+			<xacro:unless value="${mesh_side == 'right'}">
+				<inertial>
+					<origin xyz="-6.3E-05 -0.047715 0.010756"/>
+					<mass value="0.89196"/>
+					<inertia
+							ixx="0.004108" ixy="9E-06" ixz="3E-06"
+							iyy="0.002218" iyz="0.000586" izz="0.002855"/>
+				</inertial>
+			</xacro:unless>
+			<xacro:if value="${mesh_side == 'right'}">
+				<inertial>
+					<origin xyz="-7.7E-05 -0.04767 0.011429"/>
+					<mass value="0.89196"/>
+					<inertia
+							ixx="0.004099" ixy="-3E-06" ixz="-3E-06"
+							iyy="0.002205" iyz="0.000558" izz="0.002858"/>
+				</inertial>
+			</xacro:if>
+			<visual>
+				<geometry>
+					<mesh filename="file://$(find m20s_ccs_description)/meshes/link7.glb"/>
+				</geometry>
+			</visual>
+			<xacro:m20s_mesh_collision mesh="link7.glb"/>
+			<xacro:m20s_simple_cylinder xyz="0 -0.0372 0" rpy="${PI/2} 0 0" length="0.1655" radius="0.0725"/>
+		</link>
+
+		<joint name="${prefix}joint7" type="revolute">
+			<origin xyz="0 0 0" rpy="1.5708 -1.5708 0"/>
+			<parent link="${prefix}link6"/>
+			<child link="${prefix}link7"/>
+			<axis xyz="0 0 1"/>
+			<limit lower="-1.5708" upper="1.5708" effort="80" velocity="3.1416"/>
+		</joint>
+
+		<link name="${prefix}tcp"/>
+		<joint name="${prefix}tcp_joint" type="fixed">
+			<origin xyz="0 -0.120 0" rpy="${PI/2} -${PI/2} 0"/>
+			<parent link="${prefix}link7"/>
+			<child link="${prefix}tcp"/>
+		</joint>
+
+		<link name="${prefix}tcp_offset"/>
+		<joint name="${prefix}tcp_offset_joint" type="fixed">
+			<origin xyz="${tcp_offset_xyz}" rpy="${tcp_offset_rpy}"/>
+			<parent link="${prefix}tcp"/>
+			<child link="${prefix}tcp_offset"/>
+		</joint>
+	</xacro:macro>
+</robot>

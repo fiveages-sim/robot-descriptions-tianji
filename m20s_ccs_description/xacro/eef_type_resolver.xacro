@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!--
+  M20S-CCS end-effector type resolver.
+  Supported keys:
+    grippers: rg75, rg75_heavy, erg32, ag2f90/ag2f90_d, ag2f90_c, ag2f90_c_soft, ag2f120s, ag2f120s_d
+    hands: linkerhand_o6, linkerhand_l6, linkerhand_o7
+-->
+
+	<xacro:macro name="set_side_eef_types" params="side type_key">
+		<xacro:property name="${side}_hand_type" value="" scope="parent"/>
+		<xacro:property name="${side}_gripper_type" value="" scope="parent"/>
+		<xacro:property name="${side}_gripper_pad" value="default" scope="parent"/>
+
+		<xacro:if value="${type_key == 'rg75'}">
+			<xacro:property name="${side}_gripper_type" value="rg75" scope="parent"/>
+		</xacro:if>
+		<xacro:if value="${type_key == 'rg75_heavy'}">
+			<xacro:property name="${side}_gripper_type" value="rg75" scope="parent"/>
+			<xacro:property name="${side}_gripper_pad" value="heavy_carry" scope="parent"/>
+		</xacro:if>
+		<xacro:if value="${type_key == 'erg32' or type_key == 'ERG32'}">
+			<xacro:property name="${side}_gripper_type" value="erg32" scope="parent"/>
+		</xacro:if>
+		<xacro:if value="${type_key == 'ag2f90' or type_key == 'ag2f90_d'}">
+			<xacro:property name="${side}_gripper_type" value="ag2f90_d" scope="parent"/>
+		</xacro:if>
+		<xacro:if value="${type_key == 'ag2f90_c'}">
+			<xacro:property name="${side}_gripper_type" value="ag2f90_c" scope="parent"/>
+		</xacro:if>
+		<xacro:if value="${type_key == 'ag2f90_c_soft'}">
+			<xacro:property name="${side}_gripper_type" value="ag2f90_c" scope="parent"/>
+			<xacro:property name="${side}_gripper_pad" value="soft" scope="parent"/>
+		</xacro:if>
+		<xacro:if value="${type_key == 'ag2f120s'}">
+			<xacro:property name="${side}_gripper_type" value="ag2f120s" scope="parent"/>
+		</xacro:if>
+		<xacro:if value="${type_key == 'ag2f120s_d'}">
+			<xacro:property name="${side}_gripper_type" value="ag2f120s_d" scope="parent"/>
+		</xacro:if>
+		<xacro:if value="${type_key == 'linkerhand_o6'}">
+			<xacro:property name="${side}_hand_type" value="linkerhand_o6" scope="parent"/>
+		</xacro:if>
+		<xacro:if value="${type_key == 'linkerhand_l6'}">
+			<xacro:property name="${side}_hand_type" value="linkerhand_l6" scope="parent"/>
+		</xacro:if>
+		<xacro:if value="${type_key == 'linkerhand_o7'}">
+			<xacro:property name="${side}_hand_type" value="linkerhand_o7" scope="parent"/>
+		</xacro:if>
+	</xacro:macro>
+
+</robot>
