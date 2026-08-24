@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>m20s_ccs_description</name>
+    <version>1.0.0</version>
+    <description>
+        <p>URDF Description package for Marvin M20S-CCS</p>
+        <p>This package contains configuration data, 3D models and launch files
+            for Marvin M20S-CCS manipulator
+        </p>
+    </description>
+    <author>TODO</author>
+    <maintainer email="TODO@email.com"/>
+
+    <license>BSD</license>
+
+    <exec_depend>robot_common_launch</exec_depend>
+    <exec_depend>m6_ccs_description</exec_depend>
+    <exec_depend>changingtek_description</exec_depend>
+    <exec_depend>jodell_description</exec_depend>
+    <exec_depend>linkerhand_description</exec_depend>
+
+    <export>
+        <build_type>ament_cmake</build_type>
+    </export>
+</package>

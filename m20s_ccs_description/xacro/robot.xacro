@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<robot name="M20S_CCS" xmlns:xacro="http://www.ros.org/wiki/xacro">
+	<xacro:arg name="collider" default="convex"/>
+	<xacro:arg name="type" default="dual"/>
+	<xacro:arg name="left_type" default=""/>
+	<xacro:arg name="right_type" default=""/>
+	<xacro:arg name="left_tcp_offset_xyz" default="0 0 0"/>
+	<xacro:arg name="left_tcp_offset_rpy" default="0 0 0"/>
+	<xacro:arg name="right_tcp_offset_xyz" default="0 0 0"/>
+	<xacro:arg name="right_tcp_offset_rpy" default="0 0 0"/>
+
+	<xacro:property name="type_arg" value="$(arg type)"/>
+	<xacro:property name="left_type_arg" value="$(arg left_type)"/>
+	<xacro:property name="right_type_arg" value="$(arg right_type)"/>
+	<xacro:property name="effective_left_type" value="${left_type_arg if left_type_arg != '' else type_arg}"/>
+	<xacro:property name="effective_right_type" value="${right_type_arg if right_type_arg != '' else type_arg}"/>
+
+	<xacro:property name="selected_arm_config" value="dual"/>
+	<xacro:property name="selected_gripper_type" value="none"/>
+	<xacro:property name="selected_gripper_pad" value="default"/>
+
+	<xacro:if value="${type_arg == 'left'}">
+		<xacro:property name="selected_arm_config" value="left"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'right'}">
+		<xacro:property name="selected_arm_config" value="right"/>
+	</xacro:if>
+
+	<xacro:if value="${type_arg == 'ag2f90'}">
+		<xacro:property name="selected_gripper_type" value="ag2f90_d"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'ag2f90_c'}">
+		<xacro:property name="selected_gripper_type" value="ag2f90_c"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'ag2f90_c_soft'}">
+		<xacro:property name="selected_gripper_type" value="ag2f90_c"/>
+		<xacro:property name="selected_gripper_pad" value="soft"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'ag2f90_d'}">
+		<xacro:property name="selected_gripper_type" value="ag2f90_d"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'ag2f120s'}">
+		<xacro:property name="selected_gripper_type" value="ag2f120s"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'ag2f120s_d'}">
+		<xacro:property name="selected_gripper_type" value="ag2f120s_d"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'rg75'}">
+		<xacro:property name="selected_gripper_type" value="rg75"/>
+	</xacro:if>
+
+	<xacro:include filename="$(find m20s_ccs_description)/xacro/arm.xacro"/>
+	<xacro:include filename="$(find m6_ccs_description)/xacro/arm_mount.xacro"/>
+
+	<xacro:if value="${selected_arm_config == 'left'}">
+		<xacro:M20S_CCS side="left"
+			tcp_offset_xyz="$(arg left_tcp_offset_xyz)"
+			tcp_offset_rpy="$(arg left_tcp_offset_rpy)"/>
+		<xacro:if value="${selected_gripper_type == 'rg75'}">
+			<xacro:include filename="$(find jodell_description)/xacro/RG75-300.xacro"/>
+			<xacro:RG75-300 name="" use_flange="true"/>
+			<joint name="gripper_base_joint" type="fixed">
+				<parent link="tcp"/>
+				<child link="flange"/>
+			</joint>
+		</xacro:if>
+	</xacro:if>
+
+	<xacro:if value="${selected_arm_config == 'right'}">
+		<xacro:M20S_CCS side="right"
+			tcp_offset_xyz="$(arg right_tcp_offset_xyz)"
+			tcp_offset_rpy="$(arg right_tcp_offset_rpy)"/>
+	</xacro:if>
+
+	<xacro:if value="${selected_arm_config == 'dual'}">
+		<link name="base_link"/>
+		<link name="arm_base">
+			<collision>
+				<origin xyz="0.0091 0 -0.25"/>
+				<geometry>
+					<box size="0.2000 0.3 0.4029"/>
+				</geometry>
+			</collision>
+		</link>
+
+		<joint name="arm_base_joint" type="fixed">
+			<parent link="base_link"/>
+			<child link="arm_base"/>
+		</joint>
+
+		<xacro:DualArmMount parent="arm_base"/>
+
+		<xacro:M20S_CCS name="left"
+			tcp_offset_xyz="$(arg left_tcp_offset_xyz)"
+			tcp_offset_rpy="$(arg left_tcp_offset_rpy)"/>
+		<xacro:M20S_CCS name="right"
+			tcp_offset_xyz="$(arg right_tcp_offset_xyz)"
+			tcp_offset_rpy="$(arg right_tcp_offset_rpy)"/>
+
+		<xacro:include filename="$(find m20s_ccs_description)/xacro/eef_type_resolver.xacro"/>
+		<xacro:set_side_eef_types side="left" type_key="${effective_left_type}"/>
+		<xacro:set_side_eef_types side="right" type_key="${effective_right_type}"/>
+		<xacro:include filename="$(find m20s_ccs_description)/xacro/eefs.xacro"/>
+		<xacro:EndEffectors
+			eef_fixed_joints="$(arg eef_fixed_joints)"
+			left_hand_type="${left_hand_type}"
+			left_gripper_type="${left_gripper_type}"
+			left_gripper_pad="${left_gripper_pad}"
+			right_hand_type="${right_hand_type}"
+			right_gripper_type="${right_gripper_type}"
+			right_gripper_pad="${right_gripper_pad}"/>
+	</xacro:if>
+</robot>
