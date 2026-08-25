@@ -14,6 +14,7 @@
     <xacro:include filename="$(find inspire_description)/xacro/hands/RH56F2.xacro"/>
     <xacro:include filename="$(find xhand1_description)/xacro/xhand1.xacro"/>
     <xacro:include filename="$(find theohand_description)/xacro/std16a.xacro"/>
+    <xacro:include filename="$(find wuji_description)/xacro/hand2.xacro"/>
     <xacro:include filename="$(find marvin_gripper_description)/xacro/marvin_gripper.xacro"/>
     <xacro:include filename="$(find marvin_gripper_description)/xacro/marvin_gripper45.xacro"/>
 
@@ -243,6 +244,17 @@
             </joint>
         </xacro:if>
 
+        <xacro:if value="${hand_type == 'wuji_hand2'}">
+            <xacro:WujiHand2 name="${side}_hand" direction="${1 if side == 'left' else -1}" use_mount="true" fixed_joints="${eef_fixed_joints}"/>
+            <!-- mount→hand_base has R_x(π); tcp→mount needs R_x(π) so hand_base +Z (fingers) = tcp +Z.
+                 L/R mesh mirror is via direction:=±1 — do not add opposite yaw (fights mirroring). -->
+            <joint name="${side}_hand_base_joint" type="fixed">
+                <origin xyz="0 0 0" rpy="${PI} 0 0"/>
+                <parent link="${side}_tcp"/>
+                <child link="${side}_hand_mount"/>
+            </joint>
+        </xacro:if>
+
         <!-- Hands with built-in ${side}_hand_eef; alias ${side}_eef for OCS2 / task.info -->
         <xacro:if value="${hand_type == 'xhand1'}">
             <link name="${side}_eef"/>
@@ -258,7 +270,7 @@
                 <child link="${side}_eef"/>
             </joint>
         </xacro:if>
-        <xacro:if value="${hand_type == 'theohand_std16a'}">
+        <xacro:if value="${hand_type == 'theohand_std16a' or hand_type == 'wuji_hand2'}">
             <link name="${side}_eef"/>
             <joint name="${side}_eef_joint" type="fixed">
                 <parent link="${side}_hand_eef"/>
@@ -289,13 +301,13 @@
     <xacro:macro name="SideEndEffector" params="side hand_type gripper_type gripper_pad eef_fixed_joints:=false">
         <!-- OCS2 planning URDF: no actuated EEF DOF (avoids per-tool removeJoints in .info) -->
         <xacro:if value="${eef_fixed_joints}">
-            <xacro:if value="${hand_type == 'linkerhand_o6' or hand_type == 'linkerhand_o7' or hand_type == 'linkerhand_l6' or hand_type == 'freedom_v1' or hand_type == 'freedom_v2' or hand_type == 'inspire_e2' or hand_type == 'inspire_f2' or hand_type == 'xhand1' or hand_type == 'theohand_std16a'}">
+            <xacro:if value="${hand_type == 'linkerhand_o6' or hand_type == 'linkerhand_o7' or hand_type == 'linkerhand_l6' or hand_type == 'freedom_v1' or hand_type == 'freedom_v2' or hand_type == 'inspire_e2' or hand_type == 'inspire_f2' or hand_type == 'xhand1' or hand_type == 'theohand_std16a' or hand_type == 'wuji_hand2'}">
                 <xacro:SideEndEffectorLinkerHand side="${side}" hand_type="${hand_type}" eef_fixed_joints="true"/>
             </xacro:if>
             <xacro:if value="${hand_type == 'erg32'}">
                 <xacro:SideEndEffectorERG32 side="${side}" eef_fixed_joints="true"/>
             </xacro:if>
-            <xacro:unless value="${hand_type == 'linkerhand_o6' or hand_type == 'linkerhand_o7' or hand_type == 'linkerhand_l6' or hand_type == 'freedom_v1' or hand_type == 'freedom_v2' or hand_type == 'inspire_e2' or hand_type == 'inspire_f2' or hand_type == 'xhand1' or hand_type == 'theohand_std16a' or hand_type == 'erg32'}">
+            <xacro:unless value="${hand_type == 'linkerhand_o6' or hand_type == 'linkerhand_o7' or hand_type == 'linkerhand_l6' or hand_type == 'freedom_v1' or hand_type == 'freedom_v2' or hand_type == 'inspire_e2' or hand_type == 'inspire_f2' or hand_type == 'xhand1' or hand_type == 'theohand_std16a' or hand_type == 'wuji_hand2' or hand_type == 'erg32'}">
                 <xacro:if value="${gripper_type == 'ag2f90_c' or gripper_type == 'ag2f90_d'}">
                     <xacro:AG2F90-C name="${side}" use_flange="true" pad="${gripper_pad}" kinematic_only="true"/>
                     <joint name="${side}_gripper_fix" type="fixed">

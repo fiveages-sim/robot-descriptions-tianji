@@ -59,6 +59,9 @@
         <xacro:if value="${type_key == 'theohand_std16a' or type_key == 'theohand' or type_key == 'std16a'}">
             <xacro:property name="${side}_hand_type" value="theohand_std16a" scope="parent"/>
         </xacro:if>
+        <xacro:if value="${type_key == 'wuji_hand2'}">
+            <xacro:property name="${side}_hand_type" value="wuji_hand2" scope="parent"/>
+        </xacro:if>
         <xacro:if value="${type_key == 'marvin_gripper'}">
             <xacro:property name="${side}_gripper_type" value="marvin_gripper" scope="parent"/>
         </xacro:if>
