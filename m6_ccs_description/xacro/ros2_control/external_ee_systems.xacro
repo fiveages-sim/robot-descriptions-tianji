@@ -18,8 +18,9 @@
 		require_initial_feedback:=true
 		command_deadband:=0.0
 		connect_timeout_ms:=5000
-		enable_timeout_s:=5.0">
-		<ros2_control name="wuji_hand2_${side}_system" type="system">
+		enable_timeout_s:=5.0
+		rw_rate:=200">
+		<ros2_control name="wuji_hand2_${side}_system" type="system" rw_rate="${rw_rate}">
 			<hardware>
 				<plugin>wujihand2_ros2_control/WujiHand2Hardware</plugin>
 				<param name="hand_side">${hand_side}</param>
