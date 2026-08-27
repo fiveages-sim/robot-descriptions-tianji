@@ -6,6 +6,40 @@
 	<xacro:include filename="$(find freedom_description)/xacro/ros2_control/side_systems.xacro"/>
 	<xacro:include filename="$(find inspire_description)/xacro/ros2_control/side_systems.xacro"/>
 
+	<xacro:macro name="wuji_hand2_ethernet_side_system" params="
+		side
+		hand_side
+		device_address
+		serial_number
+		mit_kp:=3.0
+		mit_kd:=0.05
+		effort_limit:=1.5
+		read_feedback:=true
+		require_initial_feedback:=true
+		command_deadband:=0.0
+		connect_timeout_ms:=5000
+		enable_timeout_s:=5.0">
+		<ros2_control name="wuji_hand2_${side}_system" type="system">
+			<hardware>
+				<plugin>wujihand2_ros2_control/WujiHand2Hardware</plugin>
+				<param name="hand_side">${hand_side}</param>
+				<param name="device_address">${device_address}</param>
+				<xacro:if value="${serial_number != ''}">
+					<param name="serial_number">${serial_number}</param>
+				</xacro:if>
+				<param name="mit_kp">${mit_kp}</param>
+				<param name="mit_kd">${mit_kd}</param>
+				<param name="effort_limit">${effort_limit}</param>
+				<param name="read_feedback">${read_feedback}</param>
+				<param name="require_initial_feedback">${require_initial_feedback}</param>
+				<param name="command_deadband">${command_deadband}</param>
+				<param name="connect_timeout_ms">${connect_timeout_ms}</param>
+				<param name="enable_timeout_s">${enable_timeout_s}</param>
+			</hardware>
+			<xacro:wuji_hand2_interfaces name="${side}_hand"/>
+		</ros2_control>
+	</xacro:macro>
+
 	<xacro:macro name="side_usb_hand_system" params="side hand_type serial_port">
 		<xacro:property name="usb_hand_system_name" value="${str('linkerhand_7' if hand_type == 'linkerhand_o7' else 'linkerhand_6')}"/>
 		<ros2_control name="${usb_hand_system_name}_${side}_system" type="system">
@@ -66,6 +100,18 @@
 		left_read_tactile:=false
 		right_read_tactile:=false
 		usb_baudrate:=115200
+		device_address_left:=$(arg device_address_left)
+		device_address_right:=$(arg device_address_right)
+		serial_number_left:=$(arg serial_number_left)
+		serial_number_right:=$(arg serial_number_right)
+		mit_kp:=$(arg mit_kp)
+		mit_kd:=$(arg mit_kd)
+		effort_limit:=$(arg effort_limit)
+		read_feedback:=$(arg read_feedback)
+		require_initial_feedback:=$(arg require_initial_feedback)
+		command_deadband:=$(arg command_deadband)
+		connect_timeout_ms:=$(arg connect_timeout_ms)
+		enable_timeout_s:=$(arg enable_timeout_s)
 		left_ft:=$(arg left_ft)
 		right_ft:=$(arg right_ft)
 		usb_left_ft_port:=$(arg usb_left_ft_port)
@@ -135,6 +181,36 @@
 		</xacro:if>
 		<xacro:if value="${right_drive_type == 'usb_can' and right_hand_type == 'inspire_f2'}">
 			<xacro:inspire_canfd_side_system side="right" can_interface="${right_ee_can_interface}" hand_type="inspire_f2"/>
+		</xacro:if>
+		<xacro:if value="${left_drive_type == 'ethernet' and left_hand_type == 'wuji_hand2'}">
+			<xacro:wuji_hand2_ethernet_side_system
+				side="left"
+				hand_side="left"
+				device_address="${device_address_left}"
+				serial_number="${serial_number_left}"
+				mit_kp="${mit_kp}"
+				mit_kd="${mit_kd}"
+				effort_limit="${effort_limit}"
+				read_feedback="${read_feedback}"
+				require_initial_feedback="${require_initial_feedback}"
+				command_deadband="${command_deadband}"
+				connect_timeout_ms="${connect_timeout_ms}"
+				enable_timeout_s="${enable_timeout_s}"/>
+		</xacro:if>
+		<xacro:if value="${right_drive_type == 'ethernet' and right_hand_type == 'wuji_hand2'}">
+			<xacro:wuji_hand2_ethernet_side_system
+				side="right"
+				hand_side="right"
+				device_address="${device_address_right}"
+				serial_number="${serial_number_right}"
+				mit_kp="${mit_kp}"
+				mit_kd="${mit_kd}"
+				effort_limit="${effort_limit}"
+				read_feedback="${read_feedback}"
+				require_initial_feedback="${require_initial_feedback}"
+				command_deadband="${command_deadband}"
+				connect_timeout_ms="${connect_timeout_ms}"
+				enable_timeout_s="${enable_timeout_s}"/>
 		</xacro:if>
 
 		<xacro:ft_sensor_systems
