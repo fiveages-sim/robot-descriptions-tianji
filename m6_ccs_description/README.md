@@ -20,7 +20,7 @@ OCS2 规划：`robot_common_launch manipulator_ocs2.launch.py robot_name:=m6_ccs
 | 末端（对称） | 加 `type:=<key>`（如 `erg32`、`rg75`），见 [§2](#2-末端执行器) |
 | 末端（左右不同） | `left_type:=… right_type:=…`，**不要**再传 `type:=` |
 | 展台 | `variant:=desktop`（与 `type` 正交，见 [§3](#3-平台与外观)） |
-| 真机 | `demo.launch.py … hardware:=real` 或 `real_usb`；驱动方式见 [§2.1](#21-真机驱动方式) |
+| 真机 | `demo.launch.py … hardware:=real`；末端驱动方式见 [§2.1](#21-真机驱动方式) |
 | Mock 控制 | `demo.launch.py …`（默认 `hardware:=mock_components`） |
 
 ![Marvin M6 CCS](../.images/m6_ccs.png)
@@ -46,7 +46,7 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs \
 |--------|-------------|----------|-------------|
 | `marvin` | `hardware:=real`（默认） | 臂体 **RS485**（Marvin COM1） | [`marvin_ros2_control`](https://github.com/fiveages-sim/marvin-ros2-control#1-支持的末端执行器) |
 | `tianji_can` | `left_ee_drive_type:=tianji_can` 等 | 臂体 **场总线 CAN**（`ee_channel=1`） | 同上；**仅部分灵巧手**，见下表 |
-| `usb` | `hardware:=real_usb`（默认） | 外接 **USB 串口** | [`modbus_ros2_control`](https://github.com/fiveages-sim/modbus-ros2-control#1-支持的末端执行器) |
+| `usb` | `left_ee_drive_type:=usb` 等 | 外接 **USB 串口** | [`modbus_ros2_control`](https://github.com/fiveages-sim/modbus-ros2-control#1-支持的末端执行器) |
 | `usb_can` | `left_ee_drive_type:=usb_can` 等 | 外接 **SocketCAN**（`can0` / `can1`） | [`can_ros2_control`](https://github.com/fiveages-sim/can-ros2-control#1-支持的末端执行器) |
 
 夹爪**仅** `marvin`（RS485）。**无** 外接 USB/CAN 夹爪路径。
@@ -159,11 +159,13 @@ ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type
   left_ee_drive_type:=tianji_can right_ee_drive_type:=tianji_can
 
 # 外接 USB 串口（Modbus）
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real_usb type:=linkerhand_o7
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real_usb type:=theohand_std16a
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=linkerhand_o7 \
+  left_ee_drive_type:=usb right_ee_drive_type:=usb
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=theohand_std16a \
+  left_ee_drive_type:=usb right_ee_drive_type:=usb
 
 # 外接 SocketCAN（LinkerHand O6/L6/O7、freedom_v1、inspire_e2/f2）
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real_usb type:=linkerhand_l6 \
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=linkerhand_l6 \
   left_ee_drive_type:=usb_can right_ee_drive_type:=usb_can
 ```
 
