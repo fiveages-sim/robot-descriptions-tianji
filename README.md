@@ -59,7 +59,7 @@ ros2 launch robot_common_launch manipulator_ocs2.launch.py robot_name:=<robot>
 ros2 launch ocs2_arm_controller demo.launch.py robot:=<robot>
 ```
 
-默认硬件为 `mock_components`。M6-CCS / Marvin Pro 真机加 `hardware:=real` 或 `real_usb`（细节见 [m6_ccs_description README](m6_ccs_description/README.md)）。M20S-CCS 当前无真机驱动。
+默认硬件为 `mock_components`。M6-CCS / Marvin Pro 真机加 `hardware:=real`；末端驱动方式通过 `left_ee_drive_type` / `right_ee_drive_type` 指定（细节见 [m6_ccs_description README](m6_ccs_description/README.md)）。M20S-CCS 当前无真机驱动。
 
 ## Layout
 

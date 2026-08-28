@@ -16,7 +16,7 @@
   <xacro:include filename="$(find robot_common_launch)/xacro/ros2_control/simulation_hardware.xacro"/>
   <xacro:include filename="$(find m6_ccs_description)/xacro/ros2_control/end_effector_interfaces.xacro"/>
 
-  <xacro:property name="is_real_hardware" value="${'$(arg ros2_control_hardware_type)' == 'real' or '$(arg ros2_control_hardware_type)' == 'real_usb'}"/>
+  <xacro:property name="is_real_hardware" value="${'$(arg ros2_control_hardware_type)' == 'real'}"/>
   <xacro:property name="ee_block_mode" value="${'real' if is_real_hardware else 'sim'}"/>
 
   <ros2_control name="Marvin_Pro_System" type="system">
