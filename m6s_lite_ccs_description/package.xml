@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>m6s_lite_ccs_description</name>
+    <version>1.0.0</version>
+    <description>
+        <p>URDF Description package for Marvin M6S Lite CCS</p>
+        <p>Shorter dual-arm CCS variant used by Gento Luna. Kinematics from Luna CAD
+            (link lengths 0.264 m). Reuses DualArmMount from m6_ccs_description.
+        </p>
+    </description>
+    <author>TODO</author>
+    <maintainer email="TODO@email.com"/>
+    <license>BSD</license>
+
+    <exec_depend>robot_common_launch</exec_depend>
+    <exec_depend>m6_ccs_description</exec_depend>
+
+    <export>
+        <build_type>ament_cmake</build_type>
+    </export>
+</package>

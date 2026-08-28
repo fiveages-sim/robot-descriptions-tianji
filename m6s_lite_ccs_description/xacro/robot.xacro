@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<robot name="M6S_Lite_CCS" xmlns:xacro="http://www.ros.org/wiki/xacro">
+	<xacro:arg name="collider" default="convex"/>
+	<xacro:arg name="type" default="dual"/>
+	<xacro:arg name="left_tcp_offset_xyz" default="0 0 0"/>
+	<xacro:arg name="left_tcp_offset_rpy" default="0 0 0"/>
+	<xacro:arg name="right_tcp_offset_xyz" default="0 0 0"/>
+	<xacro:arg name="right_tcp_offset_rpy" default="0 0 0"/>
+
+	<xacro:property name="type_arg" value="$(arg type)"/>
+	<xacro:property name="selected_arm_config" value="dual"/>
+	<xacro:if value="${type_arg == 'left'}">
+		<xacro:property name="selected_arm_config" value="left"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'right'}">
+		<xacro:property name="selected_arm_config" value="right"/>
+	</xacro:if>
+
+	<xacro:include filename="$(find m6s_lite_ccs_description)/xacro/arm.xacro"/>
+	<xacro:include filename="$(find m6_ccs_description)/xacro/arm_mount.xacro"/>
+
+	<xacro:if value="${selected_arm_config == 'left'}">
+		<xacro:M6S_LITE_CCS
+			tcp_offset_xyz="$(arg left_tcp_offset_xyz)"
+			tcp_offset_rpy="$(arg left_tcp_offset_rpy)"/>
+	</xacro:if>
+
+	<xacro:if value="${selected_arm_config == 'right'}">
+		<xacro:M6S_LITE_CCS direction="-1"
+			tcp_offset_xyz="$(arg right_tcp_offset_xyz)"
+			tcp_offset_rpy="$(arg right_tcp_offset_rpy)"/>
+	</xacro:if>
+
+	<xacro:if value="${selected_arm_config == 'dual'}">
+		<link name="base_link"/>
+		<link name="arm_base">
+			<collision>
+				<origin xyz="0.0091 0 -0.25"/>
+				<geometry>
+					<box size="0.2000 0.3 0.4029"/>
+				</geometry>
+			</collision>
+		</link>
+		<joint name="arm_base_joint" type="fixed">
+			<parent link="base_link"/>
+			<child link="arm_base"/>
+		</joint>
+		<!-- CAD J1 at y=±0.2146; no M6-style 0.1745 base offset -->
+		<xacro:DualArmMount parent="arm_base"
+			left_xyz="0 0.2146 0" right_xyz="0 -0.2146 0"/>
+		<xacro:M6S_LITE_CCS name="left"
+			tcp_offset_xyz="$(arg left_tcp_offset_xyz)"
+			tcp_offset_rpy="$(arg left_tcp_offset_rpy)"/>
+		<xacro:M6S_LITE_CCS name="right" direction="-1"
+			tcp_offset_xyz="$(arg right_tcp_offset_xyz)"
+			tcp_offset_rpy="$(arg right_tcp_offset_rpy)"/>
+	</xacro:if>
+</robot>
