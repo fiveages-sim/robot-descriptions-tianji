@@ -6,79 +6,90 @@
 	<xacro:include filename="$(find freedom_description)/xacro/ros2_control/side_systems.xacro"/>
 	<xacro:include filename="$(find inspire_description)/xacro/ros2_control/side_systems.xacro"/>
 
-	<xacro:macro name="side_usb_hand_system" params="side hand_type serial_port">
+	<xacro:macro name="side_usb_hand_system" params="side hand_type serial_port rw_rate:=''">
 		<xacro:property name="usb_hand_system_name" value="${str('linkerhand_7' if hand_type == 'linkerhand_o7' else 'linkerhand_6')}"/>
-		<ros2_control name="${usb_hand_system_name}_${side}_system" type="system">
-			<hardware>
-				<plugin>modbus_ros2_control/DexterousHandHardware</plugin>
-				<param name="serial_port">${serial_port}</param>
-				<param name="hand_type">${hand_type}</param>
-				<param name="hand_side">${side}</param>
-				<param name="max_speed_ratio">1.0</param>
-			</hardware>
-			<xacro:side_hand_interfaces side="${side}" hand_type="${hand_type}"/>
-		</ros2_control>
+		<xacro:side_ros2_control_system name="${usb_hand_system_name}_${side}_system" rw_rate="${rw_rate}">
+			<contents>
+				<hardware>
+					<plugin>modbus_ros2_control/DexterousHandHardware</plugin>
+					<param name="serial_port">${serial_port}</param>
+					<param name="hand_type">${hand_type}</param>
+					<param name="hand_side">${side}</param>
+					<param name="max_speed_ratio">1.0</param>
+				</hardware>
+				<xacro:side_hand_interfaces side="${side}" hand_type="${hand_type}"/>
+			</contents>
+		</xacro:side_ros2_control_system>
 	</xacro:macro>
 
-	<xacro:macro name="theohand_usb_side_system" params="side serial_port baudrate:=115200 slave_id:=auto">
+	<xacro:macro name="theohand_usb_side_system" params="side serial_port baudrate:=115200 slave_id:=auto rw_rate:=''">
 		<xacro:property name="theohand_slave_id" value="${2 if side == 'left' and slave_id == 'auto' else 1 if side == 'right' and slave_id == 'auto' else slave_id}"/>
-		<ros2_control name="theohand_${side}_system" type="system">
-			<hardware>
-				<plugin>modbus_ros2_control/TheoHandModbusHardware</plugin>
-				<param name="serial_port">${serial_port}</param>
-				<param name="slave_id">${theohand_slave_id}</param>
-				<param name="baudrate">${baudrate}</param>
-				<param name="read_feedback">true</param>
-			</hardware>
-			<xacro:side_hand_interfaces side="${side}" hand_type="theohand_std16a"/>
-		</ros2_control>
+		<xacro:side_ros2_control_system name="theohand_${side}_system" rw_rate="${rw_rate}">
+			<contents>
+				<hardware>
+					<plugin>modbus_ros2_control/TheoHandModbusHardware</plugin>
+					<param name="serial_port">${serial_port}</param>
+					<param name="slave_id">${theohand_slave_id}</param>
+					<param name="baudrate">${baudrate}</param>
+					<param name="read_feedback">true</param>
+				</hardware>
+				<xacro:side_hand_interfaces side="${side}" hand_type="theohand_std16a"/>
+			</contents>
+		</xacro:side_ros2_control_system>
 	</xacro:macro>
 
 	<!-- USB-485 夹爪（modbus_ros2_control/ModbusHardware）：rg75 (Jodell) / ag2f90_d (Changingtek 90D) -->
-	<xacro:macro name="changingtek_usb_side_system" params="side variant serial_port">
-		<ros2_control name="changingtek_${side}_system" type="system">
-			<hardware>
-				<plugin>modbus_ros2_control/ModbusHardware</plugin>
-				<param name="gripper_type">changingtek</param>
-				<param name="variant">${variant}</param>
-				<param name="serial_port">${serial_port}</param>
-			</hardware>
-			<xacro:side_gripper_joint side="${side}"/>
-		</ros2_control>
+	<xacro:macro name="changingtek_usb_side_system" params="side variant serial_port rw_rate:=''">
+		<xacro:side_ros2_control_system name="changingtek_${side}_system" rw_rate="${rw_rate}">
+			<contents>
+				<hardware>
+					<plugin>modbus_ros2_control/ModbusHardware</plugin>
+					<param name="gripper_type">changingtek</param>
+					<param name="variant">${variant}</param>
+					<param name="serial_port">${serial_port}</param>
+				</hardware>
+				<xacro:side_gripper_joint side="${side}"/>
+			</contents>
+		</xacro:side_ros2_control_system>
 	</xacro:macro>
 
-	<xacro:macro name="jodell_usb_side_system" params="side serial_port">
-		<ros2_control name="jodell_${side}_system" type="system">
-			<hardware>
-				<plugin>modbus_ros2_control/ModbusHardware</plugin>
-				<param name="gripper_type">jodell</param>
-				<param name="serial_port">${serial_port}</param>
-			</hardware>
-			<xacro:side_gripper_joint side="${side}"/>
-		</ros2_control>
+	<xacro:macro name="jodell_usb_side_system" params="side serial_port rw_rate:=''">
+		<xacro:side_ros2_control_system name="jodell_${side}_system" rw_rate="${rw_rate}">
+			<contents>
+				<hardware>
+					<plugin>modbus_ros2_control/ModbusHardware</plugin>
+					<param name="gripper_type">jodell</param>
+					<param name="serial_port">${serial_port}</param>
+				</hardware>
+				<xacro:side_gripper_joint side="${side}"/>
+			</contents>
+		</xacro:side_ros2_control_system>
 	</xacro:macro>
 
-	<xacro:macro name="linkerhand_usb_can_side_system" params="side hand_type can_interface read_tactile:=false">
-		<ros2_control name="${hand_type}_${side}_can_system" type="system" rw_rate="50">
-			<hardware>
-				<xacro:if value="${hand_type == 'linkerhand_o6'}">
-					<plugin>can_ros2_control/O6CanHardware</plugin>
-				</xacro:if>
-				<xacro:if value="${hand_type == 'linkerhand_l6'}">
-					<plugin>can_ros2_control/L6CanHardware</plugin>
-				</xacro:if>
-				<xacro:if value="${hand_type == 'linkerhand_o7'}">
-					<plugin>can_ros2_control/O7CanHardware</plugin>
-				</xacro:if>
-				<param name="can_interface">${can_interface}</param>
-				<param name="hand_side">${side}</param>
-				<param name="read_feedback">true</param>
-				<param name="read_tactile">${read_tactile}</param>
-				<param name="${side}_tool_torque">1.0</param>
-				<param name="${side}_tool_velocity">1.0</param>
-			</hardware>
-			<xacro:side_hand_interfaces side="${side}" hand_type="${hand_type}"/>
-		</ros2_control>
+	<xacro:macro name="linkerhand_usb_can_side_system" params="side hand_type can_interface read_tactile:=false rw_rate:=''">
+		<xacro:property name="linkerhand_can_rw_rate" value="${rw_rate if rw_rate != '' else 50}"/>
+		<xacro:side_ros2_control_system name="${hand_type}_${side}_can_system" rw_rate="${linkerhand_can_rw_rate}">
+			<contents>
+				<hardware>
+					<xacro:if value="${hand_type == 'linkerhand_o6'}">
+						<plugin>can_ros2_control/O6CanHardware</plugin>
+					</xacro:if>
+					<xacro:if value="${hand_type == 'linkerhand_l6'}">
+						<plugin>can_ros2_control/L6CanHardware</plugin>
+					</xacro:if>
+					<xacro:if value="${hand_type == 'linkerhand_o7'}">
+						<plugin>can_ros2_control/O7CanHardware</plugin>
+					</xacro:if>
+					<param name="can_interface">${can_interface}</param>
+					<param name="hand_side">${side}</param>
+					<param name="read_feedback">true</param>
+					<param name="read_tactile">${read_tactile}</param>
+					<param name="${side}_tool_torque">1.0</param>
+					<param name="${side}_tool_velocity">1.0</param>
+				</hardware>
+				<xacro:side_hand_interfaces side="${side}" hand_type="${hand_type}"/>
+			</contents>
+		</xacro:side_ros2_control_system>
 	</xacro:macro>
 
 	<!-- left_ft / right_ft / usb_*_ft_port: declared in marvin_hardware.xacro; defaults read $(arg ...) here. -->
@@ -89,90 +100,92 @@
 		right_ee_can_interface:=can1
 		left_read_tactile:=false
 		right_read_tactile:=false
+		left_ee_rw_rate:=''
+		right_ee_rw_rate:=''
 		usb_baudrate:=115200
 		left_ft:=$(arg left_ft)
 		right_ft:=$(arg right_ft)
 		usb_left_ft_port:=$(arg usb_left_ft_port)
 		usb_right_ft_port:=$(arg usb_right_ft_port)">
 		<xacro:if value="${left_drive_type == 'usb_can' and (left_hand_type == 'linkerhand_o6' or left_hand_type == 'linkerhand_l6' or left_hand_type == 'linkerhand_o7')}">
-			<xacro:linkerhand_usb_can_side_system side="left" hand_type="${left_hand_type}" can_interface="${left_ee_can_interface}" read_tactile="${left_read_tactile}"/>
+			<xacro:linkerhand_usb_can_side_system side="left" hand_type="${left_hand_type}" can_interface="${left_ee_can_interface}" read_tactile="${left_read_tactile}" rw_rate="${left_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${right_drive_type == 'usb_can' and (right_hand_type == 'linkerhand_o6' or right_hand_type == 'linkerhand_l6' or right_hand_type == 'linkerhand_o7')}">
-			<xacro:linkerhand_usb_can_side_system side="right" hand_type="${right_hand_type}" can_interface="${right_ee_can_interface}" read_tactile="${right_read_tactile}"/>
+			<xacro:linkerhand_usb_can_side_system side="right" hand_type="${right_hand_type}" can_interface="${right_ee_can_interface}" read_tactile="${right_read_tactile}" rw_rate="${right_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${left_drive_type == 'usb' and (left_hand_type == 'linkerhand_o6' or left_hand_type == 'linkerhand_l6' or left_hand_type == 'linkerhand_o7')}">
-			<xacro:side_usb_hand_system side="left" hand_type="${left_hand_type}" serial_port="${usb_left_port}"/>
+			<xacro:side_usb_hand_system side="left" hand_type="${left_hand_type}" serial_port="${usb_left_port}" rw_rate="${left_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${right_drive_type == 'usb' and (right_hand_type == 'linkerhand_o6' or right_hand_type == 'linkerhand_l6' or right_hand_type == 'linkerhand_o7')}">
-			<xacro:side_usb_hand_system side="right" hand_type="${right_hand_type}" serial_port="${usb_right_port}"/>
+			<xacro:side_usb_hand_system side="right" hand_type="${right_hand_type}" serial_port="${usb_right_port}" rw_rate="${right_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${left_drive_type == 'usb' and left_hand_type == 'theohand_std16a'}">
-			<xacro:theohand_usb_side_system side="left" serial_port="${usb_left_port}" baudrate="${usb_baudrate}"/>
+			<xacro:theohand_usb_side_system side="left" serial_port="${usb_left_port}" baudrate="${usb_baudrate}" rw_rate="${left_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${right_drive_type == 'usb' and right_hand_type == 'theohand_std16a'}">
-			<xacro:theohand_usb_side_system side="right" serial_port="${usb_right_port}" baudrate="${usb_baudrate}"/>
+			<xacro:theohand_usb_side_system side="right" serial_port="${usb_right_port}" baudrate="${usb_baudrate}" rw_rate="${right_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${left_drive_type == 'usb' and left_hand_type == 'inspire_e2'}">
-			<xacro:inspire_rs485_side_system side="left" serial_port="${usb_left_port}"/>
+			<xacro:inspire_rs485_side_system side="left" serial_port="${usb_left_port}" rw_rate="${left_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${right_drive_type == 'usb' and right_hand_type == 'inspire_e2'}">
-			<xacro:inspire_rs485_side_system side="right" serial_port="${usb_right_port}"/>
+			<xacro:inspire_rs485_side_system side="right" serial_port="${usb_right_port}" rw_rate="${right_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${left_drive_type == 'usb' and left_hand_type == 'inspire_f2'}">
-			<xacro:inspire_rs485_side_system side="left" serial_port="${usb_left_port}" hand_type="inspire_f2"/>
+			<xacro:inspire_rs485_side_system side="left" serial_port="${usb_left_port}" hand_type="inspire_f2" rw_rate="${left_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${right_drive_type == 'usb' and right_hand_type == 'inspire_f2'}">
-			<xacro:inspire_rs485_side_system side="right" serial_port="${usb_right_port}" hand_type="inspire_f2"/>
+			<xacro:inspire_rs485_side_system side="right" serial_port="${usb_right_port}" hand_type="inspire_f2" rw_rate="${right_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${left_drive_type == 'usb' and left_hand_type == 'freedom_v1'}">
-			<xacro:freedom_rs485_side_system side="left" serial_port="${usb_left_port}"/>
+			<xacro:freedom_rs485_side_system side="left" serial_port="${usb_left_port}" rw_rate="${left_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${right_drive_type == 'usb' and right_hand_type == 'freedom_v1'}">
-			<xacro:freedom_rs485_side_system side="right" serial_port="${usb_right_port}"/>
+			<xacro:freedom_rs485_side_system side="right" serial_port="${usb_right_port}" rw_rate="${right_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${left_drive_type == 'usb' and left_hand_type == 'freedom_v2'}">
-			<xacro:freedom_rs485_side_system side="left" serial_port="${usb_left_port}" type="freedomv2"/>
+			<xacro:freedom_rs485_side_system side="left" serial_port="${usb_left_port}" type="freedomv2" rw_rate="${left_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${right_drive_type == 'usb' and right_hand_type == 'freedom_v2'}">
-			<xacro:freedom_rs485_side_system side="right" serial_port="${usb_right_port}" type="freedomv2"/>
+			<xacro:freedom_rs485_side_system side="right" serial_port="${usb_right_port}" type="freedomv2" rw_rate="${right_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${left_drive_type == 'usb' and left_hand_type == 'xhand1'}">
-			<xacro:xhand1_rs485_side_system side="left" serial_port="${usb_left_port}"/>
+			<xacro:xhand1_rs485_side_system side="left" serial_port="${usb_left_port}" rw_rate="${left_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${right_drive_type == 'usb' and right_hand_type == 'xhand1'}">
-			<xacro:xhand1_rs485_side_system side="right" serial_port="${usb_right_port}"/>
+			<xacro:xhand1_rs485_side_system side="right" serial_port="${usb_right_port}" rw_rate="${right_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${left_drive_type == 'usb_can' and left_hand_type == 'freedom_v1'}">
-			<xacro:freedom_can_side_system side="left" can_interface="${left_ee_can_interface}" device_id="0"/>
+			<xacro:freedom_can_side_system side="left" can_interface="${left_ee_can_interface}" device_id="0" rw_rate="${left_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${right_drive_type == 'usb_can' and right_hand_type == 'freedom_v1'}">
-			<xacro:freedom_can_side_system side="right" can_interface="${right_ee_can_interface}" device_id="1"/>
+			<xacro:freedom_can_side_system side="right" can_interface="${right_ee_can_interface}" device_id="1" rw_rate="${right_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${left_drive_type == 'usb_can' and left_hand_type == 'inspire_e2'}">
-			<xacro:inspire_canfd_side_system side="left" can_interface="${left_ee_can_interface}"/>
+			<xacro:inspire_canfd_side_system side="left" can_interface="${left_ee_can_interface}" rw_rate="${left_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${right_drive_type == 'usb_can' and right_hand_type == 'inspire_e2'}">
-			<xacro:inspire_canfd_side_system side="right" can_interface="${right_ee_can_interface}"/>
+			<xacro:inspire_canfd_side_system side="right" can_interface="${right_ee_can_interface}" rw_rate="${right_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${left_drive_type == 'usb_can' and left_hand_type == 'inspire_f2'}">
-			<xacro:inspire_canfd_side_system side="left" can_interface="${left_ee_can_interface}" hand_type="inspire_f2"/>
+			<xacro:inspire_canfd_side_system side="left" can_interface="${left_ee_can_interface}" hand_type="inspire_f2" rw_rate="${left_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${right_drive_type == 'usb_can' and right_hand_type == 'inspire_f2'}">
-			<xacro:inspire_canfd_side_system side="right" can_interface="${right_ee_can_interface}" hand_type="inspire_f2"/>
+			<xacro:inspire_canfd_side_system side="right" can_interface="${right_ee_can_interface}" hand_type="inspire_f2" rw_rate="${right_ee_rw_rate}"/>
 		</xacro:if>
 
 		<!-- USB-485 夹爪（rg75 / ag2f90_d） -->
 		<xacro:if value="${left_drive_type == 'usb' and left_gripper_type == 'ag2f90_d'}">
-			<xacro:changingtek_usb_side_system side="left" variant="90d" serial_port="${usb_left_port}"/>
+			<xacro:changingtek_usb_side_system side="left" variant="90d" serial_port="${usb_left_port}" rw_rate="${left_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${right_drive_type == 'usb' and right_gripper_type == 'ag2f90_d'}">
-			<xacro:changingtek_usb_side_system side="right" variant="90d" serial_port="${usb_right_port}"/>
+			<xacro:changingtek_usb_side_system side="right" variant="90d" serial_port="${usb_right_port}" rw_rate="${right_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${left_drive_type == 'usb' and left_gripper_type == 'rg75'}">
-			<xacro:jodell_usb_side_system side="left" serial_port="${usb_left_port}"/>
+			<xacro:jodell_usb_side_system side="left" serial_port="${usb_left_port}" rw_rate="${left_ee_rw_rate}"/>
 		</xacro:if>
 		<xacro:if value="${right_drive_type == 'usb' and right_gripper_type == 'rg75'}">
-			<xacro:jodell_usb_side_system side="right" serial_port="${usb_right_port}"/>
+			<xacro:jodell_usb_side_system side="right" serial_port="${usb_right_port}" rw_rate="${right_ee_rw_rate}"/>
 		</xacro:if>
 
 		<xacro:ft_sensor_systems
