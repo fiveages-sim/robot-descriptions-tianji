@@ -92,7 +92,7 @@
 			<xacro:inspire_canfd_side_system side="right" can_interface="${right_ee_can_interface}" hand_type="inspire_f2" rw_rate="${right_ee_rw_rate}"/>
 		</xacro:if>
 
-		<!-- USB-485 夹爪（rg75 / ag2f90_d） -->
+		<!-- 外接 RS485 夹爪（rg75 / ag2f90_d）；drive_type 键为 usb，串口不一定是 USB -->
 		<xacro:if value="${left_drive_type == 'usb' and left_gripper_type == 'ag2f90_d'}">
 			<xacro:changingtek_usb_side_system side="left" variant="90d" serial_port="${usb_left_port}" rw_rate="${left_ee_rw_rate}"/>
 		</xacro:if>
