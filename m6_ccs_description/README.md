@@ -20,7 +20,7 @@ OCS2 规划：`robot_common_launch manipulator_ocs2.launch.py robot_name:=m6_ccs
 | 末端（对称） | 加 `type:=<key>`（如 `erg32`、`rg75`、`wuji_hand2`），见 [§2](#2-末端执行器) |
 | 末端（左右不同） | `left_type:=… right_type:=…`，**不要**再传 `type:=` |
 | 展台 | `variant:=desktop`（与 `type` 正交，见 [§3](#3-平台与外观)） |
-| 真机 | `demo.launch.py … hardware:=real` 或 `real_usb`；驱动方式见 [§2.1](#21-真机驱动方式) |
+| 真机 | `demo.launch.py … hardware:=real`；末端驱动方式见 [§2.1](#21-真机驱动方式) |
 | Mock 控制 | `demo.launch.py …`（默认 `hardware:=mock_components`） |
 
 ![Marvin M6 CCS](../.images/m6_ccs.png)
@@ -46,19 +46,19 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs \
 |--------|-------------|----------|-------------|
 | `marvin` | `hardware:=real`（默认） | 臂体 **RS485**（Marvin COM1） | [`marvin_ros2_control`](https://github.com/fiveages-sim/marvin-ros2-control#1-支持的末端执行器) |
 | `tianji_can` | `left_ee_drive_type:=tianji_can` 等 | 臂体 **场总线 CAN**（`ee_channel=1`） | 同上；**仅部分灵巧手**，见下表 |
-| `usb` | `hardware:=real_usb`（默认） | 外接 **USB 串口** | [`modbus_ros2_control`](https://github.com/fiveages-sim/modbus-ros2-control#1-支持的末端执行器) |
+| `usb` | `left_ee_drive_type:=usb` 等 | 外接 **USB 串口** | [`modbus_ros2_control`](https://github.com/fiveages-sim/modbus-ros2-control#1-支持的末端执行器) |
 | `usb_can` | `left_ee_drive_type:=usb_can` 等 | 外接 **SocketCAN**（`can0` / `can1`） | [`can_ros2_control`](https://github.com/fiveages-sim/can-ros2-control#1-支持的末端执行器) |
 | `ethernet` | `left_ee_drive_type:=ethernet` 等 | 外接 **以太网** | [`wujihand2_ros2_control`](https://github.com/fiveages-sim/wujihand2-ros2-control)；**仅** `wuji_hand2` |
 
-夹爪**仅** `marvin`（RS485）。**无** 外接 USB/CAN 夹爪路径。
+夹爪默认 `marvin`（臂体 RS485）。独立外接 **RS485** 仅 **rg75**、**ag2f90 / ag2f90_d**（配置键仍是 `usb`，串口设备不一定是 USB）；其余夹爪无独立外接 / `usb_can` 路径。
 
 ### 2.2 类型与支持矩阵
 
 | Type key | 产品 | `marvin` | `tianji_can` | `usb` | `usb_can` | `ethernet` |
 |----------|------|:--------:|:------------:|:-----:|:---------:|:---------:|
-| `rg75` | Jodell RG75-300 | ✅ | — | — | — | — |
+| `rg75` | Jodell RG75-300 | ✅ | — | ✅ | — | — |
 | `erg32` | Jodell ERG32（旋转 + 夹爪，2-DOF） | ✅ | — | — | — | — |
-| `ag2f90`, `ag2f90_d` | ChangingTek AG2F90-D | ✅ | — | — | — | — |
+| `ag2f90`, `ag2f90_d` | ChangingTek AG2F90-D | ✅ | — | ✅ | — | — |
 | `ag2f90_c`, `ag2f90_c_soft` | ChangingTek AG2F90-C | ✅ | — | — | — | — |
 | `ag2f120s`, `ag2f120s_d` | ChangingTek AG2F120S | ✅ | — | — | — | — |
 | `epgi180` | Eincinx EPGI180 | ✅ | — | — | — | — |
@@ -79,7 +79,8 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs \
 - **`freedom_v2`** — Marvin 仅 RS485；`tianji_can` 与 `usb_can` **均不支持**（V2 外接请用 `usb` + Modbus）。
 - **`inspire_e2`** — 仿真 / 外接 `usb`·`usb_can`；**不走 Marvin**。现场 Inspire 手请用 `inspire_f2`。
 - **`usb_can`** — 支持 **LinkerHand O6/L6/O7**、**Freedom V1**、**Inspire E2/F2**；LinkerHand 根据型号分别使用 `O6CanHardware`、`L6CanHardware`、`O7CanHardware`。
-- **`wuji_hand2`** — 仅 **`ethernet`**（`device_address_left` / `device_address_right`）；臂仍 `hardware:=real`（Marvin），手不走 RS485/USB/CAN。仿真可直接 `type:=wuji_hand2`（`mock_components`）。
+- **外接 485 夹爪** — 仅 **rg75**、**ag2f90 / ag2f90_d**（独立 side system）。物理链路是外接 RS485，配置键仍写 `usb`（`usb_left_port` / `usb_right_port` 可以是 `/dev/ttyUSB*`、板载串口等，**不一定是 USB 接入**）。其余夹爪仍只走臂体 `marvin` RS485，无 `usb_can`。
+- **`wuji_hand2`** — 仅 **`ethernet`**（`device_address_left` / `device_address_right`）；臂仍 `hardware:=real`（Marvin），手不走 RS485/USB/CAN。可用 `left_ee_rw_rate` / `right_ee_rw_rate` 覆盖手侧 `rw_rate`（未写默认 **200**）。仿真可直接 `type:=wuji_hand2`（`mock_components`）。
 
 ## 3. 平台与外观
 
@@ -161,12 +162,20 @@ ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type
 ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=inspire_f2 \
   left_ee_drive_type:=tianji_can right_ee_drive_type:=tianji_can
 
-# 外接 USB 串口（Modbus）
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real_usb type:=linkerhand_o7
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real_usb type:=theohand_std16a
+# 外接 USB 串口（Modbus，灵巧手）
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=linkerhand_o7 \
+  left_ee_drive_type:=usb right_ee_drive_type:=usb
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=theohand_std16a \
+  left_ee_drive_type:=usb right_ee_drive_type:=usb
+
+# 外接 RS485 夹爪（rg75 / 90D；drive_type 仍写 usb，串口不一定是 USB）
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=rg75 \
+  left_ee_drive_type:=usb right_ee_drive_type:=usb
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=ag2f90_d \
+  left_ee_drive_type:=usb right_ee_drive_type:=usb
 
 # 外接 SocketCAN（LinkerHand O6/L6/O7、freedom_v1、inspire_e2/f2）
-ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real_usb type:=linkerhand_l6 \
+ros2 launch ocs2_arm_controller demo.launch.py robot:=m6_ccs hardware:=real type:=linkerhand_l6 \
   left_ee_drive_type:=usb_can right_ee_drive_type:=usb_can
 ```
 

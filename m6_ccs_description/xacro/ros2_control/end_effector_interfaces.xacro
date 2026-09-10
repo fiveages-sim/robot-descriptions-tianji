@@ -99,10 +99,11 @@
 		</xacro:if>
 
 		<xacro:if value="${mode == 'real'}">
-			<xacro:if value="${left_gripper_type != ''}">
+			<!-- 夹爪关节接口由实际驱动它的硬件块声明：marvin/tianji_can → M6_CCS_System；usb (USB-485) → external modbus system -->
+			<xacro:if value="${left_gripper_type != '' and (left_drive_type == 'marvin' or left_drive_type == 'tianji_can')}">
 				<xacro:side_gripper_joint side="left"/>
 			</xacro:if>
-			<xacro:if value="${right_gripper_type != ''}">
+			<xacro:if value="${right_gripper_type != '' and (right_drive_type == 'marvin' or right_drive_type == 'tianji_can')}">
 				<xacro:side_gripper_joint side="right"/>
 			</xacro:if>
 			<xacro:if value="${(left_drive_type == 'marvin' or left_drive_type == 'tianji_can') and left_hand_type != '' and left_hand_type != 'xhand1' and left_hand_type != 'inspire_e2' and left_hand_type != 'wuji_hand2'}">

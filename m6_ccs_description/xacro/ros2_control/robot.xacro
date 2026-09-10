@@ -7,8 +7,8 @@
 	<xacro:arg name="left_ee_drive_type" default=""/>
 	<xacro:arg name="right_ee_drive_type" default=""/>
 
-	<xacro:property name="is_real_hardware" value="${'$(arg ros2_control_hardware_type)' == 'real' or '$(arg ros2_control_hardware_type)' == 'real_usb'}"/>
-	<xacro:property name="ee_drive_type" value="${'usb' if '$(arg ros2_control_hardware_type)' == 'real_usb' else ('marvin' if '$(arg ros2_control_hardware_type)' == 'real' else '')}"/>
+	<xacro:property name="is_real_hardware" value="${'$(arg ros2_control_hardware_type)' == 'real'}"/>
+	<xacro:property name="ee_drive_type" value="${'marvin' if is_real_hardware else ''}"/>
 	<xacro:property name="left_drive_type" value="${'$(arg left_ee_drive_type)' if '$(arg left_ee_drive_type)' != '' else ee_drive_type}"/>
 	<xacro:property name="right_drive_type" value="${'$(arg right_ee_drive_type)' if '$(arg right_ee_drive_type)' != '' else ee_drive_type}"/>
 	<xacro:arg name="left_dyn_param" default=""/>
@@ -21,6 +21,8 @@
 	<xacro:arg name="right_ee_can_interface" default="can1"/>
 	<xacro:arg name="left_read_tactile" default="false"/>
 	<xacro:arg name="right_read_tactile" default="false"/>
+	<xacro:arg name="left_ee_rw_rate" default=""/>
+	<xacro:arg name="right_ee_rw_rate" default=""/>
 	<xacro:arg name="device_address_left" default=""/>
 	<xacro:arg name="device_address_right" default=""/>
 	<xacro:arg name="serial_number_left" default=""/>
@@ -92,7 +94,9 @@
 			left_ee_can_interface="$(arg left_ee_can_interface)"
 			right_ee_can_interface="$(arg right_ee_can_interface)"
 			left_read_tactile="$(arg left_read_tactile)"
-			right_read_tactile="$(arg right_read_tactile)"/>
+			right_read_tactile="$(arg right_read_tactile)"
+			left_ee_rw_rate="$(arg left_ee_rw_rate)"
+			right_ee_rw_rate="$(arg right_ee_rw_rate)"/>
 	</xacro:if>
 
 	<xacro:arg name="gazebo" default="false"/>
