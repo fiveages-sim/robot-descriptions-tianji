@@ -48,7 +48,7 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs \
 | `tianji_can` | `left_ee_drive_type:=tianji_can` 等 | 臂体 **场总线 CAN**（`ee_channel=1`） | 同上；**仅部分灵巧手**，见下表 |
 | `usb` | `left_ee_drive_type:=usb` 等 | 外接 **USB 串口** | [`modbus_ros2_control`](https://github.com/fiveages-sim/modbus-ros2-control#1-支持的末端执行器) |
 | `usb_can` | `left_ee_drive_type:=usb_can` 等 | 外接 **SocketCAN**（`can0` / `can1`） | [`can_ros2_control`](https://github.com/fiveages-sim/can-ros2-control#1-支持的末端执行器) |
-| `ethernet` | `left_ee_drive_type:=ethernet` 等 | 外接 **以太网** | [`wujihand2_ros2_control`](https://github.com/fiveages-sim/wujihand2-ros2-control)；**仅** `wuji_hand2` |
+| `ethernet` | `left_ee_drive_type:=ethernet` 等 | 外接 **以太网**（整机扫描，不写 IP） | `wuji_ros2_control`；**仅** `wuji_hand2` |
 
 夹爪默认 `marvin`（臂体 RS485）。独立外接 **RS485** 仅 **rg75**、**ag2f90 / ag2f90_d**（配置键仍是 `usb`，串口设备不一定是 USB）；其余夹爪无独立外接 / `usb_can` 路径。
 
@@ -80,7 +80,7 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs \
 - **`inspire_e2`** — 仿真 / 外接 `usb`·`usb_can`；**不走 Marvin**。现场 Inspire 手请用 `inspire_f2`。
 - **`usb_can`** — 支持 **LinkerHand O6/L6/O7**、**Freedom V1**、**Inspire E2/F2**；LinkerHand 根据型号分别使用 `O6CanHardware`、`L6CanHardware`、`O7CanHardware`。
 - **外接 485 夹爪** — 仅 **rg75**、**ag2f90 / ag2f90_d**（独立 side system）。物理链路是外接 RS485，配置键仍写 `usb`（`usb_left_port` / `usb_right_port` 可以是 `/dev/ttyUSB*`、板载串口等，**不一定是 USB 接入**）。其余夹爪仍只走臂体 `marvin` RS485，无 `usb_can`。
-- **`wuji_hand2`** — 仅 **`ethernet`**（`device_address_left` / `device_address_right`）；臂仍 `hardware:=real`（Marvin），手不走 RS485/USB/CAN。可用 `left_ee_rw_rate` / `right_ee_rw_rate` 覆盖手侧 `rw_rate`（未写默认 **200**）。仿真可直接 `type:=wuji_hand2`（`mock_components`）。
+- **`wuji_hand2`** — 仅 **`ethernet`**。整机挂臂时走手包 `side_systems` + `wuji_scan()`（按 `hand_side`），**不要**在 `robot.local.yaml` 写地址。臂仍 `hardware:=real`（Marvin），手不走 RS485/USB/CAN。可用 `left_ee_rw_rate` / `right_ee_rw_rate` 覆盖手侧 `rw_rate`（未写默认 **200**）。仿真可直接 `type:=wuji_hand2`（`mock_components`）。
 
 ## 3. 平台与外观
 

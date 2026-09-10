@@ -106,10 +106,10 @@
 			<xacro:if value="${right_gripper_type != '' and (right_drive_type == 'marvin' or right_drive_type == 'tianji_can')}">
 				<xacro:side_gripper_joint side="right"/>
 			</xacro:if>
-			<xacro:if value="${(left_drive_type == 'marvin' or left_drive_type == 'tianji_can') and left_hand_type != '' and left_hand_type != 'xhand1' and left_hand_type != 'inspire_e2' and left_hand_type != 'wuji_hand2'}">
+			<xacro:if value="${(left_drive_type == 'marvin' or left_drive_type == 'tianji_can') and left_hand_type != '' and left_hand_type != 'xhand1' and left_hand_type != 'inspire_e2'}">
 				<xacro:side_hand_interfaces side="left" hand_type="${left_hand_type}"/>
 			</xacro:if>
-			<xacro:if value="${(right_drive_type == 'marvin' or right_drive_type == 'tianji_can') and right_hand_type != '' and right_hand_type != 'xhand1' and right_hand_type != 'inspire_e2' and right_hand_type != 'wuji_hand2'}">
+			<xacro:if value="${(right_drive_type == 'marvin' or right_drive_type == 'tianji_can') and right_hand_type != '' and right_hand_type != 'xhand1' and right_hand_type != 'inspire_e2'}">
 				<xacro:side_hand_interfaces side="right" hand_type="${right_hand_type}"/>
 			</xacro:if>
 		</xacro:if>
