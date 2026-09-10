@@ -28,7 +28,7 @@
 		<xacro:property name="wuji_effective_rw_rate" value="${rw_rate if rw_rate != '' else 200}"/>
 		<ros2_control name="wuji_hand2_${side}_system" type="system" rw_rate="${wuji_effective_rw_rate}">
 			<hardware>
-				<plugin>wujihand2_ros2_control/WujiHand2Hardware</plugin>
+				<plugin>wuji_ros2_control/WujiHand2Hardware</plugin>
 				<param name="hand_side">${hand_side}</param>
 				<param name="device_address">${device_address}</param>
 				<xacro:if value="${serial_number != ''}">
