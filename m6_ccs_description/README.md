@@ -48,7 +48,7 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs \
 | `tianji_can` | `left_ee_drive_type:=tianji_can` 等 | 臂体 **场总线 CAN**（`ee_channel=1`） | 同上；**仅部分灵巧手**，见下表 |
 | `usb` | `left_ee_drive_type:=usb` 等 | 外接 **USB 串口** | [`modbus_ros2_control`](https://github.com/fiveages-sim/modbus-ros2-control#1-支持的末端执行器) |
 | `usb_can` | `left_ee_drive_type:=usb_can` 等 | 外接 **SocketCAN**（`can0` / `can1`） | [`can_ros2_control`](https://github.com/fiveages-sim/can-ros2-control#1-支持的末端执行器) |
-| `ethernet` | `left_ee_drive_type:=ethernet` 等 | 外接 **以太网** | [`wujihand2_ros2_control`](https://github.com/fiveages-sim/wujihand2-ros2-control)；**仅** `wuji_hand2` |
+| `ethernet` | `left_ee_drive_type:=ethernet` 等 | 外接 **以太网** | [`wuji_ros2_control`](https://github.com/fiveages-sim/wuji-ros2-control)；**仅** `wuji_hand2` |
 
 夹爪默认 `marvin`（臂体 RS485）。独立外接 **RS485** 仅 **rg75**、**ag2f90 / ag2f90_d**（配置键仍是 `usb`，串口设备不一定是 USB）；其余夹爪无独立外接 / `usb_can` 路径。
 
