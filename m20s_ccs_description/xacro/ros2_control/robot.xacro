@@ -35,38 +35,15 @@
 
 	<xacro:include filename="$(find m20s_ccs_description)/xacro/robot.xacro"/>
 	<xacro:include filename="$(find robot_common_launch)/xacro/ros2_control/simulation_hardware.xacro"/>
+	<xacro:include filename="$(find m20s_ccs_description)/xacro/ros2_control/marvin_hardware.xacro"/>
 
-	<!-- ===== 复用 m6_ccs 的硬件 / 力传感器 / 外接末端宏（不改动 m6 包） =====
-	     m6 侧有两个会干扰本包的 eager include，因此顺序与条件受约束：
-	       1. marvin_hardware.xacro 会 include m6 的 eefs.xacro → 同名宏覆盖本包；
-	       2. external_ee_systems.xacro 会 include m6 的 end_effector_interfaces.xacro
-	          → side_gripper_joint / dual_arm_ee_block 同名覆盖本包；且它无条件
-	          include 各 side_systems.xacro，而这些文件在 linkerhand / jodell /
-	          changingtek / theohand 中尚不存在，故只能按外接驱动条件加载
-	          （加载后 external_ee_systems 宏才存在，调用点也须同样加条件）。
-	     ft_sensor_systems.xacro 自带宏、无 include，可安全直接引入。
-	     结论：m6 文件之后必须重新引入本包 eefs / end_effector_interfaces 夺回宏定义。 -->
-	<xacro:property name="has_external_ee"
-		value="${left_drive_type == 'usb' or right_drive_type == 'usb' or left_drive_type == 'usb_can' or right_drive_type == 'usb_can'}"/>
-
-	<xacro:include filename="$(find m6_ccs_description)/xacro/ros2_control/marvin_hardware.xacro"/>
-	<xacro:include filename="$(find m6_ccs_description)/xacro/ros2_control/ft_sensor_systems.xacro"/>
-	<xacro:if value="${has_external_ee}">
-		<xacro:include filename="$(find m6_ccs_description)/xacro/ros2_control/external_ee_systems.xacro"/>
-	</xacro:if>
-
-	<!-- 以下两个 include 必须在上面 m6 的 include 之后，职责不同：
-	    - xacro/eefs.xacro：夺回被 m6 覆盖的同名宏，主要是 ee_dyn_param（负载参数表）。
-	       另需注意单臂时 xacro/robot.xacro 走的是非 dual 分支、不会引入 eefs，故此处必须显式 include。
-	    - ros2_control/end_effector_interfaces.xacro：双重职责
-	        a) 非外接驱动（marvin / tianji_can / mock）时，m6 的 external_ee_systems 未被引入，
-	            本行是 dual_arm_ee_block / single_arm_ee_block / side_gripper_joint 的唯一来源；
-	        b) 外接驱动（usb / usb_can）时，m6 的 external_ee_systems 会引入 m6 版同名宏并覆盖，
-	            本行负责夺回。m6 版 side_gripper_joint 没有 gripper_type 形参，被覆盖会直接报
-	            "Invalid parameter gripper_type"。
-	     综上：这两个 include 不可删除，也不可上移到 m6 include 之前。 -->
-	<xacro:include filename="$(find m20s_ccs_description)/xacro/eefs.xacro"/>
-	<xacro:include filename="$(find m20s_ccs_description)/xacro/ros2_control/end_effector_interfaces.xacro"/>
+	<!-- 本包自有的末端接口 / 力传感器 / 外接末端宏，不再依赖 m6_ccs_description。
+	     external_ee_systems.xacro 内部会引入：
+	       - end_effector_interfaces.xacro → dual_arm_ee_block / single_arm_ee_block / side_gripper_joint；
+	       - ft_sensor_systems.xacro      → ft_sensor_systems / side_ft_sensor_system；
+	     并自包含外接 usb / usb_can 的 side system 定义。因此它可无条件引入，既不会覆盖本包
+	     同名宏，也不必再按驱动类型条件加载（旧方案必须按 usb/usb_can 条件包含 m6 文件并回夺宏）。 -->
+	<xacro:include filename="$(find m20s_ccs_description)/xacro/ros2_control/external_ee_systems.xacro"/>
 
 	<xacro:property name="ee_block_mode" value="${'real' if is_real_hardware else 'sim'}"/>
 
@@ -100,26 +77,21 @@
 	</ros2_control>
 
 	<xacro:if value="${is_real_hardware and selected_arm_config == 'dual'}">
-		<!-- 外接 usb / usb_can：由 m6 external_ee_systems 分发（其内部已调用 ft_sensor_systems） -->
-		<xacro:if value="${has_external_ee}">
-			<xacro:external_ee_systems
-				usb_left_port="$(arg usb_left_port)"
-				usb_right_port="$(arg usb_right_port)"
-				left_ee_can_interface="$(arg left_ee_can_interface)"
-				right_ee_can_interface="$(arg right_ee_can_interface)"
-				left_read_tactile="$(arg left_read_tactile)"
-				right_read_tactile="$(arg right_read_tactile)"
-				left_ee_rw_rate="$(arg left_ee_rw_rate)"
-				right_ee_rw_rate="$(arg right_ee_rw_rate)"/>
-		</xacro:if>
-		<!-- 臂体总线（marvin / tianji_can）：只需力传感器系统 -->
-		<xacro:unless value="${has_external_ee}">
-			<xacro:ft_sensor_systems
-				left_ft="$(arg left_ft)"
-				right_ft="$(arg right_ft)"
-				usb_left_ft_port="$(arg usb_left_ft_port)"
-				usb_right_ft_port="$(arg usb_right_ft_port)"/>
-		</xacro:unless>
+		<!-- 外接 usb / usb_can 由本包 external_ee_systems 分发；其内部无条件调用
+		     ft_sensor_systems，故臂体总线（marvin / tianji_can）亦由此路径覆盖。 -->
+		<xacro:external_ee_systems
+			usb_left_port="$(arg usb_left_port)"
+			usb_right_port="$(arg usb_right_port)"
+			left_ee_can_interface="$(arg left_ee_can_interface)"
+			right_ee_can_interface="$(arg right_ee_can_interface)"
+			left_read_tactile="$(arg left_read_tactile)"
+			right_read_tactile="$(arg right_read_tactile)"
+			left_ee_rw_rate="$(arg left_ee_rw_rate)"
+			right_ee_rw_rate="$(arg right_ee_rw_rate)"
+			left_ft="$(arg left_ft)"
+			right_ft="$(arg right_ft)"
+			usb_left_ft_port="$(arg usb_left_ft_port)"
+			usb_right_ft_port="$(arg usb_right_ft_port)"/>
 	</xacro:if>
 
 	<xacro:arg name="gazebo" default="false"/>

@@ -57,7 +57,7 @@
 	</xacro:if>
 
 	<xacro:include filename="$(find m20s_ccs_description)/xacro/arm.xacro"/>
-	<xacro:include filename="$(find m6_ccs_description)/xacro/arm_mount.xacro"/>
+	<xacro:include filename="$(find m20s_ccs_description)/xacro/arm_mount.xacro"/>
 
 	<!-- 单左臂 -->
 	<xacro:if value="${selected_arm_config == 'left'}">

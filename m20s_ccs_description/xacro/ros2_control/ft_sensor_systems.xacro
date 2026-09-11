@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<!--
+		Generic FT sensor system (type=sensor, independent of Marvin).
+		robot.local.yaml left_ft/right_ft value selects the transport:
+		  kwr75_usb → this block,  kwr75_485 → Marvin built-in.
+		Exports left_ft_sensor / right_ft_sensor — same names regardless
+		of transport, so controllers/broadcasters only need one config.
+	-->
+	<xacro:macro name="side_ft_sensor_system" params="side serial_port">
+		<ros2_control name="${side}_ft_system" type="sensor">
+			<hardware>
+				<plugin>modbus_ros2_control/Kwr75ForceTorqueSensor</plugin>
+				<param name="serial_port">${serial_port}</param>
+			</hardware>
+			<sensor name="${side}_ft_sensor">
+				<state_interface name="force.x"/>
+				<state_interface name="force.y"/>
+				<state_interface name="force.z"/>
+				<state_interface name="torque.x"/>
+				<state_interface name="torque.y"/>
+				<state_interface name="torque.z"/>
+			</sensor>
+		</ros2_control>
+	</xacro:macro>
+
+	<xacro:macro name="ft_sensor_systems" params="
+		left_ft:=$(arg left_ft)
+		right_ft:=$(arg right_ft)
+		usb_left_ft_port:=$(arg usb_left_ft_port)
+		usb_right_ft_port:=$(arg usb_right_ft_port)">
+		<xacro:if value="${left_ft == 'kwr75_usb'}">
+			<xacro:side_ft_sensor_system side="left" serial_port="${usb_left_ft_port}"/>
+		</xacro:if>
+		<xacro:if value="${right_ft == 'kwr75_usb'}">
+			<xacro:side_ft_sensor_system side="right" serial_port="${usb_right_ft_port}"/>
+		</xacro:if>
+	</xacro:macro>
+
+</robot>
