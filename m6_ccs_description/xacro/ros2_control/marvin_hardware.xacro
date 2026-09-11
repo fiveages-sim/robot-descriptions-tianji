@@ -42,13 +42,13 @@
 		<xacro:if value="${arm_type == 'dual'}">
 			<xacro:property name="left_ee_type" value="${left_hand_type if left_hand_type != '' else left_gripper_type}"/>
 			<xacro:property name="right_ee_type" value="${right_hand_type if right_hand_type != '' else right_gripper_type}"/>
-			<xacro:if value="${(left_drive_type == 'marvin' or left_drive_type == 'tianji_can') and left_ee_type != '' and left_ee_type != 'xhand1' and left_ee_type != 'inspire_e2' and left_ee_type != 'wuji_hand2'}">
+			<xacro:if value="${(left_drive_type == 'marvin' or left_drive_type == 'tianji_can') and left_ee_type != '' and left_ee_type != 'xhand1' and left_ee_type != 'inspire_e2'}">
 				<param name="left_ee_type">${left_ee_type}</param>
 				<xacro:if value="${left_drive_type == 'tianji_can'}">
 					<param name="left_ee_channel">1</param>
 				</xacro:if>
 			</xacro:if>
-			<xacro:if value="${(right_drive_type == 'marvin' or right_drive_type == 'tianji_can') and right_ee_type != '' and right_ee_type != 'xhand1' and right_ee_type != 'inspire_e2' and right_ee_type != 'wuji_hand2'}">
+			<xacro:if value="${(right_drive_type == 'marvin' or right_drive_type == 'tianji_can') and right_ee_type != '' and right_ee_type != 'xhand1' and right_ee_type != 'inspire_e2'}">
 				<param name="right_ee_type">${right_ee_type}</param>
 				<xacro:if value="${right_drive_type == 'tianji_can'}">
 					<param name="right_ee_channel">1</param>
