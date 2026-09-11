@@ -8,6 +8,72 @@
 	<xacro:include filename="$(find changingtek_description)/xacro/AG2F90-C.xacro"/>
 	<xacro:include filename="$(find changingtek_description)/xacro/AG2F120S.xacro"/>
 
+	<!-- Per-side default load (dyn_param) for MarvinHardware; 10 values: m, mx, my, mz, ixx, ixy, ixz, iyy, iyz, izz.
+	     Override via launch left_dyn_param/right_dyn_param (robot.local.yaml).
+	     No end effector (empty ee_key) -> all zeros. -->
+	<xacro:macro name="ee_dyn_param" params="side ee_key arg_val">
+		<xacro:if value="${arg_val != ''}">
+			<param name="${side}_dyn_param">${arg_val}</param>
+		</xacro:if>
+		<xacro:unless value="${arg_val != ''}">
+			<xacro:if value="${ee_key == '' or ee_key == 'none'}">
+				<param name="${side}_dyn_param">0,0,0,0,0,0,0,0,0,0</param>
+			</xacro:if>
+			<xacro:unless value="${ee_key == '' or ee_key == 'none'}">
+			<xacro:if value="${side == 'left'}">
+				<xacro:if value="${ee_key == 'rg75'}">
+					<param name="${side}_dyn_param">1.6200799541791235, 1.4285009257202586, -0.5789585762443014, 104.39051192831192, 0.004873874899366342, 0.0, 0.0, 0.001, 0.0, 0.0019355638096347936</param>
+				</xacro:if>
+				<xacro:if value="${ee_key == 'erg32'}">
+					<!-- TODO: replace with measured ERG32 values -->
+					<param name="${side}_dyn_param">1.6200799541791235, 1.4285009257202586, -0.5789585762443014, 104.39051192831192, 0.004873874899366342, 0.0, 0.0, 0.001, 0.0, 0.0019355638096347936</param>
+				</xacro:if>
+				<xacro:if value="${ee_key == 'ag2f90_c' or ee_key == 'ag2f90_d' or ee_key == 'ag2f90_c_soft'}">
+					<param name="${side}_dyn_param">0.9464750422461978, -8.366166030270293, -9.50810456883501, 71.59365292895114, 0.02313627009490121, 0.0, 0.0, 0.017136701127687514, 0.0, 0.008640226166892327</param>
+				</xacro:if>
+				<xacro:if value="${ee_key == 'ag2f120s' or ee_key == 'ag2f120s_d'}">
+					<!-- TODO: replace with measured values; temporarily reuse ag2f90 series -->
+					<param name="${side}_dyn_param">1.3944348661120496, -7.913087934362548, 10.50004773179898, 72.44110460800299, 0.014948849408945898, 0.0, 0.0, 0.005470384569170036, 0.0, 0.002567996881581655</param>
+				</xacro:if>
+				<xacro:if value="${ee_key == 'linkerhand_o6'}">
+					<param name="${side}_dyn_param">0.6,0,0,70.0,0,0,0,0,0,0</param>
+				</xacro:if>
+				<xacro:if value="${ee_key == 'linkerhand_l6'}">
+					<param name="${side}_dyn_param">0.6929861562459377, -0.02709362955502027, 21.325042427584716, 142.0468769124068, 0.001, 0.0, 0.0, 0.001, 0.0, 0.004408438461135547</param>
+				</xacro:if>
+				<xacro:if value="${ee_key == 'linkerhand_o7'}">
+					<param name="${side}_dyn_param">0.8,0,0,85.0,0,0,0,0,0,0</param>
+				</xacro:if>
+			</xacro:if>
+			<xacro:if value="${side == 'right'}">
+				<xacro:if value="${ee_key == 'rg75'}">
+					<param name="${side}_dyn_param">1.6200799541791235, 1.4285009257202586, -0.5789585762443014, 104.39051192831192, 0.004873874899366342, 0.0, 0.0, 0.001, 0.0, 0.0019355638096347936</param>
+				</xacro:if>
+				<xacro:if value="${ee_key == 'erg32'}">
+					<!-- TODO: replace with measured ERG32 values -->
+					<param name="${side}_dyn_param">1.6200799541791235, 1.4285009257202586, -0.5789585762443014, 104.39051192831192, 0.004873874899366342, 0.0, 0.0, 0.001, 0.0, 0.0019355638096347936</param>
+				</xacro:if>
+				<xacro:if value="${ee_key == 'ag2f90_c' or ee_key == 'ag2f90_d' or ee_key == 'ag2f90_c_soft'}">
+					<param name="${side}_dyn_param">0.9464750422461978, -8.366166030270293, -9.50810456883501, 71.59365292895114, 0.02313627009490121, 0.0, 0.0, 0.017136701127687514, 0.0, 0.008640226166892327</param>
+				</xacro:if>
+				<xacro:if value="${ee_key == 'ag2f120s' or ee_key == 'ag2f120s_d'}">
+					<!-- TODO: replace with measured values; temporarily reuse ag2f90 series -->
+					<param name="${side}_dyn_param">1.4038028109970075, 3.8873998644204817, -10.865529763155825, 73.06884012186562, 0.001, 0.0, 0.0, 0.001, 0.0, 0.0057238484709952525</param>
+				</xacro:if>
+				<xacro:if value="${ee_key == 'linkerhand_o6'}">
+					<param name="${side}_dyn_param">1.6200799541791235, 1.4285009257202586, -0.5789585762443014, 104.39051192831192, 0.004873874899366342, 0.0, 0.0, 0.001, 0.0, 0.0019355638096347936</param>
+				</xacro:if>
+				<xacro:if value="${ee_key == 'linkerhand_l6'}">
+					<param name="${side}_dyn_param">0.757127258546731, -18.86292230512758, -23.37191007763647, 69.11766685323222, 0.02103669807705659, 0.0, 0.0, 0.01131025204380805, 0.0, 0.00955246486803428</param>
+				</xacro:if>
+				<xacro:if value="${ee_key == 'linkerhand_o7'}">
+					<param name="${side}_dyn_param">0.8,0,0,85.0,0,0,0,0,0,0</param>
+				</xacro:if>
+			</xacro:if>
+			</xacro:unless>
+		</xacro:unless>
+	</xacro:macro>
+
 	<xacro:macro name="Ocs2SideEefFrame" params="side parent_link">
 		<link name="${side}_eef"/>
 		<joint name="${side}_eef_joint" type="fixed">

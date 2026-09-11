@@ -32,28 +32,75 @@
 		</xacro:if>
 	</xacro:macro>
 
+	<!--
+		Real (arm body bus) tool interfaces: MarvinHardware drives a gripper through
+		a single position command / position state interface.
+		ERG32 is a 2-DOF tool (rotate + grip) and keeps its full interface set.
+	-->
+	<xacro:macro name="side_gripper_joint" params="side gripper_type:=''">
+		<xacro:if value="${gripper_type == 'erg32'}">
+			<xacro:erg32_interfaces name="${side}_hand"/>
+		</xacro:if>
+		<xacro:unless value="${gripper_type == 'erg32'}">
+			<joint name="${side}_gripper_joint">
+				<command_interface name="position"/>
+				<state_interface name="position">
+					<param name="initial_value">0</param>
+				</state_interface>
+			</joint>
+		</xacro:unless>
+	</xacro:macro>
+
+	<!-- mode: sim | real -->
 	<xacro:macro name="dual_arm_ee_block" params="mode">
 		<xacro:m20s_interfaces name="left"/>
 		<xacro:m20s_interfaces name="right"/>
 
-		<xacro:if value="${left_gripper_type != ''}">
-			<xacro:side_gripper_interfaces_sim side="left" gripper_type="${left_gripper_type}"/>
+		<xacro:if value="${mode == 'sim'}">
+			<xacro:if value="${left_gripper_type != ''}">
+				<xacro:side_gripper_interfaces_sim side="left" gripper_type="${left_gripper_type}"/>
+			</xacro:if>
+			<xacro:if value="${right_gripper_type != ''}">
+				<xacro:side_gripper_interfaces_sim side="right" gripper_type="${right_gripper_type}"/>
+			</xacro:if>
+			<xacro:if value="${left_hand_type != ''}">
+				<xacro:side_hand_interfaces side="left" hand_type="${left_hand_type}"/>
+			</xacro:if>
+			<xacro:if value="${right_hand_type != ''}">
+				<xacro:side_hand_interfaces side="right" hand_type="${right_hand_type}"/>
+			</xacro:if>
 		</xacro:if>
-		<xacro:if value="${right_gripper_type != ''}">
-			<xacro:side_gripper_interfaces_sim side="right" gripper_type="${right_gripper_type}"/>
-		</xacro:if>
-		<xacro:if value="${left_hand_type != ''}">
-			<xacro:side_hand_interfaces side="left" hand_type="${left_hand_type}"/>
-		</xacro:if>
-		<xacro:if value="${right_hand_type != ''}">
-			<xacro:side_hand_interfaces side="right" hand_type="${right_hand_type}"/>
+
+		<xacro:if value="${mode == 'real'}">
+			<!-- 臂体总线（marvin / tianji_can）的末端接口由 M20S_CCS_System 声明；
+			     usb / usb_can 由 external_ee_systems.xacro 的独立 side system 声明。 -->
+			<xacro:if value="${left_gripper_type != '' and (left_drive_type == 'marvin' or left_drive_type == 'tianji_can')}">
+				<xacro:side_gripper_joint side="left" gripper_type="${left_gripper_type}"/>
+			</xacro:if>
+			<xacro:if value="${right_gripper_type != '' and (right_drive_type == 'marvin' or right_drive_type == 'tianji_can')}">
+				<xacro:side_gripper_joint side="right" gripper_type="${right_gripper_type}"/>
+			</xacro:if>
+			<xacro:if value="${(left_drive_type == 'marvin' or left_drive_type == 'tianji_can') and left_hand_type != ''}">
+				<xacro:side_hand_interfaces side="left" hand_type="${left_hand_type}"/>
+			</xacro:if>
+			<xacro:if value="${(right_drive_type == 'marvin' or right_drive_type == 'tianji_can') and right_hand_type != ''}">
+				<xacro:side_hand_interfaces side="right" hand_type="${right_hand_type}"/>
+			</xacro:if>
 		</xacro:if>
 	</xacro:macro>
 
-	<xacro:macro name="single_arm_ee_block" params="mode gripper_type:=''">
+	<!-- Single left arm with optional gripper (m20s_ccs type:=left) -->
+	<xacro:macro name="single_arm_ee_block" params="mode gripper_type:=none">
 		<xacro:m20s_interfaces name=""/>
-		<xacro:if value="${gripper_type != ''}">
-			<xacro:side_gripper_interfaces_sim side="" gripper_type="${gripper_type}"/>
+		<xacro:if value="${mode == 'sim'}">
+			<xacro:if value="${gripper_type != 'none'}">
+				<xacro:side_gripper_interfaces_sim side="" gripper_type="${gripper_type}"/>
+			</xacro:if>
+		</xacro:if>
+		<xacro:if value="${mode == 'real'}">
+			<xacro:if value="${gripper_type != 'none'}">
+				<xacro:side_gripper_joint side="" gripper_type="${gripper_type}"/>
+			</xacro:if>
 		</xacro:if>
 	</xacro:macro>
 </robot>
