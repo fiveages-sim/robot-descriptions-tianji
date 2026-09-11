@@ -9,6 +9,7 @@
 	<xacro:include filename="$(find theohand_description)/xacro/ros2_control/side_systems.xacro"/>
 	<xacro:include filename="$(find jodell_description)/xacro/ros2_control/side_systems.xacro"/>
 	<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/side_systems.xacro"/>
+	<xacro:include filename="$(find wuji_description)/xacro/ros2_control/side_systems.xacro"/>
 
 	<!-- left_ft / right_ft / usb_*_ft_port: declared in marvin_hardware.xacro; defaults read $(arg ...) here. -->
 	<xacro:macro name="external_ee_systems" params="
@@ -104,6 +105,12 @@
 		</xacro:if>
 		<xacro:if value="${right_drive_type == 'usb' and right_gripper_type == 'rg75'}">
 			<xacro:jodell_usb_side_system side="right" serial_port="${usb_right_port}" rw_rate="${right_ee_rw_rate}"/>
+		</xacro:if>
+		<xacro:if value="${left_drive_type == 'ethernet' and left_hand_type == 'wuji_hand2'}">
+			<xacro:wuji_hand2_ethernet_side_system side="left" rw_rate="${left_ee_rw_rate}"/>
+		</xacro:if>
+		<xacro:if value="${right_drive_type == 'ethernet' and right_hand_type == 'wuji_hand2'}">
+			<xacro:wuji_hand2_ethernet_side_system side="right" rw_rate="${right_ee_rw_rate}"/>
 		</xacro:if>
 
 		<xacro:ft_sensor_systems
