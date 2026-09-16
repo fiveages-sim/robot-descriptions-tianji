@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<!-- ============================================================================
+	     M20S-CCS 自有的外接末端（usb / usb_can）系统定义。不依赖 m6_ccs_description，
+	     也不再引用公共描述包的 side_systems.xacro，全部宏在此内联，可独立引入。
+
+	     仅覆盖本包 xacro/eefs.xacro 中已支持的末端（其余末端无外接路径）：
+	       - LinkerHand O6 / L6 / O7 : usb_can（SocketCAN）与 usb（Modbus RTU）
+	       - ChangingTek AG2F90-D    : usb（外接 RS485，走 modbus_ros2_control/ModbusHardware）
+	       - Jodell RG75             : usb（外接 RS485，走 modbus_ros2_control/ModbusHardware）
+	     末端为臂体总线（marvin / tianji_can）时不生成任何外接 system，仅在末尾调用
+	     ft_sensor_systems（与 M6 行为等价）。
+
+	     rw_rate 为空字符串时不下发该属性，保留各硬件默认值（LinkerHand USB-CAN 默认 50）。
+	     ============================================================================ -->
+
+	<xacro:include filename="$(find m20s_ccs_description)/xacro/ros2_control/end_effector_interfaces.xacro"/>
+	<xacro:include filename="$(find m20s_ccs_description)/xacro/ros2_control/ft_sensor_systems.xacro"/>
+
+	<!-- 可选 rw_rate：为空时不下发该属性，保留 ros2_control / 硬件默认。
+	     注意 xacro:attribute 只在其直接父元素上生效（放进 xacro:if 会被丢弃），
+	     且 block 参数仅接受单个子元素；因此每个 side system 用 if/unless 包裹各自的
+	     *_content 宏，硬件与接口内容只定义一次。 -->
+
+	<!-- LinkerHand 外接 USB 串口（Modbus RTU）。 -->
+	<xacro:macro name="side_usb_hand_system_content" params="side hand_type serial_port">
+		<hardware>
+			<plugin>modbus_ros2_control/DexterousHandHardware</plugin>
+			<param name="serial_port">${serial_port}</param>
+			<param name="hand_type">${hand_type}</param>
+			<param name="hand_side">${side}</param>
+			<param name="max_speed_ratio">1.0</param>
+		</hardware>
+		<xacro:side_hand_interfaces side="${side}" hand_type="${hand_type}"/>
+	</xacro:macro>
+
+	<xacro:macro name="side_usb_hand_system" params="side hand_type serial_port rw_rate:=''">
+		<xacro:property name="usb_hand_system_name" value="${str('linkerhand_7' if hand_type == 'linkerhand_o7' else 'linkerhand_6')}"/>
+		<xacro:if value="${rw_rate == ''}">
+			<ros2_control name="${usb_hand_system_name}_${side}_system" type="system">
+				<xacro:side_usb_hand_system_content side="${side}" hand_type="${hand_type}" serial_port="${serial_port}"/>
+			</ros2_control>
+		</xacro:if>
+		<xacro:unless value="${rw_rate == ''}">
+			<ros2_control name="${usb_hand_system_name}_${side}_system" type="system" rw_rate="${rw_rate}">
+				<xacro:side_usb_hand_system_content side="${side}" hand_type="${hand_type}" serial_port="${serial_port}"/>
+			</ros2_control>
+		</xacro:unless>
+	</xacro:macro>
+
+	<!-- LinkerHand 外接 SocketCAN：按型号选择 O6/L6/O7 硬件插件。 -->
+	<xacro:macro name="linkerhand_usb_can_side_system_content" params="side hand_type can_interface read_tactile">
+		<hardware>
+			<xacro:if value="${hand_type == 'linkerhand_o6'}">
+				<plugin>can_ros2_control/O6CanHardware</plugin>
+			</xacro:if>
+			<xacro:if value="${hand_type == 'linkerhand_l6'}">
+				<plugin>can_ros2_control/L6CanHardware</plugin>
+			</xacro:if>
+			<xacro:if value="${hand_type == 'linkerhand_o7'}">
+				<plugin>can_ros2_control/O7CanHardware</plugin>
+			</xacro:if>
+			<param name="can_interface">${can_interface}</param>
+			<param name="hand_side">${side}</param>
+			<param name="read_feedback">true</param>
+			<param name="read_tactile">${read_tactile}</param>
+			<param name="${side}_tool_torque">1.0</param>
+			<param name="${side}_tool_velocity">1.0</param>
+		</hardware>
+		<xacro:side_hand_interfaces side="${side}" hand_type="${hand_type}"/>
+	</xacro:macro>
+
+	<xacro:macro name="linkerhand_usb_can_side_system" params="side hand_type can_interface read_tactile:=false rw_rate:=''">
+		<xacro:if value="${rw_rate == ''}">
+			<ros2_control name="${hand_type}_${side}_can_system" type="system">
+				<xacro:linkerhand_usb_can_side_system_content side="${side}" hand_type="${hand_type}" can_interface="${can_interface}" read_tactile="${read_tactile}"/>
+			</ros2_control>
+		</xacro:if>
+		<xacro:unless value="${rw_rate == ''}">
+			<ros2_control name="${hand_type}_${side}_can_system" type="system" rw_rate="${rw_rate}">
+				<xacro:linkerhand_usb_can_side_system_content side="${side}" hand_type="${hand_type}" can_interface="${can_interface}" read_tactile="${read_tactile}"/>
+			</ros2_control>
+		</xacro:unless>
+	</xacro:macro>
+
+	<!-- 外接 RS485 夹爪：ChangingTek AG2F90-D / Jodell RG75。
+	     物理链路是外接 RS485，配置键仍写 usb（串口设备不一定是 USB）。 -->
+	<xacro:macro name="changingtek_usb_side_system_content" params="side variant serial_port">
+		<hardware>
+			<plugin>modbus_ros2_control/ModbusHardware</plugin>
+			<param name="gripper_type">changingtek</param>
+			<param name="variant">${variant}</param>
+			<param name="serial_port">${serial_port}</param>
+		</hardware>
+		<xacro:side_gripper_joint side="${side}"/>
+	</xacro:macro>
+
+	<xacro:macro name="changingtek_usb_side_system" params="side variant serial_port rw_rate:=''">
+		<xacro:if value="${rw_rate == ''}">
+			<ros2_control name="changingtek_${side}_system" type="system">
+				<xacro:changingtek_usb_side_system_content side="${side}" variant="${variant}" serial_port="${serial_port}"/>
+			</ros2_control>
+		</xacro:if>
+		<xacro:unless value="${rw_rate == ''}">
+			<ros2_control name="changingtek_${side}_system" type="system" rw_rate="${rw_rate}">
+				<xacro:changingtek_usb_side_system_content side="${side}" variant="${variant}" serial_port="${serial_port}"/>
+			</ros2_control>
+		</xacro:unless>
+	</xacro:macro>
+
+	<xacro:macro name="jodell_usb_side_system_content" params="side serial_port">
+		<hardware>
+			<plugin>modbus_ros2_control/ModbusHardware</plugin>
+			<param name="gripper_type">jodell</param>
+			<param name="serial_port">${serial_port}</param>
+		</hardware>
+		<xacro:side_gripper_joint side="${side}"/>
+	</xacro:macro>
+
+	<xacro:macro name="jodell_usb_side_system" params="side serial_port rw_rate:=''">
+		<xacro:if value="${rw_rate == ''}">
+			<ros2_control name="jodell_${side}_system" type="system">
+				<xacro:jodell_usb_side_system_content side="${side}" serial_port="${serial_port}"/>
+			</ros2_control>
+		</xacro:if>
+		<xacro:unless value="${rw_rate == ''}">
+			<ros2_control name="jodell_${side}_system" type="system" rw_rate="${rw_rate}">
+				<xacro:jodell_usb_side_system_content side="${side}" serial_port="${serial_port}"/>
+			</ros2_control>
+		</xacro:unless>
+	</xacro:macro>
+
+	<!-- left_ft / right_ft / usb_*_ft_port: declared in marvin_hardware.xacro; defaults read $(arg ...) here. -->
+	<xacro:macro name="external_ee_systems" params="
+		usb_left_port:=/dev/ttyUSB0
+		usb_right_port:=/dev/ttyUSB2
+		left_ee_can_interface:=can0
+		right_ee_can_interface:=can1
+		left_read_tactile:=false
+		right_read_tactile:=false
+		left_ee_rw_rate:=''
+		right_ee_rw_rate:=''
+		left_ft:=$(arg left_ft)
+		right_ft:=$(arg right_ft)
+		usb_left_ft_port:=$(arg usb_left_ft_port)
+		usb_right_ft_port:=$(arg usb_right_ft_port)">
+
+		<!-- LinkerHand O6 / L6 / O7：外接 SocketCAN -->
+		<xacro:if value="${left_drive_type == 'usb_can' and (left_hand_type == 'linkerhand_o6' or left_hand_type == 'linkerhand_l6' or left_hand_type == 'linkerhand_o7')}">
+			<xacro:linkerhand_usb_can_side_system side="left" hand_type="${left_hand_type}" can_interface="${left_ee_can_interface}" read_tactile="${left_read_tactile}" rw_rate="${left_ee_rw_rate}"/>
+		</xacro:if>
+		<xacro:if value="${right_drive_type == 'usb_can' and (right_hand_type == 'linkerhand_o6' or right_hand_type == 'linkerhand_l6' or right_hand_type == 'linkerhand_o7')}">
+			<xacro:linkerhand_usb_can_side_system side="right" hand_type="${right_hand_type}" can_interface="${right_ee_can_interface}" read_tactile="${right_read_tactile}" rw_rate="${right_ee_rw_rate}"/>
+		</xacro:if>
+
+		<!-- LinkerHand O6 / L6 / O7：外接 USB 串口 -->
+		<xacro:if value="${left_drive_type == 'usb' and (left_hand_type == 'linkerhand_o6' or left_hand_type == 'linkerhand_l6' or left_hand_type == 'linkerhand_o7')}">
+			<xacro:side_usb_hand_system side="left" hand_type="${left_hand_type}" serial_port="${usb_left_port}" rw_rate="${left_ee_rw_rate}"/>
+		</xacro:if>
+		<xacro:if value="${right_drive_type == 'usb' and (right_hand_type == 'linkerhand_o6' or right_hand_type == 'linkerhand_l6' or right_hand_type == 'linkerhand_o7')}">
+			<xacro:side_usb_hand_system side="right" hand_type="${right_hand_type}" serial_port="${usb_right_port}" rw_rate="${right_ee_rw_rate}"/>
+		</xacro:if>
+
+		<!-- 外接 RS485 夹爪：ag2f90_d / rg75（drive_type 键为 usb，串口不一定是 USB） -->
+		<xacro:if value="${left_drive_type == 'usb' and left_gripper_type == 'ag2f90_d'}">
+			<xacro:changingtek_usb_side_system side="left" variant="90d" serial_port="${usb_left_port}" rw_rate="${left_ee_rw_rate}"/>
+		</xacro:if>
+		<xacro:if value="${right_drive_type == 'usb' and right_gripper_type == 'ag2f90_d'}">
+			<xacro:changingtek_usb_side_system side="right" variant="90d" serial_port="${usb_right_port}" rw_rate="${right_ee_rw_rate}"/>
+		</xacro:if>
+		<xacro:if value="${left_drive_type == 'usb' and left_gripper_type == 'rg75'}">
+			<xacro:jodell_usb_side_system side="left" serial_port="${usb_left_port}" rw_rate="${left_ee_rw_rate}"/>
+		</xacro:if>
+		<xacro:if value="${right_drive_type == 'usb' and right_gripper_type == 'rg75'}">
+			<xacro:jodell_usb_side_system side="right" serial_port="${usb_right_port}" rw_rate="${right_ee_rw_rate}"/>
+		</xacro:if>
+
+		<xacro:ft_sensor_systems
+			left_ft="${left_ft}"
+			right_ft="${right_ft}"
+			usb_left_ft_port="${usb_left_ft_port}"
+			usb_right_ft_port="${usb_right_ft_port}"/>
+	</xacro:macro>
+
+</robot>

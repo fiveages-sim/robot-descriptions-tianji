@@ -1,5 +1,7 @@
 /**:
   ros__parameters:
-    linear_scale: 0.005
-    angular_scale: 0.05
+    # linear_scale: 0.005
+    # angular_scale: 0.05
     enable_vr: true
+    marker_fixed_frame: base_link
+    vr_follow_frame: base_link
