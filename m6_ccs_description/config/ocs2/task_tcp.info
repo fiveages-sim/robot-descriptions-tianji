@@ -417,13 +417,13 @@ joint67Coupling
 
     left
     {
-        j6Index                     9
-        j7Index                     10
+        j6Index                     5
+        j7Index                     6
     }
     right
     {
-        j6Index                     16
-        j7Index                     17
+        j6Index                     12
+        j7Index                     13
     }
 }
 
