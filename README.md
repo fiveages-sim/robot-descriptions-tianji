@@ -1,6 +1,6 @@
 # Tianji Robots
 
-天机（Tianji / Marvin）机械臂描述包：单臂 M6-SRS、双臂 M6-CCS / M20S-CCS，以及高立柱固定基座的 Marvin Pro。M6-CCS 的末端解析供 Marvin Pro 与 `fiveages_w2` 复用；M20S-CCS 使用自有末端解析与挂载。
+天机（Tianji / Marvin）机械臂描述包：单臂 M6-SRS、双臂 M6-CCS / M6S Lite CCS / M20S-CCS，以及高立柱固定基座的 Marvin Pro。M6-CCS 的末端解析供 Marvin Pro 与 `fiveages_w2` 复用；M6S Lite 用于 Gento Luna。
 
 | | |
 |:---:|:---:|
@@ -15,6 +15,7 @@
 |---------|----------------|------|------|
 | [m6_srs_description](m6_srs_description/) | `m6_srs` | 单臂 | 左/右臂布局（`type:=left` / `right`） |
 | [m6_ccs_description](m6_ccs_description/) | `m6_ccs` | 双臂平台 | 丰富末端；支持 `variant:=desktop` 展台；可接 Marvin 真机 |
+| [m6s_lite_ccs_description](m6s_lite_ccs_description/) | `m6s_lite_ccs` | 双臂平台 | 更短行程 CCS（节长 0.264 m）；第一期仅 tcp；Gento Luna 使用 |
 | [m20s_ccs_description](m20s_ccs_description/) | `m20s_ccs` | 双臂平台 | 更大行程 CCS；自有末端解析与挂载；可接 Marvin 真机 |
 | [marvin_pro_description](marvin_pro_description/) | `marvin_pro` | 高立柱 + 双臂 | 复用 **M6-CCS** 臂与末端；默认 `marvin_gripper` |
 
@@ -30,7 +31,7 @@ colcon build --packages-up-to <package> --symlink-install
 source ~/ros2_ws/install/setup.bash
 ```
 
-将 `<package>` 替换为 `m6_srs_description`、`m6_ccs_description`、`m20s_ccs_description` 或 `marvin_pro_description`。
+将 `<package>` 替换为 `m6_srs_description`、`m6_ccs_description`、`m6s_lite_ccs_description`、`m20s_ccs_description` 或 `marvin_pro_description`。
 
 ### Visualize
 
@@ -40,7 +41,7 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=<robot> collider:=s
 
 常用参数：
 
-- `robot:=m6_srs` / `m6_ccs` / `m20s_ccs` / `marvin_pro`
+- `robot:=m6_srs` / `m6_ccs` / `m6s_lite_ccs` / `m20s_ccs` / `marvin_pro`
 - `type:=<ee_key>`：对称末端（M6-CCS / M20S-CCS / Marvin Pro）
 - `type:=left` / `right`：单臂布局（不要同时当末端键用）
 - `left_type:=… right_type:=…`：左右不同末端（**不要**再传 `type:=`）
@@ -68,6 +69,7 @@ Tianji/
 ├── .images/
 ├── m6_srs_description/
 ├── m6_ccs_description/
+├── m6s_lite_ccs_description/
 ├── m20s_ccs_description/
 └── marvin_pro_description/
 ```
