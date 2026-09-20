@@ -14,7 +14,6 @@
     <license>BSD</license>
 
     <exec_depend>robot_common_launch</exec_depend>
-    <exec_depend>m6_ccs_description</exec_depend>
     <exec_depend>changingtek_description</exec_depend>
     <exec_depend>jodell_description</exec_depend>
     <exec_depend>linkerhand_description</exec_depend>

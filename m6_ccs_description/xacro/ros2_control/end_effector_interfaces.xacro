@@ -15,6 +15,7 @@
 	<xacro:include filename="$(find inspire_description)/xacro/ros2_control/RH56F2.xacro"/>
 	<xacro:include filename="$(find xhand1_description)/xacro/ros2_control/side_systems.xacro"/>
 	<xacro:include filename="$(find theohand_description)/xacro/ros2_control/std16a.xacro"/>
+	<xacro:include filename="$(find wuji_description)/xacro/ros2_control/hand2.xacro"/>
 	<xacro:include filename="$(find marvin_gripper_description)/xacro/ros2_control/marvin_gripper.xacro"/>
 
 	<xacro:macro name="side_gripper_joint" params="side">
@@ -53,6 +54,9 @@
 		</xacro:if>
 		<xacro:if value="${hand_type == 'theohand_std16a'}">
 			<xacro:theohand_std16a_interfaces name="${side}_hand"/>
+		</xacro:if>
+		<xacro:if value="${hand_type == 'wuji_hand2'}">
+			<xacro:wuji_hand2_interfaces name="${side}_hand"/>
 		</xacro:if>
 	</xacro:macro>
 
@@ -95,10 +99,11 @@
 		</xacro:if>
 
 		<xacro:if value="${mode == 'real'}">
-			<xacro:if value="${left_gripper_type != ''}">
+			<!-- 夹爪关节接口由实际驱动它的硬件块声明：marvin/tianji_can → M6_CCS_System；usb (USB-485) → external modbus system -->
+			<xacro:if value="${left_gripper_type != '' and (left_drive_type == 'marvin' or left_drive_type == 'tianji_can')}">
 				<xacro:side_gripper_joint side="left"/>
 			</xacro:if>
-			<xacro:if value="${right_gripper_type != ''}">
+			<xacro:if value="${right_gripper_type != '' and (right_drive_type == 'marvin' or right_drive_type == 'tianji_can')}">
 				<xacro:side_gripper_joint side="right"/>
 			</xacro:if>
 			<xacro:if value="${(left_drive_type == 'marvin' or left_drive_type == 'tianji_can') and left_hand_type != '' and left_hand_type != 'xhand1' and left_hand_type != 'inspire_e2'}">

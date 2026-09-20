@@ -388,3 +388,42 @@ jointVelocityLimits
     }
   }
 }
+
+;=============================================================================
+; Joint67 Coupling Constraint (6/7 轴耦合)
+; 把每只手臂的 (J6, J7) 限制在厂家给出的光滑八边形可动范围内
+; （J6 限位 ±j6LimitDeg、J7 限位 ±j7LimitDeg、对角约束 slope*|J6|+|J7| <=
+;  diagonalLimitDeg）。log-sum-exp 平滑 + safetyMarginDeg 额外安全余量；
+; 越界时按 penaltyWeight / penaltyActivationDeg 软惩罚，避免伤害耦合腕部。
+;
+; 本文件不包含头部关节，布局 = [腰部(4) | 左臂(7) | 右臂(7)]；
+; 索引为 arm 段内相对索引（代码自动叠加 base 偏移）：
+;   left_joint6/7 = 9/10, right_joint6/7 = 16/17
+;
+; 参数须与 双臂/分体 控制器使用的八边形一致，并在真机上验证。
+;=============================================================================
+
+joint67Coupling
+{
+    activate                        true
+    j6LimitDeg                      58.0
+    j7LimitDeg                      78.0
+    diagonalLimitDeg                110.5
+    slope                           1.025
+    smoothTauDeg                    2.0
+    safetyMarginDeg                 1.0
+    penaltyWeight                   200.0
+    penaltyActivationDeg            3.0
+
+    left
+    {
+        j6Index                     5
+        j7Index                     6
+    }
+    right
+    {
+        j6Index                     12
+        j7Index                     13
+    }
+}
+

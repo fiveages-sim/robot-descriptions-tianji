@@ -16,7 +16,7 @@
 | [m6_srs_description](m6_srs_description/) | `m6_srs` | 单臂 | 左/右臂布局（`type:=left` / `right`） |
 | [m6_ccs_description](m6_ccs_description/) | `m6_ccs` | 双臂平台 | 丰富末端；支持 `variant:=desktop` 展台；可接 Marvin 真机 |
 | [m6s_lite_ccs_description](m6s_lite_ccs_description/) | `m6s_lite_ccs` | 双臂平台 | 更短行程 CCS（节长 0.264 m）；第一期仅 tcp；Gento Luna 使用 |
-| [m20s_ccs_description](m20s_ccs_description/) | `m20s_ccs` | 双臂平台 | 更大行程 CCS；自有末端解析与挂载；仅仿真 / mock |
+| [m20s_ccs_description](m20s_ccs_description/) | `m20s_ccs` | 双臂平台 | 更大行程 CCS；自有末端解析与挂载；可接 Marvin 真机 |
 | [marvin_pro_description](marvin_pro_description/) | `marvin_pro` | 高立柱 + 双臂 | 复用 **M6-CCS** 臂与末端；默认 `marvin_gripper` |
 
 相关夹爪包（M6-CCS / Marvin Pro）：[`marvin_gripper_description`](../../common/gripper/marvin_gripper_description/)（直板 / 45° 法兰）。
@@ -51,7 +51,7 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=<robot> collider:=s
 末端键表：
 
 - M6-CCS / Marvin Pro：[m6_ccs_description README §2](m6_ccs_description/README.md#2-末端执行器)（含真机驱动）
-- M20S-CCS：[m20s_ccs_description README §2](m20s_ccs_description/README.md#2-末端执行器)（子集，仅 mock）
+- M20S-CCS：[m20s_ccs_description README §2](m20s_ccs_description/README.md#2-末端执行器)（子集，含真机驱动）
 
 ### OCS2 / Control
 
@@ -60,7 +60,7 @@ ros2 launch robot_common_launch manipulator_ocs2.launch.py robot_name:=<robot>
 ros2 launch ocs2_arm_controller demo.launch.py robot:=<robot>
 ```
 
-默认硬件为 `mock_components`。M6-CCS / Marvin Pro 真机加 `hardware:=real`；末端驱动方式通过 `left_ee_drive_type` / `right_ee_drive_type` 指定（细节见 [m6_ccs_description README](m6_ccs_description/README.md)）。M20S-CCS 当前无真机驱动。
+默认硬件为 `mock_components`。M6-CCS / Marvin Pro / M20S-CCS 真机加 `hardware:=real`；末端驱动方式通过 `left_ee_drive_type` / `right_ee_drive_type` 指定（细节见 [m6_ccs_description README](m6_ccs_description/README.md) 与 [m20s_ccs_description README](m20s_ccs_description/README.md)）。
 
 ## Layout
 
