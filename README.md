@@ -47,6 +47,7 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=<robot> collider:=s
 - `left_type:=… right_type:=…`：左右不同末端（**不要**再传 `type:=`）
 - `variant:=desktop`：仅 `m6_ccs` 展台，与 `type` 正交
 - `collider:=simple`：规划用简化碰撞体（xacro 默认多为 `convex`）
+- `component.launch.py robot:=marvin_pro type:=body`：仅高立柱底座；`xacro_isaac:=true` 藏头部相机网格（Isaac 导入）
 
 末端键表：
 
