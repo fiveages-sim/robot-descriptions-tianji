@@ -56,6 +56,10 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=<robot> collider:=s
 
 ### OCS2 / Control
 
+各包普通 `task.info`、`desktop.info`、`single.info` 的手臂参数以 W2 的 `fixed_base.info` 为基准：预测时域 1.0 s，R scaling 为 0.05，每臂对角值为 `[0.5, 0.5, 0.5, 0.5, 0.1, 0.1, 0.1]`，末端过程权重为位置/姿态 `100/50`，终端权重为 `200/100`，关节软限速为 ±1.57 rad/s。M6-CCS 的 `task_tcp.info` 使用 `fixed_base_tcp.info` 参数：时域 0.4 s，R scaling 为 0.001，过程/终端权重分别为 `10/5`、`20/10`，J1–J4 软限速 ±2.07、J5–J7 ±2.57 rad/s。
+
+单臂配置只含 7 个关节，双臂配置只含 14 个关节，保留各模型原有的基座和末端坐标系。单臂自碰撞保持关闭；双臂按本模型基座映射碰撞对。M6-CCS 保留已有的 6/7 轴耦合范围：单臂由读取器自动使用索引 5/6，双臂为 5/6 与 12/13；其余机型不新增该约束。配置不包含腰、头、底盘关节或全身模式约束。
+
 ```bash
 ros2 launch robot_common_launch manipulator_ocs2.launch.py robot_name:=<robot>
 ros2 launch ocs2_arm_controller demo.launch.py robot:=<robot>

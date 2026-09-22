@@ -1,339 +1,197 @@
-; robot model meta-information
-model_information {
-  manipulatorModelType     0      // 0: Default-arm, 1: Wheel-based manipulator, 2: Floating-arm manipulator, 3: Fully actuated floating-arm manipulator
-  
-  ; motion joints in the URDF to consider fixed
-  removeJoints {
-    [0]  "left_gripper_joint"
-    [1]  "right_gripper_joint"
-  }
+; m20s_ccs_description：单臂精定位
+; 参数基准：W2 的 fixed_base.info，仅提取手臂适用项。
+; 状态与输入为 7 维：[joint1~7]。
+; 保留本模型的基座和末端坐标系；规划 xacro 固定末端执行器关节。
 
-  ; base frame of the robot (from URDF)
-  baseFrame                       "base_link"
-  ; end-effector frame of the robot (from URDF)
-  eeFrame                         "tcp" // gripper_base
+model_information
+{
+    manipulatorModelType    0
+    baseFrame               "base_link"
+    eeFrame                 "tcp"
+    eeFrame1                ""
+
+    removeJoints
+    {
+    }
 }
 
 model_settings
 {
-  usePreComputation               true
-  recompileLibraries              true
+    ; usePreComputation: true = 提前缓存 Pinocchio 中间量
+    usePreComputation       true
+
+    ; recompileLibraries: true = 每次启动重新生成 CppAD 动态库
+    recompileLibraries      true
 }
 
-; DDP settings
 ddp
 {
-  algorithm                       SLQ
+    algorithm                       SLQ
 
-  nThreads                        3
-  threadPriority                  50
+    nThreads                        3
+    threadPriority                  50
 
-  maxNumIterations                1
-  minRelCost                      0.1
-  constraintTolerance             1e-3
+    maxNumIterations                1
+    minRelCost                      0.1
+    constraintTolerance             1e-3
 
-  displayInfo                     false
-  displayShortSummary             false
-  checkNumericalStability         false
-  debugPrintRollout               false
-  debugCaching                    false
+    displayInfo                     false
+    displayShortSummary             false
+    checkNumericalStability         false
+    debugPrintRollout               false
+    debugCaching                    false
 
-  AbsTolODE                       1e-5
-  RelTolODE                       1e-3
-  maxNumStepsPerSecond            100000
-  timeStep                        1e-3
-  backwardPassIntegratorType      ODE45
+    AbsTolODE                       1e-5
+    RelTolODE                       1e-3
+    maxNumStepsPerSecond            100000
+    timeStep                        1e-3
+    backwardPassIntegratorType      ODE45
 
-  constraintPenaltyInitialValue   20.0
-  constraintPenaltyIncreaseRate   2.0
+    constraintPenaltyInitialValue   20.0
+    constraintPenaltyIncreaseRate   2.0
 
-  preComputeRiccatiTerms          true
+    preComputeRiccatiTerms          true
 
-  useFeedbackPolicy               false
+    useFeedbackPolicy               false
 
-  strategy                        LINE_SEARCH
-  lineSearch
-  {
-    minStepLength                 1e-2
-    maxStepLength                 1.0
-    hessianCorrectionStrategy     DIAGONAL_SHIFT
-    hessianCorrectionMultiple     1e-3
-  }
+    strategy                        LINE_SEARCH
+    lineSearch
+    {
+        minStepLength                   1e-2
+        maxStepLength                   1.0
+        hessianCorrectionStrategy       DIAGONAL_SHIFT
+        hessianCorrectionMultiple       1e-3
+    }
 }
 
-; Rollout settings
-rollout
-{
-  AbsTolODE                       1e-5
-  RelTolODE                       1e-3
-  timeStep                        1e-2
-  integratorType                  ODE45
-  maxNumStepsPerSecond            100000
-  checkNumericalStability         false
-}
-
-; MPC settings
 mpc
 {
-  timeHorizon                     2.0   ; [s]
-  solutionTimeWindow              0.4   ; [s]
-  coldStart                       false
-  
-  debugPrint                      false
+    timeHorizon                     1.0     ; [s] 保留精定位配置的预测时域
+    solutionTimeWindow              0.2     ; [s]
+    coldStart                       false
 
-  mpcDesiredFrequency             100   ; [Hz]
-  mrtDesiredFrequency             500   ; [Hz]
+    debugPrint                      false
+
+    ; 独立 MPC/MRT 节点的期望频率；控制器实际频率由 ROS 参数
+    ; mpc_frequency / update_rate 决定，不能仅依据本节判断实际运行频率。
+    mpcDesiredFrequency             100     ; [Hz]
+    mrtDesiredFrequency             500     ; [Hz]
 }
 
-; initial state
+rollout
+{
+    AbsTolODE                       1e-5
+    RelTolODE                       1e-3
+    timeStep                        1e-2
+    integratorType                  ODE45
+    maxNumStepsPerSecond            100000
+    checkNumericalStability         false
+}
+
+; 初始化值；在线控制使用实际关节观测。
 initialState
 {
-  ; initial state for the different types of arm base DOFs
-  base
-  {
-    defaultManipulator
-    {
-    }
-
-    floatingArmManipulator
-    {
-      (0,0)  0.0  ; position x
-      (1,0)  0.0  ; position y
-      (2,0)  0.5  ; position z
-      (3,0)  0.0  ; euler angle z
-      (4,0)  0.0  ; euler angle y
-      (5,0)  0.0  ; euler angle x
-    }
-
-    fullyActuatedFloatingArmManipulator
-    {
-      (0,0)  0.0  ; position x
-      (1,0)  0.0  ; position y
-      (2,0)  0.0  ; position z
-      (3,0)  0.0  ; euler angle z
-      (4,0)  0.0  ; euler angle y
-      (5,0)  0.0  ; euler angle x
-    }
-
-    wheelBasedMobileManipulator
-    {
-      (0,0)  0.0  ; position x
-      (1,0)  0.0  ; position y
-      (2,0)  0.0  ; heading
-    }
-  }
-
-  ; initial state for the arm DOFs
-  arm
-  {
-    (0,0)   0.0     ; arm_1
-    (1,0)   0.0     ; arm_2
-    (2,0)   0.0     ; arm_3
-    (3,0)   0.0     ; arm_4
-    (4,0)   0.0     ; arm_5
-    (5,0)   0.0     ; arm_6
-    (6,0)   0.0     ; arm_7
-  }
-}
-
-inputCost
-{
-  ; control weight matrix
-  R
-  {
-    ; input costs for the different types of arm base DOFs
-    base
-    {
-      defaultManipulator
-      {
-      }
-
-      floatingArmManipulator
-      {
-      }
-
-      fullyActuatedFloatingArmManipulator
-      {
-        scaling 1e-2
-        (0,0)  5.0  ; position x
-        (1,1)  5.0  ; position y
-        (2,2)  5.0  ; position z
-        (3,3)  5.0  ; euler angle z
-        (4,4)  5.0  ; euler angle y
-        (5,5)  5.0  ; euler angle x
-      }
-
-      wheelBasedMobileManipulator
-      {
-        scaling 1e-2
-        (0,0)  5.0  ; forward velocity
-        (1,1)  5.0  ; turning velocity
-      }
-    }
-    
-    ; input costs for the arm DOFs
     arm
     {
-      scaling 1e-3
-
-      (0,0)  2.0  ; arm_1 velocity
-      (1,1)  2.0  ; arm_2 velocity
-      (2,2)  2.0  ; arm_3 velocity
-      (3,3)  2.0  ; arm_4 velocity
-      (4,4)  1.0  ; arm_5 velocity
-      (5,5)  1.0  ; arm_6 velocity
-      (6,6)  1.0  ; arm_7 velocity
+        (0,0)    0.0     ; joint1
+        (1,0)    0.0     ; joint2
+        (2,0)    0.0     ; joint3
+        (3,0)    0.0     ; joint4
+        (4,0)    0.0     ; joint5
+        (5,0)    0.0     ; joint6
+        (6,0)    0.0     ; joint7
     }
-  }
+}
+
+; R 为 7x7 正对角矩阵，实际速度偏差权重 = scaling * 对角值。
+inputCost
+{
+    R
+    {
+        arm
+        {
+            scaling 5e-2
+
+            (0,0)    0.5     ; joint1
+            (1,1)    0.5     ; joint2
+            (2,2)    0.5     ; joint3
+            (3,3)    0.5     ; joint4
+            (4,4)    0.1     ; joint5
+            (5,5)    0.1     ; joint6
+            (6,6)    0.1     ; joint7
+        }
+    }
 }
 
 endEffector
 {
-  ; end effector quadratic penalty scaling
-  muPosition      10.0
-  muOrientation    5
+    dualArmMode false
+    muPosition      100.0
+    muOrientation   50.0
 }
 
 finalEndEffector
 {
-  muPosition      20.0
-  muOrientation    10
+    dualArmMode false
+    muPosition      200.0
+    muOrientation   100.0
 }
 
-selfCollision
-{ 
-  ; activate self-collision constraint
-  activate  false
-
-  ; Self Collision raw object pairs
-  collisionObjectPairs
-  {
-      [0] "1, 5",
-      [1] "1, 8",
-      [2] "4, 11",
-      [3] "7, 11"，
-      [4] "1, 11"
-  }
-
-  ; Self Collision pairs
-  collisionLinkPairs
-  {
-  }
-
-  ; minimum distance allowed between the pairs
-  minimumDistance  0.01
-
-  ; relaxed log barrier mu
-  mu      1e-3
-
-  ; relaxed log barrier delta
-  delta   1e-4
-}
-
-; Only applied for arm joints: limits parsed from URDF
+; 关节位置限位来自本模型 URDF，以 relaxed barrier 软惩罚实现。
 jointPositionLimits
 {
-  ; activate constraint
-  activate  true
-
-  ; relaxed log barrier mu
-  mu      0.001
-
-  ; relaxed log barrier delta
-  delta   1e-3
+    activate                        true
+    mu                              1e-3
+    delta                           1e-3
 }
 
+; 速度上下限为 7 维列向量 (i,0)，以软惩罚实现，并非硬裁剪。
 jointVelocityLimits
 {
-  ; relaxed log barrier mu
-  mu      0.01
+    mu      1e-2
+    delta   1e-3
 
-  ; relaxed log barrier delta
-  delta   1e-3
-  
-  lowerBound
-  {
-    ; velocity limits for the different types of arm base DOFs
-    base
+    lowerBound
     {
-      defaultManipulator
-      {
-      }
-
-      floatingArmManipulator
-      {
-      }
-
-      fullyActuatedFloatingArmManipulator
-      {
-        (0,0)  -0.1  ; linear velocity x
-        (1,0)  -0.1  ; linear velocity y
-        (2,0)  -0.1  ; linear velocity z
-        (3,0)  -0.3  ; euler angle velocity z
-        (4,0)  -0.3  ; euler angle velocity y
-        (5,0)  -0.3  ; euler angle velocity x
-      }
-
-      wheelBasedMobileManipulator
-      {
-        (0,0)  -0.1 ; forward velocity
-        (1,0)  -0.3 ; turning velocity
-      }
+        arm
+        {
+            (0,0)    -1.57   ; joint1
+            (1,0)    -1.57   ; joint2
+            (2,0)    -1.57   ; joint3
+            (3,0)    -1.57   ; joint4
+            (4,0)    -1.57   ; joint5
+            (5,0)    -1.57   ; joint6
+            (6,0)    -1.57   ; joint7
+        }
     }
 
-    ; velocity limits for the arm DOFs
-    arm
+    upperBound
     {
-      (0,0)  -0.657     ; arm_1 [rad/s]
-      (1,0)  -0.657	   ; arm_2 [rad/s]
-      (2,0)  -0.657	   ; arm_3 [rad/s]
-      (3,0)  -0.657	   ; arm_4 [rad/s]
-      (4,0)  -0.657	   ; arm_5 [rad/s]
-      (5,0)  -0.657	   ; arm_6 [rad/s]
-      (6,0)  -0.657	   ; arm_7 [rad/s]
+        arm
+        {
+            (0,0)    1.57    ; joint1
+            (1,0)    1.57    ; joint2
+            (2,0)    1.57    ; joint3
+            (3,0)    1.57    ; joint4
+            (4,0)    1.57    ; joint5
+            (5,0)    1.57    ; joint6
+            (6,0)    1.57    ; joint7
+        }
     }
-  }
+}
 
-  upperBound
-  {
-    ; velocity limits for the different types of arm base DOFs
-    base
+; 保持原单臂配置的自碰撞关闭状态；无全身躯干碰撞对或硬编码几何编号。
+selfCollision
+{
+    activate false
+    mu                  1e-3
+    delta               1e-2
+    minimumDistance     0.01
+
+    collisionObjectPairs
     {
-      defaultManipulator
-      {
-      }
-
-      floatingArmManipulator
-      {
-      }
-
-      fullyActuatedFloatingArmManipulator
-      {
-        (0,0)  0.1  ; linear velocity x
-        (1,0)  0.1  ; linear velocity y
-        (2,0)  0.1  ; linear velocity z
-        (3,0)  0.3  ; euler angle velocity z
-        (4,0)  0.3  ; euler angle velocity y
-        (5,0)  0.3  ; euler angle velocity x
-      }
-
-      wheelBasedMobileManipulator
-      {
-        (0,0)  0.1 ; forward velocity
-        (1,0)  0.3 ; turning velocity
-      }
     }
-
-    ; velocity limits for the arm DOFs
-    arm
+    collisionLinkPairs
     {
-      (0,0)  0.657      ; arm_1 [rad/s]
-      (1,0)  0.657	   ; arm_2 [rad/s]
-      (2,0)  0.657	   ; arm_3 [rad/s]
-      (3,0)  0.657	   ; arm_4 [rad/s]
-      (4,0)  0.657	   ; arm_5 [rad/s]
-      (5,0)  0.657	   ; arm_6 [rad/s]
-      (6,0)  0.657	   ; arm_7 [rad/s]
     }
-  }
 }
