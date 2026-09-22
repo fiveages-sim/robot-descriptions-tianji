@@ -103,6 +103,11 @@ hardware:
   max_joint_acceleration: 30
   usb_left_port: /dev/ttyUSB0
   usb_right_port: /dev/ttyUSB2
+  # 阻抗增益（各 7 维；留空/注释时用 MarvinHardware 内置默认值）：
+  # joint_k_gains: [2.0, 2.0, 2.0, 1.6, 1.0, 1.0, 1.0]
+  # joint_d_gains: [0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4]
+  # cart_k_gains:  [1800.0, 1800.0, 1800.0, 40.0, 40.0, 40.0, 20.0]
+  # cart_d_gains:  [0.6, 0.6, 0.6, 0.4, 0.4, 0.4, 0.4]
   # left_dyn_param / right_dyn_param: 可选负载覆盖（空列表跳过）
   # left_ee_drive_type / right_ee_drive_type: marvin | tianji_can | usb | usb_can
 ```

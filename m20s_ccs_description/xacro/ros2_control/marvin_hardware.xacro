@@ -20,6 +20,10 @@
 		device_ip
 		left_dyn_param
 		right_dyn_param
+		joint_k_gains
+		joint_d_gains
+		cart_k_gains
+		cart_d_gains
 		selected_gripper_type:=none">
 		<plugin>marvin_ros2_control/MarvinHardware</plugin>
 		<param name="arm_type">${arm_type}</param>
@@ -71,6 +75,19 @@
 		<param name="max_joint_speed">${max_joint_speed}</param>
 		<param name="max_joint_acceleration">${max_joint_acceleration}</param>
 		<param name="ctrl_mode">${arm_ctrl_mode}</param>
+		<!-- 阻抗增益：仅在 robot.local.yaml（hardware:）显式给出时才注入 -->
+		<xacro:if value="${joint_k_gains != ''}">
+			<param name="joint_k_gains">${joint_k_gains}</param>
+		</xacro:if>
+		<xacro:if value="${joint_d_gains != ''}">
+			<param name="joint_d_gains">${joint_d_gains}</param>
+		</xacro:if>
+		<xacro:if value="${cart_k_gains != ''}">
+			<param name="cart_k_gains">${cart_k_gains}</param>
+		</xacro:if>
+		<xacro:if value="${cart_d_gains != ''}">
+			<param name="cart_d_gains">${cart_d_gains}</param>
+		</xacro:if>
 		<xacro:if value="${device_ip != ''}">
 			<param name="device_ip">${device_ip}</param>
 		</xacro:if>

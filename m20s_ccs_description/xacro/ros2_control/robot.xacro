@@ -15,6 +15,15 @@
 	<xacro:arg name="right_dyn_param" default=""/>
 	<xacro:arg name="max_joint_speed" default="100"/>
 	<xacro:arg name="max_joint_acceleration" default="100"/>
+	<!-- 阻抗增益（各 7 维，在 robot.local.yaml 的 hardware: 下配置；留空用 MarvinHardware 默认值）
+	     joint_k_gains = 2.0,2.0,2.0,1.6,1.0,1.0,1.0
+	     joint_d_gains = 0.4,0.4,0.4,0.4,0.4,0.4,0.4
+	     cart_k_gains  = 1800.0,1800.0,1800.0,40.0,40.0,40.0,20.0
+	     cart_d_gains  = 0.6,0.6,0.6,0.4,0.4,0.4,0.4 -->
+	<xacro:arg name="joint_k_gains" default=""/>
+	<xacro:arg name="joint_d_gains" default=""/>
+	<xacro:arg name="cart_k_gains" default=""/>
+	<xacro:arg name="cart_d_gains" default=""/>
 	<xacro:arg name="usb_left_port" default="/dev/ttyUSB0"/>
 	<xacro:arg name="usb_right_port" default="/dev/ttyUSB2"/>
 	<xacro:arg name="left_ee_can_interface" default="can0"/>
@@ -61,6 +70,10 @@
 					device_ip="$(arg device_ip)"
 					left_dyn_param="$(arg left_dyn_param)"
 					right_dyn_param="$(arg right_dyn_param)"
+					joint_k_gains="$(arg joint_k_gains)"
+					joint_d_gains="$(arg joint_d_gains)"
+					cart_k_gains="$(arg cart_k_gains)"
+					cart_d_gains="$(arg cart_d_gains)"
 					selected_gripper_type="${selected_gripper_type}"/>
 			</xacro:if>
 		</hardware>
