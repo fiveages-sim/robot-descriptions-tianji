@@ -113,12 +113,12 @@
 		<xacro:unless value="${variant_arg == 'desktop'}">
 			<link name="base_link"/>
 			<link name="arm_base">
-				<collision>
+				<!-- <collision>
 					<origin xyz="0.0091 0 -0.05"/>
 					<geometry>
 						<box size="0.20 0.32 0.20"/>
 					</geometry>
-				</collision>
+				</collision> -->
 				<collision>
 					<origin xyz="0.0091 0 -0.30"/>
 					<geometry>
