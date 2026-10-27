@@ -14,32 +14,42 @@
 ocs2_arm_controller:
   ros__parameters:
 
+    # ── 力控接近：本文件只需要这两项 ──
+    # 实际接近速度 = min(approach_vel, force_vmax)。首接触峰值 ≈ F_des + k_env·v·0.05，
+    # 与环境刚度有关，没有任何参数能消除；要更软就降低 approach_vel。
+    # 其余护栏参数（guard_enable / delay / bandwidth_hz / bandwidth_ratio /
+    # stiffness_bound / max_lead）一律用 StateCompliance.h 的默认值。
+    compliance_hybrid_force_approach_vel: 0.002                            # 接近速度 [m/s]
+    compliance_hybrid_force_vmax: [0.002, 0.002, 0.002, 0.05, 0.05, 0.05]  # 力控轴速度硬上限，同时限退让速度 [m/s, rad/s]
+
     # ── 轴选择与目标力 ──
     compliance_task_selection: [1.0, 0.0, 0.0, 0.0, 0.0, 0.0]  # 1=力控 0=位控 [Fx,Fy,Fz,Mx,My,Mz]
     compliance_force_setpoint: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]  # 目标力 [N,Nm]
     compliance_force_feedback_sign: -1.0                       # 力方向反了改 1.0
 
     # ── 位控轴 (S=0)：v = K/(1+D)·Δx + I ──
-    # 关节位置环实测频响：等效延迟 τ≈34ms，>3Hz 起增益>1 谐振峰。
-    # 位置环带宽 ωc=K，K=30(4.8Hz) 落入谐振区 → 目标周围来回振荡；
-    # K=15(2.4Hz) 相位滞后≈-32°、PM≈50°，远离谐振峰。档位预设不再改此参数。
+    # 位置环延迟/带宽须按具体机械臂辨识；启用 servo_guard 时，
+    # 实际位控增益 K/(1+D) 还受 servo_bandwidth_ratio 与总延迟共同限幅。
     compliance_hybrid_pos_stiffness: [15.0, 15.0, 15.0, 10.0, 10.0, 10.0]  # K [1/s]（各档固定）
     compliance_hybrid_pos_damping:   [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]        # D（阻尼，振荡时加大）
     compliance_hybrid_pos_ki: 0.0
     compliance_hybrid_pos_ki_max: 0.02
 
     # ── 力控轴 (S=1)：v = (F_err + I·leak) / D ──
-    # D 越大环路增益越低、对力越硬（越大越硬）；接触环路同样经过 34ms 延迟。
+    # D 越大，相同力误差下的速度越小；实际 D 下限还由接触刚度与位置环响应确定。
     # 抗拖拽振荡调优值（针对 1-3 Hz 低频摆动）：
     #   - damping 加大 → 降低环路增益
     #   - ki_leak 加大 → 防止拖拽时积分 wind-up
-    #   - vel_lpf_alpha 减小 → 导纳输出更强低通（虚拟惯性）
+    #   - vel_lpf_alpha 减小会增加延迟；不能代替降低外环增益
     compliance_hybrid_force_damping: [8000.0, 8000.0, 8000.0, 400.0, 400.0, 400.0]  # D（中档，=RViz 中档）
     compliance_hybrid_force_ki: 1.0          # 积分增益（消重力残余）；2.0 在接触刚性物体时积分过冲 → 力振荡
     compliance_hybrid_force_ki_max: 5.0     # 积分上限（10 过大，接触时 wind-up → 极限环）
     compliance_hybrid_force_ki_leak: 1.0     # 积分泄漏 [1/s]，拖拽振荡调大 (0.8~1.5)
     compliance_hybrid_force_deadband: 0.5    # 力误差死区 [N]：|F_err|≤死区时力控轴 v=0（防重力残差漂移）；残差大时调大
-    compliance_force_vel_lpf_alpha: 0.15     # 导纳输出低通(虚拟惯性)；拖拽振荡调小 (0.1~0.2)
+    compliance_force_vel_lpf_alpha: 0.15     # 加速平滑；减速/停止/反向旁路旧速度，避免滤波继续推进
+
+    compliance_hybrid_force_contact_eps: 1.0     # 自由段清积分，接触后进力导纳 [N/Nm]
+    # approach_vel 已上移到本段开头的「力控接近」块。
 
     # ── 速度与位移限幅 ──
     compliance_hybrid_cart_vmax: [0.15, 0.15, 0.15, 0.6, 0.6, 0.6]  # 笛卡尔速度上限 [m/s, rad/s]
@@ -53,9 +63,9 @@ ocs2_arm_controller:
     # DLS: qdot = Jᵀ(JJᵀ+λ²I)⁻¹v，事后 clamp 关节速度（可能破坏末端速度方向）。
     # QP : min 0.5·qdotᵀ(JᵀJ+λ²I)qdot − (Jᵀv)ᵀqdot  s.t. |qdot_i|≤joint_vmax，
     #      限位在求解中被正确处理（投影），适合接近速度限位/奇异时避免过冲。
-    compliance_hybrid_inverse_method: DLS      # "DLS" 或 "QP"
+    compliance_hybrid_inverse_method: QP      # "DLS" 或 "QP"
     compliance_hybrid_dls_lambda: 0.05         # DLS 正则化
-    compliance_hybrid_qp_lambda: 1.0           # QP 正则化权重（需≥DLS λ，保证投影梯度收敛）
+    compliance_hybrid_qp_lambda: 0.1           # QP 正则化，速度/位置限位在求解内处理
 
     # ── 力信号与零力校准 ──
     # wrench EMA：α 太小（如 0.10）时滤波滞后大，接触刚性物体时相位裕度不足 → 力振荡。
