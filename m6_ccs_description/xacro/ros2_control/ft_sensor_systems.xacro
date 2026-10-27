@@ -8,8 +8,14 @@
 		Exports left_ft_sensor / right_ft_sensor — same names regardless
 		of transport, so controllers/broadcasters only need one config.
 	-->
-	<xacro:macro name="side_ft_sensor_system" params="side serial_port">
-		<ros2_control name="${side}_ft_system" type="sensor">
+	<!-- rw_rate：本 sensor 组件的读取周期上限 [Hz]。
+	     KWR75 串口读取已改为「后台线程持续排空 + 缓存最新帧」，read() 只做一次
+	     加锁 memcpy（~µs），不再占用实时环时间，所以这里可以放心用 500 Hz。
+	     真正的采样率由物理链路决定：28 字节帧 @115200 8N1 = 2.431 ms/帧 → 411 Hz，
+	     即每个控制周期大约 80% 能拿到新帧，其余复用上一帧（最大 2.4 ms 陈旧）。
+	     若将来把 baudrate 提到 460800/921600，采样率可同步提高（改 robot.local.yaml）。 -->
+	<xacro:macro name="side_ft_sensor_system" params="side serial_port rw_rate:=500">
+		<ros2_control name="${side}_ft_system" type="sensor" rw_rate="${rw_rate}">
 			<hardware>
 				<plugin>modbus_ros2_control/Kwr75ForceTorqueSensor</plugin>
 				<param name="serial_port">${serial_port}</param>
