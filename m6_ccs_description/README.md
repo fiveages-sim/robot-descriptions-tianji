@@ -71,9 +71,12 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs \
 | `inspire_f2` | Inspire RH56F2 | ✅ | ✅ | ✅ | ✅ | — |
 | `xhand1` | XHand1 | — | — | ✅ | — | — |
 | `theohand_std16a` | TheoHand STD16A | ✅ | — | ✅ | — | — |
+| `dh_3_7` | DH-Robotics DH-3-7 | — | — | ✅ | — | — |
 | `wuji_hand2` | Wuji Hand2（舞肌） | — | — | — | — | ✅ |
 
 要点：
+
+- **`dh_3_7`** — USB-RS485（`usb` / `usb_rs485`）；左右手各 7 轴，默认从站号均为 1。
 
 - **`tianji_can` ≠ 全部 CAN 化** — 仅 **Freedom V1**、**Inspire F2** 走臂体场总线 CAN/CAN FD；其余末端仍用 RS485（`marvin`）或外接总线。
 - **`freedom_v2`** — Marvin 仅 RS485；`tianji_can` 与 `usb_can` **均不支持**（V2 外接请用 `usb` + Modbus）。
