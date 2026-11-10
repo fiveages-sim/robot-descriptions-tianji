@@ -252,6 +252,19 @@ selfCollision
     }
 }
 
+; HOME 关节参考：软拉向 controller HOME（home_1，或 home_joint_reference / home_joint_reference_id）。
+; 双臂全部纳入；excludeJointIndices 为 arm 状态索引。
+; fiveages_w2 split_body 的 ocs2_arm_controller 也加载本文件（robot_name:=m6_ccs）。
+homeJointReference
+{
+    activate                        true
+    activateDefault                 true
+    mu                              1e-3
+    excludeJointIndices
+    {
+    }
+}
+
 ; 保留 M6 CCS 已有的 6/7 轴机械耦合范围；索引只覆盖本文件中的手臂。
 joint67Coupling
 {
