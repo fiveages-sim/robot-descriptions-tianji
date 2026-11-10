@@ -53,6 +53,9 @@
         <xacro:if value="${type_key == 'inspire_f2'}">
             <xacro:property name="${side}_hand_type" value="inspire_f2" scope="parent"/>
         </xacro:if>
+        <xacro:if value="${type_key == 'dh_3_7'}">
+            <xacro:property name="${side}_hand_type" value="dh_3_7" scope="parent"/>
+        </xacro:if>
         <xacro:if value="${type_key == 'xhand1'}">
             <xacro:property name="${side}_hand_type" value="xhand1" scope="parent"/>
         </xacro:if>
