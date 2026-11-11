@@ -8,6 +8,7 @@ Panels:
         - /RobotModel2
         - /RobotModel2/Description Topic1
         - /TF1
+        - /TargetErrorDisplay1
       Splitter Ratio: 0.5
     Tree Height: 208
   - Class: rviz_common/Selection
@@ -390,6 +391,15 @@ Visualization Manager:
         {}
       Update Interval: 0
       Value: false
+    - Class: arms_rviz_control_plugin/TargetErrorDisplay
+      Enabled: true
+      ErrorOrientationGreenDeg: 1
+      ErrorOrientationRedDeg: 5
+      ErrorPositionGreenMm: 5
+      ErrorPositionRedMm: 20
+      Name: TargetErrorDisplay
+      Scale: 0.7
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 255; 255; 255
