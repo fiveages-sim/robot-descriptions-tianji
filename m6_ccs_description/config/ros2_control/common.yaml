@@ -2,7 +2,7 @@
 
 controller_manager:
   ros__parameters:
-    update_rate: 100  # Hz
+    update_rate: 500  # Hz
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
@@ -21,7 +21,7 @@ controller_manager:
 ocs2_arm_controller:
   ros__parameters:
     # Joint configuration
-    update_rate: 100  # Hz
+    update_rate: 500  # Hz
     joints:
       - left_joint1
       - left_joint2
