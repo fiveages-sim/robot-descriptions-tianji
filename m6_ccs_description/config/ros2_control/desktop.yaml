@@ -17,10 +17,12 @@ ocs2_arm_controller:
 
 left_gripper_controller:
   ros__parameters:
+    update_rate: 50  # Hz
     joint: left_gripper_joint
     use_effort_interface: false
 
 right_gripper_controller:
   ros__parameters:
+    update_rate: 50  # Hz
     joint: right_gripper_joint
     use_effort_interface: false
