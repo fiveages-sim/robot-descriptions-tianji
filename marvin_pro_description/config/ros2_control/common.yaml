@@ -36,7 +36,7 @@ ocs2_arm_controller:
 
     future_time_offset: 1.0
     robot_name: marvin_pro
-    mpc_frequency: 50
+    mpc_frequency: 100
 
     # Placeholder homes (reuse CCS dual defaults; tune on hardware).
     home_1: [1.457133809892805, -1.0633699963902674, -1.1994065285584414, -0.8074199090303408, -0.6949558811978124, -0.6864381599253574, -0.1295225067208675,

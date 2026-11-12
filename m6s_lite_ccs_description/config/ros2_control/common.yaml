@@ -36,7 +36,7 @@ ocs2_arm_controller:
 
     future_time_offset: 1.0
     robot_name: m6s_lite_ccs
-    mpc_frequency: 50
+    mpc_frequency: 100
     info_file_name: task
 
     home_1: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
