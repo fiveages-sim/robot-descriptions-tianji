@@ -16,6 +16,7 @@
     <exec_depend>robot_common_launch</exec_depend>
     <exec_depend>changingtek_description</exec_depend>
     <exec_depend>jodell_description</exec_depend>
+    <exec_depend>robotiq_gripper_description</exec_depend>
     <exec_depend>linkerhand_description</exec_depend>
     <exec_depend>dh_description</exec_depend>
     <exec_depend>freedom_description</exec_depend>

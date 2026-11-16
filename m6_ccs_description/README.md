@@ -57,6 +57,7 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs \
 | Type key | 产品 | `marvin` | `tianji_can` | `usb` | `usb_can` | `ethernet` |
 |----------|------|:--------:|:------------:|:-----:|:---------:|:---------:|
 | `rg75` | Jodell RG75-300 | ✅ | — | ✅ | — | — |
+| `robotiq85` | Robotiq 2F-85 | ✅ | — | — | — | — |
 | `erg32` | Jodell ERG32（旋转 + 夹爪，2-DOF） | ✅ | — | — | — | — |
 | `ag2f90`, `ag2f90_d` | ChangingTek AG2F90-D | ✅ | — | ✅ | — | — |
 | `ag2f90_c`, `ag2f90_c_soft` | ChangingTek AG2F90-C | ✅ | — | — | — | — |

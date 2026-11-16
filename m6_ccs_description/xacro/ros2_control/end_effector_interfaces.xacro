@@ -7,6 +7,7 @@
 	<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F90-C.xacro"/>
 	<xacro:include filename="$(find changingtek_description)/xacro/ros2_control/AG2F120S.xacro"/>
 	<xacro:include filename="$(find eincinx_description)/xacro/ros2_control/EPGI180-v2.xacro"/>
+	<xacro:include filename="$(find robotiq_gripper_description)/xacro/ros2_control/2F85.xacro"/>
 	<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o6.xacro"/>
 	<xacro:include filename="$(find linkerhand_description)/xacro/ros2_control/o7.xacro"/>
 	<xacro:include filename="$(find freedom_description)/xacro/ros2_control/freedomv1.xacro"/>
@@ -67,6 +68,10 @@
 	<xacro:macro name="side_gripper_interfaces_sim" params="side gripper_type">
 		<xacro:if value="${gripper_type == 'rg75'}">
 			<xacro:rg75_interfaces name="${side}"/>
+		</xacro:if>
+		<xacro:if value="${gripper_type == 'robotiq85'}">
+			<!-- name=left|right → left_gripper_joint / right_gripper_joint (+ mimic state) -->
+			<xacro:robotiq_2f85_interfaces name="${side}"/>
 		</xacro:if>
 		<xacro:if value="${gripper_type == 'ag2f90_c' or gripper_type == 'ag2f90_d'}">
 			<xacro:ag2f90c_interfaces name="${side}"/>

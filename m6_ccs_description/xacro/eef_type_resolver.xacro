@@ -10,6 +10,9 @@
         <xacro:if value="${type_key == 'rg75'}">
             <xacro:property name="${side}_gripper_type" value="rg75" scope="parent"/>
         </xacro:if>
+        <xacro:if value="${type_key == 'robotiq85'}">
+            <xacro:property name="${side}_gripper_type" value="robotiq85" scope="parent"/>
+        </xacro:if>
         <xacro:if value="${type_key == 'epgi180'}">
             <xacro:property name="${side}_gripper_type" value="epgi180" scope="parent"/>
         </xacro:if>
