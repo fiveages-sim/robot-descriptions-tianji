@@ -143,7 +143,7 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=m6_ccs \
 
 ### 3.3 `DualArmMount`（臂安装位姿）
 
-`xacro/arm_mount.xacro`：默认间距 `0 ±0.062 m`；`variant:=desktop` 时为 `0 ±0.12 m, z=0.701`。
+`xacro/arm_mount.xacro`：默认间距 `0 ±0.068 m`；`variant:=desktop` 时为 `0 ±0.12 m, z=0.701`。
 
 ```xml
 <xacro:DualArmMount parent="arm_base"/>

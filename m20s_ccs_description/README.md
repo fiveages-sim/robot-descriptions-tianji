@@ -69,7 +69,7 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=m20s_ccs \
 
 ## 3. 平台
 
-双臂默认按 M6-CCS 侧挂：`arm_base` 上左右臂 `xyz = (0, ±0.062, 0)`，`rpy = (∓π/2, 0, 0)`。安装位姿由本包 `xacro/arm_mount.xacro` 的 `DualArmMount` 参数覆盖。
+双臂入口的安装位置为 `xyz = (0, ±0.0494, 0)`，`rpy = (∓1.1345, 0, 0)`。本包 `xacro/arm_mount.xacro` 的通用默认位置为 `0 ±0.068 0` m，由整机入口的 `DualArmMount` 参数覆盖。
 
 `collider:=simple` 时各连杆用包围盒拟合的圆柱碰撞体；`convex` 用 glb mesh。OCS2 `task.info` 已开启双臂自碰撞（`arm_base` 与左右 `link3/5/7`）。
 

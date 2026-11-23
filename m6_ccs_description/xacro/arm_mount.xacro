@@ -4,8 +4,8 @@
 	<xacro:property name="PI" value="3.1415926535897931"/>
 
 	<xacro:macro name="DualArmBase" params="
-		left_xyz:='0 0.062 0'
-		right_xyz:='0 -0.062 0'
+		left_xyz:='0 0.068 0'
+		right_xyz:='0 -0.068 0'
 		left_rpy:=''
 		right_rpy:=''
 	">
@@ -17,8 +17,8 @@
 
 	<xacro:macro name="DualArmMount" params="
 		parent
-		left_xyz:='0 0.062 0'
-		right_xyz:='0 -0.062 0'
+		left_xyz:='0 0.068 0'
+		right_xyz:='0 -0.068 0'
 		left_rpy:=''
 		right_rpy:=''
 	">
@@ -36,7 +36,7 @@
 		</joint>
 	</xacro:macro>
 
-	<xacro:macro name="LeftArmMount" params="parent left_xyz:='0 0.062 0' left_rpy:=''">
+	<xacro:macro name="LeftArmMount" params="parent left_xyz:='0 0.068 0' left_rpy:=''">
 		<xacro:property name="_left_rpy" value="${left_rpy if left_rpy != '' else '-'+str(PI/2)+' 0 0'}"/>
 		<joint name="left_arm_base_joint" type="fixed">
 			<parent link="${parent}"/>
